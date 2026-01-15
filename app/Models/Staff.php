@@ -36,3 +36,5 @@ class Staff extends Model implements AuthenticatableContract, AuthorizableContra
         return $this->belongsTo(Business::class);
     }
 }
+
+// test
