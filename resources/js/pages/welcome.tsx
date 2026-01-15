@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import {useForm} from '@inertiajs/react';
-import { Phone, Mail, Menu, Award, Gift, Tag, ChevronDown, QrCode, BarChart3, Palette, Wifi, WifiOff, Headphones, LogIn, Play, CheckCircle2, TrendingUp, Users } from 'lucide-react';
+import { Phone, Mail, Menu, Award, Gift, Tag, ChevronDown, QrCode, BarChart3, Palette, Wifi, WifiOff, Headphones, LogIn, Play, CheckCircle2, TrendingUp, Users, Sparkles, Globe, ShieldCheck } from 'lucide-react';
 import { Facebook, Instagram } from "lucide-react";
 import {
   Accordion,
@@ -139,121 +139,238 @@ export default function Welcome() {
     return (
         <>
             {/* SEO HEAD TAGS - THIS IS THE MOST IMPORTANT PART */}
-          <Head>
-
+            <Head>
                 <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
+                <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+                <link
+                    rel="icon"
+                    type="image/png"
+                    sizes="96x96"
+                    href="/favicon-96x96.png"
+                />
+                <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+                <link rel="manifest" href="/site.webmanifest" />
 
-    <title>StampBayan - Free Digital Loyalty Card System for Philippine Businesses</title>
-    <meta name="title" content="StampBayan - Free Digital Loyalty Card System" />
-    <meta name="description" content="FREE digital loyalty card system for Philippine businesses. Replace punch cards with QR scanning. No fees, unlimited customers. Start in 5 minutes." />
-    <meta name="keywords" content="free loyalty program Philippines, customer loyalty card, digital stamp card, Filipino business tools" />
-    <link rel="canonical" href="https://www.stampbayan.com" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.stampbayan.com" />
-    <meta property="og:title" content="StampBayan - Free Digital Loyalty Card System" />
-    <meta property="og:description" content="StampBayan is a FREE digital loyalty card system for Philippine businesses. Replace paper punch cards with QR code scanning. Track customer analytics, boost repeat sales, and build lasting relationships. No setup fees, unlimited customers. Start in 5 minutes." />
-    <meta property="og:image" content="https://www.stampbayan.com/images/og-image.jpg" />
-    <meta property="og:site_name" content="StampBayan" />
-    <meta property="og:locale" content="en_PH" />
-    <meta name="robots" content="index, follow" />
+                <title>
+                    StampBayan - Free Digital Loyalty Card System for Philippine
+                    Businesses
+                </title>
+                <meta
+                    name="title"
+                    content="StampBayan - Free Digital Loyalty Card System"
+                />
+                <meta
+                    name="description"
+                    content="FREE digital loyalty card system for Philippine businesses. Replace punch cards with QR scanning. No fees, unlimited customers. Start in 5 minutes."
+                />
+                <meta
+                    name="keywords"
+                    content="free loyalty program Philippines, customer loyalty card, digital stamp card, Filipino business tools"
+                />
+                <link rel="canonical" href="https://www.stampbayan.com" />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://www.stampbayan.com" />
+                <meta
+                    property="og:title"
+                    content="StampBayan - Free Digital Loyalty Card System"
+                />
+                <meta
+                    property="og:description"
+                    content="StampBayan is a FREE digital loyalty card system for Philippine businesses. Replace paper punch cards with QR code scanning. Track customer analytics, boost repeat sales, and build lasting relationships. No setup fees, unlimited customers. Start in 5 minutes."
+                />
+                <meta
+                    property="og:image"
+                    content="https://www.stampbayan.com/images/og-image.jpg"
+                />
+                <meta property="og:site_name" content="StampBayan" />
+                <meta property="og:locale" content="en_PH" />
+                <meta name="robots" content="index, follow" />
 
-    <script type="application/ld+json">
-        {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": "StampBayan",
-            "applicationCategory": "BusinessApplication",
-            "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "PHP"
-            },
-            "description": "Free digital loyalty card system for Philippine businesses. Create, manage and track customer loyalty programs with QR code scanning.",
-            "operatingSystem": "Web-based",
-            "countryOfOrigin": "PH"
-        })}
-    </script>
-</Head>
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'SoftwareApplication',
+                        name: 'StampBayan',
+                        applicationCategory: 'BusinessApplication',
+                        offers: {
+                            '@type': 'Offer',
+                            price: '0',
+                            priceCurrency: 'PHP',
+                        },
+                        description:
+                            'Free digital loyalty card system for Philippine businesses. Create, manage and track customer loyalty programs with QR code scanning.',
+                        operatingSystem: 'Web-based',
+                        countryOfOrigin: 'PH',
+                    })}
+                </script>
+            </Head>
 
-
-            <div className="min-h-screen relative overflow-hidden bg-primary">
+            <div className="relative min-h-screen overflow-hidden bg-primary">
                 {/* Header */}
-                <header className={`fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4 lg:px-8 xl:px-12 lg:py-6 transition-all duration-300 ${
-                    isScrolled ? 'bg-primary shadow-lg' : 'bg-transparent'
-                }`}>
-                    <div className="max-w-7xl mx-auto flex items-center justify-between">
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                            <img src={LOGO} alt="StampBayan Logo" className='sm:h-10 sm:w-32 h-8 w-24'/>
+                <header
+                    className={`fixed top-0 right-0 left-0 z-50 px-4 py-4 transition-all duration-300 sm:px-6 lg:px-8 lg:py-6 xl:px-12 ${
+                        isScrolled ? 'bg-primary shadow-lg' : 'bg-transparent'
+                    }`}
+                >
+                    <div className="mx-auto flex max-w-7xl items-center justify-between">
+                        <div className="flex flex-shrink-0 items-center gap-2">
+                            <img
+                                src={LOGO}
+                                alt="StampBayan Logo"
+                                className="h-8 w-24 sm:h-10 sm:w-32"
+                            />
                         </div>
 
-                        <nav className={`hidden lg:flex items-center gap-4 xl:gap-8 transition-all duration-300 ${
-                            isScrolled ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
-                        }`}>
-                            <a href="#benefits" onClick={(e) => scrollToSection(e, '#benefits')} className={`text-sm font-medium transition-all px-4 xl:px-5 py-2 relative ${activeSection === 'benefits' ? 'text-white' : 'text-white/90 hover:text-white'}`}>
+                        <nav
+                            className={`hidden items-center gap-4 transition-all duration-300 lg:flex xl:gap-8 ${
+                                isScrolled
+                                    ? 'translate-y-0 opacity-100'
+                                    : 'pointer-events-none -translate-y-4 opacity-0'
+                            }`}
+                        >
+                            <a
+                                href="#benefits"
+                                onClick={(e) => scrollToSection(e, '#benefits')}
+                                className={`relative px-4 py-2 text-sm font-medium transition-all xl:px-5 ${activeSection === 'benefits' ? 'text-white' : 'text-white/90 hover:text-white'}`}
+                            >
                                 BENEFITS
-                                {activeSection === 'benefits' && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"></span>}
+                                {activeSection === 'benefits' && (
+                                    <span className="absolute right-0 bottom-0 left-0 h-0.5 bg-white"></span>
+                                )}
                             </a>
-                            <a href="#features" onClick={(e) => scrollToSection(e, '#features')} className={`text-sm font-medium transition-all px-4 xl:px-5 py-2 relative ${activeSection === 'features' ? 'text-white' : 'text-white/90 hover:text-white'}`}>
+                            <a
+                                href="#features"
+                                onClick={(e) => scrollToSection(e, '#features')}
+                                className={`relative px-4 py-2 text-sm font-medium transition-all xl:px-5 ${activeSection === 'features' ? 'text-white' : 'text-white/90 hover:text-white'}`}
+                            >
                                 FEATURES
-                                {activeSection === 'features' && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"></span>}
+                                {activeSection === 'features' && (
+                                    <span className="absolute right-0 bottom-0 left-0 h-0.5 bg-white"></span>
+                                )}
                             </a>
-                            <a href="#how-it-works" onClick={(e) => scrollToSection(e, '#how-it-works')} className={`text-sm font-medium transition-all px-4 xl:px-5 py-2 relative ${activeSection === 'how-it-works' ? 'text-white' : 'text-white/90 hover:text-white'}`}>
+
+                            <a
+                                href="#how-it-works"
+                                onClick={(e) =>
+                                    scrollToSection(e, '#how-it-works')
+                                }
+                                className={`relative px-4 py-2 text-sm font-medium transition-all xl:px-5 ${activeSection === 'how-it-works' ? 'text-white' : 'text-white/90 hover:text-white'}`}
+                            >
                                 HOW IT WORKS
-                                {activeSection === 'how-it-works' && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"></span>}
+                                {activeSection === 'how-it-works' && (
+                                    <span className="absolute right-0 bottom-0 left-0 h-0.5 bg-white"></span>
+                                )}
+                            </a>
+                            <a
+                                href="#pricing"
+                                onClick={(e) => scrollToSection(e, '#pricing')}
+                                className={`relative px-4 py-2 text-sm font-medium transition-all xl:px-5 ${activeSection === 'pricing' ? 'text-white' : 'text-white/90 hover:text-white'}`}
+                            >
+                                PRICING
+                                {activeSection === 'pricing' && (
+                                    <span className="absolute right-0 bottom-0 left-0 h-0.5 bg-white"></span>
+                                )}
                             </a>
                             {/* PRICING LINK REMOVED */}
-                            <a href="#faq" onClick={(e) => scrollToSection(e, '#faq')} className={`text-sm font-medium transition-all px-4 xl:px-5 py-2 relative ${activeSection === 'faq' ? 'text-white' : 'text-white/90 hover:text-white'}`}>
+                            <a
+                                href="#faq"
+                                onClick={(e) => scrollToSection(e, '#faq')}
+                                className={`relative px-4 py-2 text-sm font-medium transition-all xl:px-5 ${activeSection === 'faq' ? 'text-white' : 'text-white/90 hover:text-white'}`}
+                            >
                                 FAQ
-                                {activeSection === 'faq' && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"></span>}
+                                {activeSection === 'faq' && (
+                                    <span className="absolute right-0 bottom-0 left-0 h-0.5 bg-white"></span>
+                                )}
                             </a>
                         </nav>
 
                         <div className="flex items-center gap-3">
-                            <Dialog open={loginDialogOpen} onOpenChange={setLoginDialogOpen}>
+                            <Dialog
+                                open={loginDialogOpen}
+                                onOpenChange={setLoginDialogOpen}
+                            >
                                 <DialogTrigger asChild>
-                                    <button className="flex items-center gap-2 bg-white hover:bg-white/30 transition sm:px-8 py-2 rounded-full text-primary font-medium text-xs sm:text-sm px-5 cursor-pointer">
+                                    <button className="flex cursor-pointer items-center gap-2 rounded-full bg-white px-5 py-2 text-xs font-medium text-primary transition hover:bg-white/30 sm:px-8 sm:text-sm">
                                         Login
                                     </button>
                                 </DialogTrigger>
                                 <DialogContent className="sm:max-w-md">
                                     <DialogHeader>
-                                        <DialogTitle className="text-2xl font-bold text-center mb-2">Welcome Back!</DialogTitle>
+                                        <DialogTitle className="mb-2 text-center text-2xl font-bold">
+                                            Welcome Back!
+                                        </DialogTitle>
                                         <DialogDescription className="text-center">
                                             Choose your account type to continue
                                         </DialogDescription>
                                     </DialogHeader>
                                     <div className="grid gap-4 py-4">
-                                        <button onClick={() => handleLoginChoice('business')} className="group relative p-6 rounded-xl border-2 border-gray-200 hover:border-blue-500 transition-all duration-300 hover:shadow-lg">
+                                        <button
+                                            onClick={() =>
+                                                handleLoginChoice('business')
+                                            }
+                                            className="group relative rounded-xl border-2 border-gray-200 p-6 transition-all duration-300 hover:border-blue-500 hover:shadow-lg"
+                                        >
                                             <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-500 transition-colors">
-                                                    <svg className="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 transition-colors group-hover:bg-blue-500">
+                                                    <svg
+                                                        className="h-6 w-6 text-blue-600 transition-colors group-hover:text-white"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                                        />
                                                     </svg>
                                                 </div>
-                                                <div className="text-left flex-1">
-                                                    <h3 className="font-bold text-lg text-gray-900">Business Login</h3>
-                                                    <p className="text-sm text-gray-600">Access your business dashboard</p>
+                                                <div className="flex-1 text-left">
+                                                    <h3 className="text-lg font-bold text-gray-900">
+                                                        Business Login
+                                                    </h3>
+                                                    <p className="text-sm text-gray-600">
+                                                        Access your business
+                                                        dashboard
+                                                    </p>
                                                 </div>
-                                                <ChevronDown className="w-5 h-5 text-gray-400 -rotate-90 group-hover:text-blue-500 transition-colors" />
+                                                <ChevronDown className="h-5 w-5 -rotate-90 text-gray-400 transition-colors group-hover:text-blue-500" />
                                             </div>
                                         </button>
-                                        
-                                        <button onClick={() => handleLoginChoice('customer')} className="group relative p-6 rounded-xl border-2 border-gray-200 hover:border-green-500 transition-all duration-300 hover:shadow-lg">
+
+                                        <button
+                                            onClick={() =>
+                                                handleLoginChoice('customer')
+                                            }
+                                            className="group relative rounded-xl border-2 border-gray-200 p-6 transition-all duration-300 hover:border-green-500 hover:shadow-lg"
+                                        >
                                             <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center group-hover:bg-green-500 transition-colors">
-                                                    <svg className="w-6 h-6 text-green-600 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 transition-colors group-hover:bg-green-500">
+                                                    <svg
+                                                        className="h-6 w-6 text-green-600 transition-colors group-hover:text-white"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                                        />
                                                     </svg>
                                                 </div>
-                                                <div className="text-left flex-1">
-                                                    <h3 className="font-bold text-lg text-gray-900">Customer Login</h3>
-                                                    <p className="text-sm text-gray-600">View your loyalty rewards</p>
+                                                <div className="flex-1 text-left">
+                                                    <h3 className="text-lg font-bold text-gray-900">
+                                                        Customer Login
+                                                    </h3>
+                                                    <p className="text-sm text-gray-600">
+                                                        View your loyalty
+                                                        rewards
+                                                    </p>
                                                 </div>
-                                                <ChevronDown className="w-5 h-5 text-gray-400 -rotate-90 group-hover:text-green-500 transition-colors" />
+                                                <ChevronDown className="h-5 w-5 -rotate-90 text-gray-400 transition-colors group-hover:text-green-500" />
                                             </div>
                                         </button>
                                     </div>
@@ -263,512 +380,890 @@ export default function Welcome() {
                     </div>
                 </header>
 
-                <main className="relative z-10 px-4 sm:px-4 py-8 sm:py-12 lg:py-16 xl:py-20 pt-24 sm:mt-16">
-                    <div className="sm:max-w-7xl sm:mx-auto">
-                        <div className="text-center sm:max-w-5xl mx-auto leading-0">
-                            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight mb-2 px-4">
+                <main className="relative z-10 px-4 py-8 pt-24 sm:mt-16 sm:px-4 sm:py-12 lg:py-16 xl:py-20">
+                    <div className="sm:mx-auto sm:max-w-7xl">
+                        <div className="mx-auto text-center leading-0 sm:max-w-5xl">
+                            <h1 className="mb-2 px-4 text-2xl leading-tight font-bold text-white sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
                                 Stop Losing Customers to Competitors
                             </h1>
-                            
-                            <p className="text-white/80 text-xs sm:text-base lg:text-lg mb-8 sm:mb-12 px-4 max-w-3xl mx-auto">
-                                Turn one-time buyers into loyal regulars with a digital loyalty program that actually works. No more lost punch cards. No more forgotten rewards.
+
+                            <p className="mx-auto mb-8 max-w-3xl px-4 text-xs text-white/80 sm:mb-12 sm:text-base lg:text-lg">
+                                Turn one-time buyers into loyal regulars with a
+                                digital loyalty program that actually works. No
+                                more lost punch cards. No more forgotten
+                                rewards.
                             </p>
 
                             {/* UPDATED: Free Forever Messages */}
-                            <div className="flex justify-center gap-4 sm:gap-8 mb-8 sm:mb-10 mx-auto text-white/90 flex-wrap">
-                                <p className="text-xs sm:text-base flex flex-col">
+                            <div className="mx-auto mb-8 flex flex-wrap justify-center gap-4 text-white/90 sm:mb-10 sm:gap-8">
+                                <p className="flex flex-col text-xs sm:text-base">
                                     <strong>✓ 100% Free</strong>
-                                    <span className='text-[10px] sm:text-xs'>Grow your business at zero cost</span>
+                                    <span className="text-[10px] sm:text-xs">
+                                        Grow your business at zero cost
+                                    </span>
                                 </p>
-                                <p className="text-xs sm:text-base flex flex-col">
+                                <p className="flex flex-col text-xs sm:text-base">
                                     <strong>✓ Set up in 5 minutes</strong>
-                                    <span className='text-[10px] sm:text-xs'>Print QR code, start today</span>
+                                    <span className="text-[10px] sm:text-xs">
+                                        Print QR code, start today
+                                    </span>
                                 </p>
-                                <p className="text-xs sm:text-base flex flex-col">
+                                <p className="flex flex-col text-xs sm:text-base">
                                     <strong>✓ Unlimited Access</strong>
-                                    <span className='text-[10px] sm:text-xs'>No subscription fees</span>
+                                    <span className="text-[10px] sm:text-xs">
+                                        No subscription fees
+                                    </span>
                                 </p>
                             </div>
-                            
-                            <button onClick={() => setLoginDialogOpen(true)} className="text-primary cursor-pointer font-semibold px-5 sm:px-10 lg:px-12 py-2 sm:py-4 rounded-full sm:text-lg md:text-base text-xs transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg bg-white">
+
+                            <button
+                                onClick={() => setLoginDialogOpen(true)}
+                                className="cursor-pointer rounded-full bg-white px-5 py-2 text-xs font-semibold text-primary shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl sm:px-10 sm:py-4 sm:text-lg md:text-base lg:px-12"
+                            >
                                 <div className="flex flex-col items-center justify-between">
                                     Create Free Account
-                                    <span className="sm:text-xs text-[8px]">No Credit Card Required</span>
+                                    <span className="text-[8px] sm:text-xs">
+                                        No Credit Card Required
+                                    </span>
                                 </div>
                             </button>
 
-                            <div className="text-white/70 text-xs sm:text-sm mt-6">
-                                ✓ No hidden fees  •  ✓ No setup fees  •  ✓ 24/7 support
+                            <div className="mt-6 text-xs text-white/70 sm:text-sm">
+                                ✓ No hidden fees • ✓ No setup fees • ✓ 24/7
+                                support
                             </div>
                         </div>
                     </div>
                 </main>
 
                 {/* Stats Section */}
-                <section id="benefits" className="relative z-10 px-4 sm:px-6 py-16 sm:py-20 lg:py-28 bg-white">
-                    <div className="max-w-7xl mx-auto">
-                        <div className="text-center mb-12 sm:mb-16">
-                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
+                <section
+                    id="benefits"
+                    className="relative z-10 bg-white px-4 py-16 sm:px-6 sm:py-20 lg:py-28"
+                >
+                    <div className="mx-auto max-w-7xl">
+                        <div className="mb-12 text-center sm:mb-16">
+                            <h2 className="mb-4 text-3xl font-bold sm:mb-6 sm:text-4xl lg:text-5xl">
                                 Why Loyalty Programs Work
                             </h2>
-                            <p className="text-black/80 text-base sm:text-lg lg:text-xl max-w-3xl mx-auto px-4">
+                            <p className="mx-auto max-w-3xl px-4 text-base text-black/80 sm:text-lg lg:text-xl">
                                 The numbers speak for themselves
                             </p>
                         </div>
-                        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-                            <div className="bg-white/10 backdrop-blur-md shadow-lg rounded-2xl p-6 border border-white/20">
-                                <div className="flex items-center gap-4 mb-4">
-                                    <div className="w-12 h-12 rounded-xl bg-green-400/20 flex items-center justify-center">
-                                        <TrendingUp className="w-6 h-6 text-green-400" />
+                        <div className="grid gap-6 md:grid-cols-3 lg:gap-8">
+                            <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-lg backdrop-blur-md">
+                                <div className="mb-4 flex items-center gap-4">
+                                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-400/20">
+                                        <TrendingUp className="h-6 w-6 text-green-400" />
                                     </div>
                                     <div>
-                                        <div className="text-2xl font-bold text-black">67%</div>
-                                        <div className="text-black/70 text-sm">More spending from loyal customers</div>
+                                        <div className="text-2xl font-bold text-black">
+                                            67%
+                                        </div>
+                                        <div className="text-sm text-black/70">
+                                            More spending from loyal customers
+                                        </div>
                                     </div>
                                 </div>
-                                <p className="text-black/60 text-xs">Studies show loyal customers spend significantly more than new ones</p>
+                                <p className="text-xs text-black/60">
+                                    Studies show loyal customers spend
+                                    significantly more than new ones
+                                </p>
                             </div>
 
-                            <div className="bg-white/10 shadow-lg backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                                <div className="flex items-center gap-4 mb-4">
-                                    <div className="w-12 h-12 rounded-xl bg-white-400/20 flex items-center justify-center">
-                                        <Users className="w-6 h-6 text-white-400" />
+                            <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-lg backdrop-blur-md">
+                                <div className="mb-4 flex items-center gap-4">
+                                    <div className="bg-white-400/20 flex h-12 w-12 items-center justify-center rounded-xl">
+                                        <Users className="text-white-400 h-6 w-6" />
                                     </div>
                                     <div>
-                                        <div className="text-2xl font-bold text-black">5x</div>
-                                        <div className="text-black/70 text-sm">More likely to return</div>
+                                        <div className="text-2xl font-bold text-black">
+                                            5x
+                                        </div>
+                                        <div className="text-sm text-black/70">
+                                            More likely to return
+                                        </div>
                                     </div>
                                 </div>
-                                <p className="text-black/60 text-xs">Customers with loyalty cards visit 5 times more often</p>
+                                <p className="text-xs text-black/60">
+                                    Customers with loyalty cards visit 5 times
+                                    more often
+                                </p>
                             </div>
 
-                            <div className="bg-white/10 shadow-lg backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                                <div className="flex items-center gap-4 mb-4">
-                                    <div className="w-12 h-12 rounded-xl bg-yellow-400/20 flex items-center justify-center">
-                                        <BarChart3 className="w-6 h-6 text-yellow-400" />
+                            <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-lg backdrop-blur-md">
+                                <div className="mb-4 flex items-center gap-4">
+                                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-400/20">
+                                        <BarChart3 className="h-6 w-6 text-yellow-400" />
                                     </div>
                                     <div>
-                                        <div className="text-2xl font-bold text-black">25-95%</div>
-                                        <div className="text-black/70 text-sm">Profit increase potential</div>
+                                        <div className="text-2xl font-bold text-black">
+                                            25-95%
+                                        </div>
+                                        <div className="text-sm text-black/70">
+                                            Profit increase potential
+                                        </div>
                                     </div>
                                 </div>
-                                <p className="text-black/60 text-xs">Just 5% increase in retention can boost profits dramatically</p>
+                                <p className="text-xs text-black/60">
+                                    Just 5% increase in retention can boost
+                                    profits dramatically
+                                </p>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 {/* Video Demo Section */}
-                <section className="relative z-10 px-4 sm:px-6 py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-[#f8f9fa] to-white">
-                    <div className="max-w-7xl mx-auto">
-                        <div className="text-center mb-12">
-                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black mb-4">
+                <section className="relative z-10 bg-gradient-to-b from-[#f8f9fa] to-white px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
+                    <div className="mx-auto max-w-7xl">
+                        <div className="mb-12 text-center">
+                            <h2 className="mb-4 text-3xl font-bold text-black sm:text-4xl lg:text-5xl">
                                 See It In Action (No Need To Download)
                             </h2>
-                            <p className="text-black/90 text-base sm:text-lg max-w-2xl mx-auto">
-                                Watch how easy it is for both businesses and customers
+                            <p className="mx-auto max-w-2xl text-base text-black/90 sm:text-lg">
+                                Watch how easy it is for both businesses and
+                                customers
                             </p>
                         </div>
-                        <div className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
+                        <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2 lg:gap-8">
                             <div className="group">
-                                <div className="bg-white rounded-2xl p-4 shadow-xl hover:shadow-2xl transition-all duration-300">
-                                    <div className="relative bg-white rounded-xl mb-4 overflow-hidden mx-auto" style={{ maxWidth: '400px' }}>
-                                        <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
+                                <div className="rounded-2xl bg-white p-4 shadow-xl transition-all duration-300 hover:shadow-2xl">
+                                    <div
+                                        className="relative mx-auto mb-4 overflow-hidden rounded-xl bg-white"
+                                        style={{ maxWidth: '400px' }}
+                                    >
+                                        <div
+                                            className="relative w-full"
+                                            style={{ paddingBottom: '177.78%' }}
+                                        >
                                             <div className="absolute inset-0 flex items-center justify-center">
                                                 <div className="text-center">
-                                                    <Play className="w-16 h-16 text-white/80 mx-auto mb-3" />
-                                                    <p className="text-white/60 text-sm">Business Demo Video</p>
+                                                    <Play className="mx-auto mb-3 h-16 w-16 text-white/80" />
+                                                    <p className="text-sm text-white/60">
+                                                        Business Demo Video
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <video className="absolute inset-0 w-full h-full object-contain" controls poster={BUSINESSTHUMBANAIL}>
-                                                <source src={BUSINESSPOV} type="video/mp4" />
+                                            <video
+                                                className="absolute inset-0 h-full w-full object-contain"
+                                                controls
+                                                poster={BUSINESSTHUMBANAIL}
+                                            >
+                                                <source
+                                                    src={BUSINESSPOV}
+                                                    type="video/mp4"
+                                                />
                                             </video>
                                         </div>
                                     </div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">Business View</h3>
-                                    <p className="text-gray-600 text-sm text-center">See how simple it is to manage your loyalty program and track customer activity</p>
+                                    <h3 className="mb-2 text-center text-xl font-bold text-gray-900">
+                                        Business View
+                                    </h3>
+                                    <p className="text-center text-sm text-gray-600">
+                                        See how simple it is to manage your
+                                        loyalty program and track customer
+                                        activity
+                                    </p>
                                 </div>
                             </div>
 
                             <div className="group">
-                                <div className="bg-white rounded-2xl p-4 shadow-xl hover:shadow-2xl transition-all duration-300">
-                                    <div className="relative bg-white rounded-xl mb-4 overflow-hidden mx-auto" style={{ maxWidth: '400px' }}>
-                                        <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
+                                <div className="rounded-2xl bg-white p-4 shadow-xl transition-all duration-300 hover:shadow-2xl">
+                                    <div
+                                        className="relative mx-auto mb-4 overflow-hidden rounded-xl bg-white"
+                                        style={{ maxWidth: '400px' }}
+                                    >
+                                        <div
+                                            className="relative w-full"
+                                            style={{ paddingBottom: '177.78%' }}
+                                        >
                                             <div className="absolute inset-0 flex items-center justify-center">
                                                 <div className="text-center">
-                                                    <Play className="w-16 h-16 text-white/80 mx-auto mb-3" />
-                                                    <p className="text-white/60 text-sm">Customer Demo Video</p>
+                                                    <Play className="mx-auto mb-3 h-16 w-16 text-white/80" />
+                                                    <p className="text-sm text-white/60">
+                                                        Customer Demo Video
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <video className="absolute inset-0 w-full h-full object-contain" controls poster={CUSTOMERTHUMBNAIL}>
-                                                <source src={CUSTOMERPOV} type="video/mp4" />
+                                            <video
+                                                className="absolute inset-0 h-full w-full object-contain"
+                                                controls
+                                                poster={CUSTOMERTHUMBNAIL}
+                                            >
+                                                <source
+                                                    src={CUSTOMERPOV}
+                                                    type="video/mp4"
+                                                />
                                             </video>
                                         </div>
                                     </div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">Customer Experience</h3>
-                                    <p className="text-gray-600 text-sm text-center">Watch how customers scan, collect stamps, and redeem rewards in seconds</p>
+                                    <h3 className="mb-2 text-center text-xl font-bold text-gray-900">
+                                        Customer Experience
+                                    </h3>
+                                    <p className="text-center text-sm text-gray-600">
+                                        Watch how customers scan, collect
+                                        stamps, and redeem rewards in seconds
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-        
                 {/* Features Section */}
-                <section id="features" className="relative z-10 px-4 sm:px-6 py-16 sm:py-20 lg:py-28" style={{ backgroundColor: '#f8f9fa' }}>
-                    <div className="max-w-7xl mx-auto">
-                        <div className="text-center mb-12 sm:mb-16 lg:mb-20">
-                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6" style={{ color: '#333333' }}>
+                <section
+                    id="features"
+                    className="relative z-10 px-4 py-16 sm:px-6 sm:py-20 lg:py-28"
+                    style={{ backgroundColor: '#f8f9fa' }}
+                >
+                    <div className="mx-auto max-w-7xl">
+                        <div className="mb-12 text-center sm:mb-16 lg:mb-20">
+                            <h2
+                                className="mb-4 text-3xl font-bold sm:mb-6 sm:text-4xl lg:text-5xl"
+                                style={{ color: '#333333' }}
+                            >
                                 Powerful Features for Your Business
                             </h2>
-                            <p className="text-gray-600 text-base sm:text-lg lg:text-xl max-w-3xl mx-auto px-4">
-                                Everything you need to run a successful loyalty program
+                            <p className="mx-auto max-w-3xl px-4 text-base text-gray-600 sm:text-lg lg:text-xl">
+                                Everything you need to run a successful loyalty
+                                program
                             </p>
                         </div>
 
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                            <article className="group p-6 lg:p-8 rounded-3xl bg-white border-2 border-gray-100 hover:border-primary transition-all duration-300 hover:shadow-xl">
-                                <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: '#F4B942' }}>
-                                    <BarChart3 className="w-7 h-7 lg:w-8 lg:h-8 text-white"/>
+                        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+                            <article className="group rounded-3xl border-2 border-gray-100 bg-white p-6 transition-all duration-300 hover:border-primary hover:shadow-xl lg:p-8">
+                                <div
+                                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 lg:h-16 lg:w-16"
+                                    style={{ backgroundColor: '#F4B942' }}
+                                >
+                                    <BarChart3 className="h-7 w-7 text-white lg:h-8 lg:w-8" />
                                 </div>
-                                <h3 className="text-xl lg:text-2xl font-bold mb-3" style={{ color: '#333333' }}>
+                                <h3
+                                    className="mb-3 text-xl font-bold lg:text-2xl"
+                                    style={{ color: '#333333' }}
+                                >
                                     Customer Analytics
                                 </h3>
-                                <p className="text-gray-600 text-sm lg:text-base">
-                                    Track customer traffic by day, visit frequency, and new customer counts to make data-driven decisions and plan better.
+                                <p className="text-sm text-gray-600 lg:text-base">
+                                    Track customer traffic by day, visit
+                                    frequency, and new customer counts to make
+                                    data-driven decisions and plan better.
                                 </p>
                             </article>
 
-                            <article className="group p-6 lg:p-8 rounded-3xl bg-white border-2 border-gray-100 hover:border-primary transition-all duration-300 hover:shadow-xl">
-                                <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: '#F4B942' }}>
-                                    <Palette className="w-7 h-7 lg:w-8 lg:h-8 text-white"/>
+                            <article className="group rounded-3xl border-2 border-gray-100 bg-white p-6 transition-all duration-300 hover:border-primary hover:shadow-xl lg:p-8">
+                                <div
+                                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 lg:h-16 lg:w-16"
+                                    style={{ backgroundColor: '#F4B942' }}
+                                >
+                                    <Palette className="h-7 w-7 text-white lg:h-8 lg:w-8" />
                                 </div>
-                                <h3 className="text-xl lg:text-2xl font-bold mb-3" style={{ color: '#333333' }}>
+                                <h3
+                                    className="mb-3 text-xl font-bold lg:text-2xl"
+                                    style={{ color: '#333333' }}
+                                >
                                     Customizable Cards
                                 </h3>
-                                <p className="text-gray-600 text-sm lg:text-base">
-                                    Design loyalty cards that match your brand with custom colors, logos, and reward structures.
+                                <p className="text-sm text-gray-600 lg:text-base">
+                                    Design loyalty cards that match your brand
+                                    with custom colors, logos, and reward
+                                    structures.
                                 </p>
                             </article>
 
-                            <article className="group p-6 lg:p-8 rounded-3xl bg-white border-2 border-gray-100 hover:border-primary transition-all duration-300 hover:shadow-xl">
-                                <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: '#F4B942' }}>
-                                    <QrCode className="w-7 h-7 lg:w-8 lg:h-8 text-white"/>
+                            <article className="group rounded-3xl border-2 border-gray-100 bg-white p-6 transition-all duration-300 hover:border-primary hover:shadow-xl lg:p-8">
+                                <div
+                                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 lg:h-16 lg:w-16"
+                                    style={{ backgroundColor: '#F4B942' }}
+                                >
+                                    <QrCode className="h-7 w-7 text-white lg:h-8 lg:w-8" />
                                 </div>
-                                <h3 className="text-xl lg:text-2xl font-bold mb-3" style={{ color: '#333333' }}>
+                                <h3
+                                    className="mb-3 text-xl font-bold lg:text-2xl"
+                                    style={{ color: '#333333' }}
+                                >
                                     Custom QR Codes
                                 </h3>
-                                <p className="text-gray-600 text-sm lg:text-base">
-                                    Generate unique QR codes for your business to display at your location for easy customer scanning.
+                                <p className="text-sm text-gray-600 lg:text-base">
+                                    Generate unique QR codes for your business
+                                    to display at your location for easy
+                                    customer scanning.
                                 </p>
                             </article>
 
-                            <article className="group p-6 lg:p-8 rounded-3xl bg-white border-2 border-gray-100 hover:border-primary transition-all duration-300 hover:shadow-xl">
-                                <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: '#F4B942' }}>
-                                    <Wifi className="w-7 h-7 lg:w-8 lg:h-8 text-white"/>
+                            <article className="group rounded-3xl border-2 border-gray-100 bg-white p-6 transition-all duration-300 hover:border-primary hover:shadow-xl lg:p-8">
+                                <div
+                                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 lg:h-16 lg:w-16"
+                                    style={{ backgroundColor: '#F4B942' }}
+                                >
+                                    <Wifi className="h-7 w-7 text-white lg:h-8 lg:w-8" />
                                 </div>
-                                <h3 className="text-xl lg:text-2xl font-bold mb-3" style={{ color: '#333333' }}>
+                                <h3
+                                    className="mb-3 text-xl font-bold lg:text-2xl"
+                                    style={{ color: '#333333' }}
+                                >
                                     Scan to Stamp
                                 </h3>
-                                <p className="text-gray-600 text-sm lg:text-base">
-                                    Customers can instantly earn stamps by scanning your QR code with their smartphone.
+                                <p className="text-sm text-gray-600 lg:text-base">
+                                    Customers can instantly earn stamps by
+                                    scanning your QR code with their smartphone.
                                 </p>
                             </article>
 
-                            <article className="group p-6 lg:p-8 rounded-3xl bg-white border-2 border-gray-100 hover:border-primary transition-all duration-300 hover:shadow-xl">
-                                <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: '#F4B942' }}>
-                                    <WifiOff className="w-7 h-7 lg:w-8 lg:h-8 text-white" />
+                            <article className="group rounded-3xl border-2 border-gray-100 bg-white p-6 transition-all duration-300 hover:border-primary hover:shadow-xl lg:p-8">
+                                <div
+                                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 lg:h-16 lg:w-16"
+                                    style={{ backgroundColor: '#F4B942' }}
+                                >
+                                    <WifiOff className="h-7 w-7 text-white lg:h-8 lg:w-8" />
                                 </div>
-                                <h3 className="text-xl lg:text-2xl font-bold mb-3" style={{ color: '#333333' }}>
+                                <h3
+                                    className="mb-3 text-xl font-bold lg:text-2xl"
+                                    style={{ color: '#333333' }}
+                                >
                                     Offline Stamp Codes
                                 </h3>
-                                <p className="text-gray-600 text-sm lg:text-base">
-                                    Award stamps even without internet connection using unique offline codes.
+                                <p className="text-sm text-gray-600 lg:text-base">
+                                    Award stamps even without internet
+                                    connection using unique offline codes.
                                 </p>
                             </article>
 
-                            <article className="group p-6 lg:p-8 rounded-3xl bg-white border-2 border-gray-100 hover:border-primary transition-all duration-300 hover:shadow-xl">
-                                <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: '#F4B942' }}>
-                                    <Headphones className="w-7 h-7 lg:w-8 lg:h-8 text-white" />
+                            <article className="group rounded-3xl border-2 border-gray-100 bg-white p-6 transition-all duration-300 hover:border-primary hover:shadow-xl lg:p-8">
+                                <div
+                                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 lg:h-16 lg:w-16"
+                                    style={{ backgroundColor: '#F4B942' }}
+                                >
+                                    <Headphones className="h-7 w-7 text-white lg:h-8 lg:w-8" />
                                 </div>
-                                <h3 className="text-xl lg:text-2xl font-bold mb-3" style={{ color: '#333333' }}>
+                                <h3
+                                    className="mb-3 text-xl font-bold lg:text-2xl"
+                                    style={{ color: '#333333' }}
+                                >
                                     24/7 Customer Support
                                 </h3>
-                                <p className="text-gray-600 text-sm lg:text-base">
-                                    Get help anytime with our ticket-based support system. We're always here to assist you.
+                                <p className="text-sm text-gray-600 lg:text-base">
+                                    Get help anytime with our ticket-based
+                                    support system. We're always here to assist
+                                    you.
                                 </p>
                             </article>
                         </div>
                     </div>
                 </section>
 
-       
-            {/* How It Works Section */}
-            <section id="how-it-works" className="relative z-10 px-4 sm:px-6 py-16 sm:py-20 lg:py-28 bg-white" >
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-12 sm:mb-16 lg:mb-20">
-                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6" style={{ color: '#333333' }}>
-                            How It Works
-                        </h2>
-                        <p className="text-gray-600 text-base sm:text-lg lg:text-xl max-w-3xl mx-auto px-4">
-                            Get started in minutes with our simple three-step process
-                        </p>
-                    </div>
-
-                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                        {/* Left Side - Image */}
-                        <img src={APP} alt="application user interface" className="w-full rounded-2xl" />
-                        
-                        {/* Right Side - Steps */}
-                        <div className="order-1 lg:order-2 space-y-1 lg:space-y-3">
-                            {/* Step 1 */}
-                            <div className="flex gap-4 sm:gap-3 group">
-                                <div className="flex-shrink-0">
-                                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center font-bold text-xl sm:text-2xl transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: '#F4B942', color: '#ffffff' }}>
-                                        1
-                                    </div>
-                                </div>
-                                <div className="flex-1 pt-1">
-                                    <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3" style={{ color: '#333333' }}>
-                                        Create Business Account
-                                    </h3>
-                                    <p className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed">
-                                        Sign up in seconds and set up your business profile. Customize your loyalty program with your brand colors and rewards.
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Connector Line */}
-                            <div className="ml-6 sm:ml-8 h-8 w-0.5 bg-gradient-to-b from-gray-300 to-transparent"></div>
-
-                            {/* Step 2 */}
-                            <div className="flex gap-4 sm:gap-6 group">
-                                <div className="flex-shrink-0">
-                                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center font-bold text-xl sm:text-2xl transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: '#F4B942', color: '#ffffff' }}>
-                                        2
-                                    </div>
-                                </div>
-                                <div className="flex-1 pt-1">
-                                    <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3" style={{ color: '#333333' }}>
-                                        Print Your QR Code
-                                    </h3>
-                                    <p className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed">
-                                        Generate and print your unique QR code. Display it at your counter, entrance, or anywhere customers can easily scan it.
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Connector Line */}
-                            <div className="ml-6 sm:ml-8 h-8 w-0.5 bg-gradient-to-b from-gray-300 to-transparent"></div>
-
-                            {/* Step 3 */}
-                            <div className="flex gap-4 sm:gap-6 group">
-                                <div className="flex-shrink-0">
-                                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center font-bold text-xl sm:text-2xl transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: '#F4B942', color: '#ffffff' }}>
-                                        3
-                                    </div>
-                                </div>
-                                <div className="flex-1 pt-1">
-                                    <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3" style={{ color: '#333333' }}>
-                                        Customers Scan & Join
-                                    </h3>
-                                    <p className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed">
-                                        Customers scan the QR code, register, and instantly join your loyalty program. No paper cards, no hassle!
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* CTA Button */}
-                       
-                              <div className="mt-6 w-full bg-primary flex items-center justify-center sm:w-auto font-semibold py-3 sm:py-4 rounded-full text-base sm:text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg cursor-pointer">
-
-                                  <a 
-                                    href='/documentation'
-                                    target='_blank'
-                                    className=""
-                                    style={{ backgroundColor: '#F4B942', color: '#ffffff' }}
-                                >
-                                    Full guide
-                                </a>
-                              </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-             {/* Pricing Section (Updated to reflect FREE service) */}
-                <section id="pricing" className="relative z-10 px-4 sm:px-6 py-16 sm:py-20 lg:py-28 bg-[#f8f9fa]">
-                    <div className="max-w-7xl mx-auto">
-                        <div className="text-center mb-12 sm:mb-16 lg:mb-20">
-                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6" style={{ color: '#333333' }}>
-                                Simple, Transparent Pricing
+                {/* How It Works Section */}
+                <section
+                    id="how-it-works"
+                    className="relative z-10 bg-white px-4 py-16 sm:px-6 sm:py-20 lg:py-28"
+                >
+                    <div className="mx-auto max-w-7xl">
+                        <div className="mb-12 text-center sm:mb-16 lg:mb-20">
+                            <h2
+                                className="mb-4 text-3xl font-bold sm:mb-6 sm:text-4xl lg:text-5xl"
+                                style={{ color: '#333333' }}
+                            >
+                                How It Works
                             </h2>
-                            <p className="text-gray-600 text-base sm:text-lg lg:text-xl max-w-3xl mx-auto px-4">
-                                Start now for free. No catch.
+                            <p className="mx-auto max-w-3xl px-4 text-base text-gray-600 sm:text-lg lg:text-xl">
+                                Get started in minutes with our simple
+                                three-step process
                             </p>
                         </div>
 
-                        <div className="max-w-md mx-auto">
-                            <div className="bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border-4 border-primary">
-                                <div className="text-center">
-                                    <Tag className="w-10 h-10 text-primary mx-auto mb-4"/>
-                                    <h3 className="text-3xl font-bold mb-2">
-                                        StampBayan FREE Plan
-                                    </h3>
-                                    <p className="text-sm text-gray-500 mb-6">
-                                        Built for Filipino businesses to thrive.
-                                    </p>
-                                    <div className="my-8">
-                                        <p className="text-5xl font-extrabold text-primary inline-flex items-end">
-                                            <span className="text-3xl align-top">₱</span>0
-                                            <span className="text-xl font-medium text-gray-500">/month</span>
+                        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+                            {/* Left Side - Image */}
+                            <img
+                                src={APP}
+                                alt="application user interface"
+                                className="w-full rounded-2xl"
+                            />
+
+                            {/* Right Side - Steps */}
+                            <div className="order-1 space-y-1 lg:order-2 lg:space-y-3">
+                                {/* Step 1 */}
+                                <div className="group flex gap-4 sm:gap-3">
+                                    <div className="flex-shrink-0">
+                                        <div
+                                            className="flex h-12 w-12 items-center justify-center rounded-2xl text-xl font-bold transition-all duration-300 group-hover:scale-110 sm:h-16 sm:w-16 sm:text-2xl"
+                                            style={{
+                                                backgroundColor: '#F4B942',
+                                                color: '#ffffff',
+                                            }}
+                                        >
+                                            1
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 pt-1">
+                                        <h3
+                                            className="mb-2 text-xl font-bold sm:mb-3 sm:text-2xl"
+                                            style={{ color: '#333333' }}
+                                        >
+                                            Create Business Account
+                                        </h3>
+                                        <p className="text-sm leading-relaxed text-gray-600 sm:text-base lg:text-lg">
+                                            Sign up in seconds and set up your
+                                            business profile. Customize your
+                                            loyalty program with your brand
+                                            colors and rewards.
                                         </p>
                                     </div>
-                                    <button 
-                                        onClick={() => setLoginDialogOpen(true)}
-                                        className="w-full text-white bg-primary hover:bg-primary/90 cursor-pointer font-semibold px-8 py-3 rounded-full text-base transition-all duration-300 hover:shadow-lg shadow-md"
-                                    >
-                                        Start Your Loyalty Program
-                                    </button>
-                                    <p className="text-xs text-gray-500 mt-3">
-                                        No credit card required.
-                                    </p>
                                 </div>
-                                
-                                <ul className="mt-8 space-y-4 text-left">
-                                    <li className="flex items-start">
-                                        <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 mt-1 flex-shrink-0"/>
-                                        <span className="text-gray-700"><strong>Unlimited</strong> customers</span>
-                                    </li>
-                                    <li className="flex items-start">
-                                        <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 mt-1 flex-shrink-0"/>
-                                        <span className="text-gray-700"><strong>Unlimited</strong> stamps and rewards</span>
-                                    </li>
-                                    <li className="flex items-start">
-                                        <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 mt-1 flex-shrink-0"/>
-                                        <span className="text-gray-700">Full access to <strong>Customer Analytics</strong></span>
-                                    </li>
-                                    <li className="flex items-start">
-                                        <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 mt-1 flex-shrink-0"/>
-                                        <span className="text-gray-700">Custom Card & QR Code Builder</span>
-                                    </li>
-                                    <li className="flex items-start">
-                                        <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 mt-1 flex-shrink-0"/>
-                                        <span className="text-gray-700">Dedicated Support (Email/Chat)</span>
-                                    </li>
-                                </ul>
+
+                                {/* Connector Line */}
+                                <div className="ml-6 h-8 w-0.5 bg-gradient-to-b from-gray-300 to-transparent sm:ml-8"></div>
+
+                                {/* Step 2 */}
+                                <div className="group flex gap-4 sm:gap-6">
+                                    <div className="flex-shrink-0">
+                                        <div
+                                            className="flex h-12 w-12 items-center justify-center rounded-2xl text-xl font-bold transition-all duration-300 group-hover:scale-110 sm:h-16 sm:w-16 sm:text-2xl"
+                                            style={{
+                                                backgroundColor: '#F4B942',
+                                                color: '#ffffff',
+                                            }}
+                                        >
+                                            2
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 pt-1">
+                                        <h3
+                                            className="mb-2 text-xl font-bold sm:mb-3 sm:text-2xl"
+                                            style={{ color: '#333333' }}
+                                        >
+                                            Print Your QR Code
+                                        </h3>
+                                        <p className="text-sm leading-relaxed text-gray-600 sm:text-base lg:text-lg">
+                                            Generate and print your unique QR
+                                            code. Display it at your counter,
+                                            entrance, or anywhere customers can
+                                            easily scan it.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Connector Line */}
+                                <div className="ml-6 h-8 w-0.5 bg-gradient-to-b from-gray-300 to-transparent sm:ml-8"></div>
+
+                                {/* Step 3 */}
+                                <div className="group flex gap-4 sm:gap-6">
+                                    <div className="flex-shrink-0">
+                                        <div
+                                            className="flex h-12 w-12 items-center justify-center rounded-2xl text-xl font-bold transition-all duration-300 group-hover:scale-110 sm:h-16 sm:w-16 sm:text-2xl"
+                                            style={{
+                                                backgroundColor: '#F4B942',
+                                                color: '#ffffff',
+                                            }}
+                                        >
+                                            3
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 pt-1">
+                                        <h3
+                                            className="mb-2 text-xl font-bold sm:mb-3 sm:text-2xl"
+                                            style={{ color: '#333333' }}
+                                        >
+                                            Customers Scan & Join
+                                        </h3>
+                                        <p className="text-sm leading-relaxed text-gray-600 sm:text-base lg:text-lg">
+                                            Customers scan the QR code,
+                                            register, and instantly join your
+                                            loyalty program. No paper cards, no
+                                            hassle!
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* CTA Button */}
+
+                                <div className="mt-6 flex w-full cursor-pointer items-center justify-center rounded-full bg-primary py-3 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl sm:w-auto sm:py-4 sm:text-lg">
+                                    <a
+                                        href="/documentation"
+                                        target="_blank"
+                                        className=""
+                                        style={{
+                                            backgroundColor: '#F4B942',
+                                            color: '#ffffff',
+                                        }}
+                                    >
+                                        Full guide
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-            {/* FAQ Section */}
-<section id="faq" className="relative z-10 px-4 py-4 sm:px-6  sm:py-12 lg:py-16 bg-white">
-    <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12 sm:mb-16 lg:mb-20">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6" style={{ color: '#333333' }}>
-                Frequently Asked Questions
-            </h2>
-            <p className="text-gray-600 text-base sm:text-lg lg:text-xl px-4">
-                Everything you need to know about StampBayan
-            </p>
-        </div>
+                {/* PRICING SECTION */}
+                <section
+                    id="pricing"
+                    className="relative z-10 bg-white px-4 py-16 sm:px-6 sm:py-20 lg:py-28"
+                >
+                    <div className="mx-auto max-w-7xl">
+                        <div className="mb-12 text-center sm:mb-16">
+                            <h2 className="mb-4 text-3xl font-bold text-black sm:text-4xl lg:text-5xl">
+                                Simple, Transparent Pricing
+                            </h2>
+                            <p className="mx-auto max-w-2xl text-base text-black/70 sm:text-lg">
+                                Start for free and upgrade as your brand grows.
+                            </p>
+                        </div>
 
-        <Accordion type="single" collapsible className="space-y-4">
-            <AccordionItem value="item-1" className="border-2 border-gray-100 rounded-2xl px-6 hover:border-primary transition-colors">
-                <AccordionTrigger className="text-left text-lg sm:text-xl font-bold hover:no-underline py-6" style={{ color: '#333333' }}>
-                    What is StampBayan?
-                </AccordionTrigger>
-                <AccordionContent className="text-gray-600 text-base sm:text-lg pb-6 leading-relaxed">
-                    StampBayan is a modern Customer Loyalty Card system where businesses can reward their customers for coming back and build relationships with them to strengthen customer loyalty. Say goodbye to paper punch cards and hello to a digital solution that's easy for both you and your customers.
-                </AccordionContent>
-            </AccordionItem>
+                        <div className="grid gap-8 md:grid-cols-1 lg:mx-auto lg:max-w-5xl">
+                            {/* Free Plan (Starter) */}
+                            <div className="flex flex-col rounded-3xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:shadow-md">
+                                <div className="mb-8">
+                                    <h3 className="text-xl font-bold text-gray-900">
+                                        Starter
+                                    </h3>
+                                    <div className="mt-4 flex items-baseline">
+                                        <span className="text-4xl font-extrabold tracking-tight text-gray-900">
+                                            ₱0
+                                        </span>
+                                        <span className="ml-1 text-xl font-semibold text-gray-500">
+                                            /forever
+                                        </span>
+                                    </div>
+                                    <p className="mt-2 text-sm text-gray-500">
+                                        Perfect for small shops starting out.
+                                    </p>
+                                </div>
+                                <ul className="mb-8 flex-1 space-y-4">
+                                    <li className="flex items-center gap-3 text-sm text-gray-600">
+                                        <CheckCircle2 className="h-5 w-5 text-green-500" />
+                                        Unlimited customers
+                                    </li>
+                                    <li className="flex items-center gap-3 text-sm text-gray-600">
+                                        <CheckCircle2 className="h-5 w-5 text-green-500" />
+                                        Unlimited stamps and rewards
+                                    </li>
+                                    <li className="flex items-center gap-3 text-sm text-gray-600">
+                                        <CheckCircle2 className="h-5 w-5 text-green-500" />
+                                        Full access to Customer Analytics
+                                    </li>
+                                    <li className="flex items-center gap-3 text-sm text-gray-600">
+                                        <CheckCircle2 className="h-5 w-5 text-green-500" />
+                                        Custom Card & QR Code Builder
+                                    </li>
+                                    <li className="flex items-center gap-3 text-sm text-gray-600">
+                                        <CheckCircle2 className="h-5 w-5 text-green-500" />
+                                        Dedicated Support (Email/Chat)
+                                    </li>
+                                </ul>
+                                <button
+                                    onClick={() => setLoginDialogOpen(true)}
+                                    className="w-full rounded-xl border-2 border-primary py-3 text-sm font-bold text-primary transition-colors hover:bg-primary hover:text-white"
+                                >
+                                    Get Started
+                                </button>
+                            </div>
 
-            <AccordionItem value="item-2" className="border-2 border-gray-100 rounded-2xl px-6 hover:border-primary transition-colors">
-                <AccordionTrigger className="text-left text-lg sm:text-xl font-bold hover:no-underline py-6" style={{ color: '#333333' }}>
-                    What is your goal?
-                </AccordionTrigger>
-                <AccordionContent className="text-gray-600 text-base sm:text-lg pb-6 leading-relaxed">
-                    Our goal is to introduce businesses to modern systems so they can see the benefits and advantages of using digital loyalty programs. We want to show businesses that having a system doesn't have to be expensive to maintain—it's actually a powerful tool to help you grow and thrive.
-                </AccordionContent>
-            </AccordionItem>
+                            {/* Pro Plan */}
+                            {/* <div className="relative flex flex-col rounded-3xl border-2 border-primary bg-white p-8 shadow-xl transition-all hover:scale-[1.02]">
+                                <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-bold text-white">
+                                    FOR GROWING BRANDS
+                                </div>
+                                <div className="mb-8">
+                                    <h3 className="text-xl font-bold text-gray-900">
+                                        Pro
+                                    </h3>
+                                    <div className="mt-4 flex items-baseline">
+                                        <span className="text-4xl font-extrabold tracking-tight text-gray-900">
+                                            ₱199
+                                        </span>
+                                        <span className="ml-1 text-xl font-semibold text-gray-500">
+                                            /month
+                                        </span>
+                                    </div>
+                                    <p className="mt-2 text-sm text-gray-500">
+                                        Everything in Free, plus branding tools.
+                                    </p>
+                                </div>
+                                <ul className="mb-8 flex-1 space-y-4">
+                                    <li className="flex items-center gap-3 text-sm font-bold text-gray-900">
+                                        <Sparkles className="h-5 w-5 text-primary" />
+                                        Custom landing page
+                                    </li>
+                                    <li className="flex items-center gap-3 text-sm font-bold text-gray-900">
+                                        <Globe className="h-5 w-5 text-primary" />
+                                        yourbusiness.stampbayan.com
+                                    </li>
+                                    <li className="flex items-center gap-3 text-sm font-bold text-gray-900">
+                                        <Palette className="h-5 w-5 text-primary" />
+                                        Show your logo
+                                    </li>
+                                    <li className="flex items-center gap-3 text-sm font-bold text-gray-900">
+                                        <Headphones className="h-5 w-5 text-primary" />
+                                        Priority support
+                                    </li>
+                                    <hr className="my-4 border-gray-100" />
+                                    <li className="flex items-center gap-3 text-sm text-gray-500 italic">
+                                        <CheckCircle2 className="h-4 w-4 text-gray-400" />
+                                        Includes all Free features
+                                    </li>
+                                </ul>
+                                <button
+                                    onClick={() => setLoginDialogOpen(true)}
+                                    className="w-full rounded-xl bg-primary py-3 text-sm font-bold text-white transition-opacity hover:opacity-90"
+                                >
+                                    Learn more
+                                </button>
+                            </div> */}
+                        </div>
+                    </div>
+                </section>
 
-            <AccordionItem value="item-3" className="border-2 border-gray-100 rounded-2xl px-6 hover:border-primary transition-colors">
-                <AccordionTrigger className="text-left text-lg sm:text-xl font-bold hover:no-underline py-6" style={{ color: '#333333' }}>
-                    How will this help my business?
-                </AccordionTrigger>
-                <AccordionContent className="text-gray-600 text-base sm:text-lg pb-6 leading-relaxed">
-                    Building strong connections with your customers keeps them coming back. Research shows that increasing customer retention by just 5% can boost profits by 25-95%. Loyal customers spend 67% more than new customers and are five times more likely to make repeat purchases. With StampBayan, you create meaningful relationships that turn one-time visitors into lifelong patrons.
-                </AccordionContent>
-            </AccordionItem>
+                {/* FAQ Section */}
+                <section
+                    id="faq"
+                    className="relative z-10 bg-white px-4 py-4 sm:px-6 sm:py-12 lg:py-16"
+                >
+                    <div className="mx-auto max-w-4xl">
+                        <div className="mb-12 text-center sm:mb-16 lg:mb-20">
+                            <h2
+                                className="mb-4 text-3xl font-bold sm:mb-6 sm:text-4xl lg:text-5xl"
+                                style={{ color: '#333333' }}
+                            >
+                                Frequently Asked Questions
+                            </h2>
+                            <p className="px-4 text-base text-gray-600 sm:text-lg lg:text-xl">
+                                Everything you need to know about StampBayan
+                            </p>
+                        </div>
 
-            <AccordionItem value="item-4" className="border-2 border-gray-100 rounded-2xl px-6 hover:border-primary transition-colors">
-                <AccordionTrigger className="text-left text-lg sm:text-xl font-bold hover:no-underline py-6" style={{ color: '#333333' }}>
-                    What is Customer Analytics?
-                </AccordionTrigger>
-                <AccordionContent className="text-gray-600 text-base sm:text-lg pb-6 leading-relaxed">
-                    Our Customer Analytics feature gives you valuable insights into your business performance. You'll see:
-                    <ul className="list-disc list-inside mt-3 space-y-2 ml-2">
-                        <li>Customer traffic by day - Know when your store is busiest</li>
-                        <li>Customer visit frequency - Understand how often customers return</li>
-                        <li>New customer count - Track your business growth</li>
-                        <li>Peak hours and trends - Plan staffing and inventory better</li>
-                    </ul>
-                    <span className="block mt-3">All this data helps you make smarter business decisions and serve your customers better.</span>
-                </AccordionContent>
-            </AccordionItem>
+                        <Accordion
+                            type="single"
+                            collapsible
+                            className="space-y-4"
+                        >
+                            <AccordionItem
+                                value="item-1"
+                                className="rounded-2xl border-2 border-gray-100 px-6 transition-colors hover:border-primary"
+                            >
+                                <AccordionTrigger
+                                    className="py-6 text-left text-lg font-bold hover:no-underline sm:text-xl"
+                                    style={{ color: '#333333' }}
+                                >
+                                    What is StampBayan?
+                                </AccordionTrigger>
+                                <AccordionContent className="pb-6 text-base leading-relaxed text-gray-600 sm:text-lg">
+                                    StampBayan is a modern Customer Loyalty Card
+                                    system where businesses can reward their
+                                    customers for coming back and build
+                                    relationships with them to strengthen
+                                    customer loyalty. Say goodbye to paper punch
+                                    cards and hello to a digital solution that's
+                                    easy for both you and your customers.
+                                </AccordionContent>
+                            </AccordionItem>
 
- 
+                            <AccordionItem
+                                value="item-2"
+                                className="rounded-2xl border-2 border-gray-100 px-6 transition-colors hover:border-primary"
+                            >
+                                <AccordionTrigger
+                                    className="py-6 text-left text-lg font-bold hover:no-underline sm:text-xl"
+                                    style={{ color: '#333333' }}
+                                >
+                                    What is your goal?
+                                </AccordionTrigger>
+                                <AccordionContent className="pb-6 text-base leading-relaxed text-gray-600 sm:text-lg">
+                                    Our goal is to introduce businesses to
+                                    modern systems so they can see the benefits
+                                    and advantages of using digital loyalty
+                                    programs. We want to show businesses that
+                                    having a system doesn't have to be expensive
+                                    to maintain—it's actually a powerful tool to
+                                    help you grow and thrive.
+                                </AccordionContent>
+                            </AccordionItem>
 
-            <AccordionItem value="item-6" className="border-2 border-gray-100 rounded-2xl px-6 hover:border-primary transition-colors ">
-                <AccordionTrigger className="text-left text-lg sm:text-xl font-bold hover:no-underline py-6" style={{ color: '#333333' }}>
-                    What makes StampBayan different from other loyalty systems?
-                </AccordionTrigger>
-                <AccordionContent className="text-gray-600 text-base sm:text-lg pb-6 leading-relaxed">
-                    At StampBayan, we believe that even small businesses deserve access to powerful systems. We've designed our platform to be affordable because we know that useful tools don't have to be expensive. Our system focuses on delivering real benefits to your business while being incredibly easy to use. No complicated setup, no hidden costs—just a straightforward solution that helps you grow.
-                </AccordionContent>
-            </AccordionItem>
-        </Accordion>
-    </div>
-</section>
+                            <AccordionItem
+                                value="item-3"
+                                className="rounded-2xl border-2 border-gray-100 px-6 transition-colors hover:border-primary"
+                            >
+                                <AccordionTrigger
+                                    className="py-6 text-left text-lg font-bold hover:no-underline sm:text-xl"
+                                    style={{ color: '#333333' }}
+                                >
+                                    How will this help my business?
+                                </AccordionTrigger>
+                                <AccordionContent className="pb-6 text-base leading-relaxed text-gray-600 sm:text-lg">
+                                    Building strong connections with your
+                                    customers keeps them coming back. Research
+                                    shows that increasing customer retention by
+                                    just 5% can boost profits by 25-95%. Loyal
+                                    customers spend 67% more than new customers
+                                    and are five times more likely to make
+                                    repeat purchases. With StampBayan, you
+                                    create meaningful relationships that turn
+                                    one-time visitors into lifelong patrons.
+                                </AccordionContent>
+                            </AccordionItem>
 
-       {/* Footer - The approved dark footer */}
-                <footer className="px-4 sm:px-6 py-12 bg-primary">
-                    <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-8 text-white/70 text-sm">
+                            <AccordionItem
+                                value="item-4"
+                                className="rounded-2xl border-2 border-gray-100 px-6 transition-colors hover:border-primary"
+                            >
+                                <AccordionTrigger
+                                    className="py-6 text-left text-lg font-bold hover:no-underline sm:text-xl"
+                                    style={{ color: '#333333' }}
+                                >
+                                    What is Customer Analytics?
+                                </AccordionTrigger>
+                                <AccordionContent className="pb-6 text-base leading-relaxed text-gray-600 sm:text-lg">
+                                    Our Customer Analytics feature gives you
+                                    valuable insights into your business
+                                    performance. You'll see:
+                                    <ul className="mt-3 ml-2 list-inside list-disc space-y-2">
+                                        <li>
+                                            Customer traffic by day - Know when
+                                            your store is busiest
+                                        </li>
+                                        <li>
+                                            Customer visit frequency -
+                                            Understand how often customers
+                                            return
+                                        </li>
+                                        <li>
+                                            New customer count - Track your
+                                            business growth
+                                        </li>
+                                        <li>
+                                            Peak hours and trends - Plan
+                                            staffing and inventory better
+                                        </li>
+                                    </ul>
+                                    <span className="mt-3 block">
+                                        All this data helps you make smarter
+                                        business decisions and serve your
+                                        customers better.
+                                    </span>
+                                </AccordionContent>
+                            </AccordionItem>
+
+                            <AccordionItem
+                                value="item-6"
+                                className="rounded-2xl border-2 border-gray-100 px-6 transition-colors hover:border-primary"
+                            >
+                                <AccordionTrigger
+                                    className="py-6 text-left text-lg font-bold hover:no-underline sm:text-xl"
+                                    style={{ color: '#333333' }}
+                                >
+                                    What makes StampBayan different from other
+                                    loyalty systems?
+                                </AccordionTrigger>
+                                <AccordionContent className="pb-6 text-base leading-relaxed text-gray-600 sm:text-lg">
+                                    At StampBayan, we believe that even small
+                                    businesses deserve access to powerful
+                                    systems. We've designed our platform to be
+                                    affordable because we know that useful tools
+                                    don't have to be expensive. Our system
+                                    focuses on delivering real benefits to your
+                                    business while being incredibly easy to use.
+                                    No complicated setup, no hidden costs—just a
+                                    straightforward solution that helps you
+                                    grow.
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                    </div>
+                </section>
+
+                {/* Footer - The approved dark footer */}
+                <footer className="bg-primary px-4 py-12 sm:px-6">
+                    <div className="mx-auto grid max-w-7xl gap-8 text-sm text-white/70 md:grid-cols-4">
                         <div className="md:col-span-1">
-                            <img src={LOGO} alt="StampBayan Logo" className='h-8 mb-4'/>
-                            <p className='mb-4'>Digital Loyalty for Filipino Businesses.</p>
+                            <img
+                                src={LOGO}
+                                alt="StampBayan Logo"
+                                className="mb-4 h-8"
+                            />
+                            <p className="mb-4">
+                                Digital Loyalty for Filipino Businesses.
+                            </p>
                             <div className="flex gap-4">
-                                <Facebook className="w-5 h-5 hover:text-white transition cursor-pointer" />
-                                <Instagram className="w-5 h-5 hover:text-white transition cursor-pointer" />
+                                <Facebook className="h-5 w-5 cursor-pointer transition hover:text-white" />
+                                <Instagram className="h-5 w-5 cursor-pointer transition hover:text-white" />
                             </div>
                         </div>
 
-                        <div className="md:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:col-span-3">
                             <div>
-                                <h4 className="font-bold mb-3 text-white">Navigate</h4>
+                                <h4 className="mb-3 font-bold text-white">
+                                    Navigate
+                                </h4>
                                 <ul>
-                                    <li><a href="#benefits" onClick={(e) => scrollToSection(e, '#benefits')} className="hover:text-white">Benefits</a></li>
-                                    <li><a href="#features" onClick={(e) => scrollToSection(e, '#features')} className="hover:text-white">Features</a></li>
-                                    <li><a href="#pricing" onClick={(e) => scrollToSection(e, '#pricing')} className="hover:text-white">Pricing</a></li>
-                                    <li><a href="#faq" onClick={(e) => scrollToSection(e, '#faq')} className="hover:text-white">FAQ</a></li>
+                                    <li>
+                                        <a
+                                            href="#benefits"
+                                            onClick={(e) =>
+                                                scrollToSection(e, '#benefits')
+                                            }
+                                            className="hover:text-white"
+                                        >
+                                            Benefits
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#features"
+                                            onClick={(e) =>
+                                                scrollToSection(e, '#features')
+                                            }
+                                            className="hover:text-white"
+                                        >
+                                            Features
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#pricing"
+                                            onClick={(e) =>
+                                                scrollToSection(e, '#pricing')
+                                            }
+                                            className="hover:text-white"
+                                        >
+                                            Pricing
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#faq"
+                                            onClick={(e) =>
+                                                scrollToSection(e, '#faq')
+                                            }
+                                            className="hover:text-white"
+                                        >
+                                            FAQ
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                             <div>
-                                <h4 className="font-bold mb-3 text-white">Contact</h4>
-                                <p className='flex items-center gap-2 mb-2'><Mail className='w-4 h-4 text-white/50'/> stampbayan@gmail.com</p>
-                                <p className='flex items-center gap-2'><Phone className='w-4 h-4 text-white/50'/> +63 9266887267</p>
+                                <h4 className="mb-3 font-bold text-white">
+                                    Contact
+                                </h4>
+                                <p className="mb-2 flex items-center gap-2">
+                                    <Mail className="h-4 w-4 text-white/50" />{' '}
+                                    stampbayan@gmail.com
+                                </p>
+                                <p className="flex items-center gap-2">
+                                    <Phone className="h-4 w-4 text-white/50" />{' '}
+                                    +63 9266887267
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div className="mt-12 pt-6 border-t border-white/10 text-center text-xs text-white/50">
-                        &copy; {new Date().getFullYear()} StampBayan. All rights reserved.
+                    <div className="mt-12 border-t border-white/10 pt-6 text-center text-xs text-white/50">
+                        &copy; {new Date().getFullYear()} StampBayan. All rights
+                        reserved.
                     </div>
                 </footer>
             </div>
 
-                        {/* <button
+            {/* <button
         onClick={() => setIsOpen(true)}
         className="cursor-pointer fixed bottom-6 right-6 z-50 bg-primary hover:bg-primary/90 text-white rounded-full p-4 shadow-2xl transition-all duration-300 hover:scale-110 group animate-bounce"
         style={{
@@ -780,92 +1275,108 @@ export default function Welcome() {
         <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
       </button> */}
 
-      {/* Suggestion Form Dialog */}
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-primary">
-              We'd Love Your Feedback! 💡
-            </DialogTitle>
-            <DialogDescription>
-              Help us improve StampBayan by sharing your suggestions or ideas.
-            </DialogDescription>
-          </DialogHeader>
+            {/* Suggestion Form Dialog */}
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle className="text-2xl font-bold text-primary">
+                            We'd Love Your Feedback! 💡
+                        </DialogTitle>
+                        <DialogDescription>
+                            Help us improve StampBayan by sharing your
+                            suggestions or ideas.
+                        </DialogDescription>
+                    </DialogHeader>
 
-          {submitSuccess ? (
-            <div className="py-8 text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Send className="w-8 h-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Thank You!
-              </h3>
-              <p className="text-gray-600">
-                Your suggestion has been received. We appreciate your feedback!
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-4 py-4">
+                    {submitSuccess ? (
+                        <div className="py-8 text-center">
+                            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                                <Send className="h-8 w-8 text-green-600" />
+                            </div>
+                            <h3 className="mb-2 text-xl font-bold text-gray-900">
+                                Thank You!
+                            </h3>
+                            <p className="text-gray-600">
+                                Your suggestion has been received. We appreciate
+                                your feedback!
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="space-y-4 py-4">
+                            <div>
+                                <label
+                                    htmlFor="email"
+                                    className="mb-1 block text-sm font-medium text-gray-700"
+                                >
+                                    Email (Optional)
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={data.email}
+                                    onChange={(e) =>
+                                        setData('email', e.target.value)
+                                    }
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-2 transition outline-none focus:border-transparent focus:ring-2 focus:ring-primary"
+                                    placeholder="your@email.com"
+                                />
+                                {errors.email && (
+                                    <p className="mt-1 text-xs text-red-500">
+                                        {errors.email}
+                                    </p>
+                                )}
+                            </div>
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email (Optional)
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={data.email}
-                  onChange={(e) => setData('email', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
-                  placeholder="your@email.com"
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-                )}
-              </div>
+                            <div>
+                                <label
+                                    htmlFor="suggestion"
+                                    className="mb-1 block text-sm font-medium text-gray-700"
+                                >
+                                    Your Suggestion{' '}
+                                    <span className="text-red-500">*</span>
+                                </label>
+                                <textarea
+                                    id="suggestion"
+                                    name="suggestion"
+                                    value={data.suggestion}
+                                    onChange={(e) =>
+                                        setData('suggestion', e.target.value)
+                                    }
+                                    rows={4}
+                                    className="w-full resize-none rounded-lg border border-gray-300 px-4 py-2 transition outline-none focus:border-transparent focus:ring-2 focus:ring-primary"
+                                    placeholder="Tell us what you think..."
+                                />
+                                {errors.suggestion && (
+                                    <p className="mt-1 text-xs text-red-500">
+                                        {errors.suggestion}
+                                    </p>
+                                )}
+                            </div>
 
-              <div>
-                <label htmlFor="suggestion" className="block text-sm font-medium text-gray-700 mb-1">
-                  Your Suggestion <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  id="suggestion"
-                  name="suggestion"
-                  value={data.suggestion}
-                  onChange={(e) => setData('suggestion', e.target.value)}
-                  rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition resize-none"
-                  placeholder="Tell us what you think..."
-                />
-                {errors.suggestion && (
-                  <p className="text-red-500 text-xs mt-1">{errors.suggestion}</p>
-                )}
-              </div>
+                            <button
+                                onClick={handleSubmit}
+                                disabled={processing || !data.suggestion.trim()}
+                                className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3 font-semibold text-white transition-all duration-300 hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-gray-300"
+                            >
+                                {processing ? (
+                                    <>
+                                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                                        Sending...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Send className="h-5 w-5" />
+                                        Submit Suggestion
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
 
-              <button
-                onClick={handleSubmit}
-                disabled={processing || !data.suggestion.trim()}
-                className="w-full bg-primary hover:bg-primary/90 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                {processing ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5" />
-                    Submit Suggestion
-                  </>
-                )}
-              </button>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      <style>{`
+            <style>{`
         @keyframes bounce {
           0%, 100% {
             transform: translateY(0);
@@ -875,8 +1386,7 @@ export default function Welcome() {
           }
         }
       `}</style>
-    </>
-           
+        </>
     );
 }
 

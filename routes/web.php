@@ -41,6 +41,10 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::get('/pro-plan', function () {
+    return Inertia::render('pro-plan');
+})->name('pro-plan');
+
 Route::get('/documentation', [DocumentationController::class, 'index']);
 
 Route::middleware(['auth', 'verified'])->group(function () {

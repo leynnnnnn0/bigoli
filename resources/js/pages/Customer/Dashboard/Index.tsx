@@ -369,8 +369,7 @@ useEffect(() => {
 
   const handleSubmitCode = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(data);
-    
+
     post('/stamps/record', {
       onSuccess: (page) => {
         const index = cardTemplates.findIndex(card => card.id === page.props.flash.active_card_id);
@@ -417,7 +416,6 @@ useEffect(() => {
     const strokeColor = isFilled ? '#FFFFFF' : '#D1D5DB';
     let stampImageUrl = currentCard.stampImage ? `/${currentCard.stampImage}` : null;
 
-    console.log(stampImage);
     if(stampImage){
       stampImageUrl = `/${stampImage}`;
     }
@@ -514,7 +512,7 @@ useEffect(() => {
 
     const logoUrl = cardTemplate.logo ? `/${cardTemplate.logo}` : null;
     const backgroundImageUrl = cardTemplate.backgroundImage ? `/${cardTemplate.backgroundImage}` : null;
-    console.log(cardTemplate);
+
     
     return (
       <div 
