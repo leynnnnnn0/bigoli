@@ -906,7 +906,7 @@ export default function Welcome() {
                                 Simple, Transparent Pricing
                             </h2>
                             <p className="mx-auto max-w-2xl text-base text-black/70 sm:text-lg">
-                                Start for free and upgrade as your brand grows.
+                                Start for free.
                             </p>
                         </div>
 
