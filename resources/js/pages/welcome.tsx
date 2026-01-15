@@ -959,7 +959,7 @@ export default function Welcome() {
                                 </button>
                             </div>
 
-                            {/* Pro Plan */}
+                            {/* Pro Plan only */}
                             {/* <div className="relative flex flex-col rounded-3xl border-2 border-primary bg-white p-8 shadow-xl transition-all hover:scale-[1.02]">
                                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-bold text-white">
                                     FOR GROWING BRANDS
