@@ -93,8 +93,9 @@ class IssueStampController extends Controller
 
     public function generateOfflineStamps(Request $request)
     {
+        $business = Auth::user()->business;
         $loyaltyCardId = $request->input('id');
-        $registrationLink = "https://stampbayan.com/customer/register?business=" . Auth::user()->business->qr_token;
+        $registrationLink = $business->subdomain ? $business->subdomain : 'https://stampbayan.com/customer/register?business=' . $business->qr_token;
         $businessId = Auth::user()->business->id;
 
         // Fetch the loyalty card details
