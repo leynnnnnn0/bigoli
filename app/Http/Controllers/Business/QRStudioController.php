@@ -37,12 +37,13 @@ class QRStudioController extends Controller
         ]);
     }
 
+    $qrUrl = $busines->subdomain ? $busines->subdomain : 'https://stampbayan.com/customer/register?business=' . $busines->qr_token;
     $data = [
         'heading' => $qrCode->heading ?? 'Loyalty Program',
         'subheading' => $qrCode->subheading ?? 'Join our loyalty program by scanning the QR code',
         'backgroundColor' => $qrCode->background_color ?? '#FFFFFF',
         'textColor' => $qrCode->text_color ?? '#000000',
-        'qrUrl' => 'https://stampbayan.com/customer/register?business=' . $busines->qr_token,
+        'qrUrl' => $qrUrl,
         'logo' => $qrCode->logo ? public_path($qrCode->logo) : null,
         'backgroundImage' => $qrCode->background_image ? public_path($qrCode->background_image) : null,
     ];

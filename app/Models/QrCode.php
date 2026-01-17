@@ -14,6 +14,7 @@ class QrCode extends Model
         'text_color',
         'background_image',
         'logo',
+        'subdomain',
     ];
 
     protected $casts = [
