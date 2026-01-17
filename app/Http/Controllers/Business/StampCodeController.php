@@ -190,7 +190,6 @@ class StampCodeController extends Controller
                 ]);
             });
         } catch (\Exception $e) {
-            dd($e);
             return back()->withErrors(['error' => 'Failed to record stamp. Please try again.']);
         }
     }
