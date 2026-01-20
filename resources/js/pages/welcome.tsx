@@ -9,6 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import homeBackground from '../../images/homeBackground.png';
 import {
   Dialog,
   DialogContent,
@@ -204,7 +205,7 @@ export default function Welcome() {
                 </script>
             </Head>
 
-            <div className="relative min-h-screen overflow-hidden bg-primary">
+            <div className="relative min-h-screen overflow-hidden bg-transparent">
                 {/* Header */}
                 <header
                     className={`fixed top-0 right-0 left-0 z-50 px-4 py-4 transition-all duration-300 sm:px-6 lg:px-8 lg:py-6 xl:px-12 ${
@@ -379,57 +380,70 @@ export default function Welcome() {
                     </div>
                 </header>
 
-                <main className="relative z-10 px-4 py-8 pt-24 sm:mt-16 sm:px-4 sm:py-12 lg:py-16 xl:py-20">
-                    <div className="sm:mx-auto sm:max-w-7xl">
-                        <div className="mx-auto text-center leading-0 sm:max-w-5xl">
-                            <h1 className="mb-2 px-4 text-2xl leading-tight font-bold text-white sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
-                                Stop Losing Customers to Competitors
-                            </h1>
+                <main className="relative z-10 px-4 py-8 sm:px-4 sm:py-12 lg:py-16 xl:py-20">
+                    {/* Background with gradient overlay */}
+                    <div className="absolute inset-0 -z-10">
+                        <div
+                            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                            style={{
+                                backgroundImage: `url(${homeBackground})`,
+                            }}
+                        ></div>
+                        <div className="absolute inset-0 bg-gradient-to-b from-primary/70 via-primary/50 to-primary/70"></div>
+                    </div>
 
-                            <p className="mx-auto mb-8 max-w-3xl px-4 text-xs text-white/80 sm:mb-12 sm:text-base lg:text-lg">
-                                Turn one-time buyers into loyal regulars with a
-                                digital loyalty program that actually works. No
-                                more lost punch cards. No more forgotten
-                                rewards.
-                            </p>
+                    <div className="mt-15 sm:mx-auto sm:max-w-7xl lg:mt-10">
+                        <div className="sm:mx-auto sm:max-w-7xl">
+                            <div className="mx-auto text-center leading-0 sm:max-w-5xl">
+                                <h1 className="mb-2 px-4 text-2xl leading-tight font-bold text-white sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
+                                    Stop Losing Customers to Competitors
+                                </h1>
 
-                            {/* UPDATED: Free Forever Messages */}
-                            <div className="mx-auto mb-8 flex flex-wrap justify-center gap-4 text-white/90 sm:mb-10 sm:gap-8">
-                                <p className="flex flex-col text-xs sm:text-base">
-                                    <strong>✓ 100% Free</strong>
-                                    <span className="text-[10px] sm:text-xs">
-                                        Grow your business at zero cost
-                                    </span>
+                                <p className="mx-auto mb-8 max-w-3xl px-4 text-xs text-white/80 sm:mb-12 sm:text-base lg:text-lg">
+                                    Turn one-time buyers into loyal regulars
+                                    with a digital loyalty program that actually
+                                    works. No more lost punch cards. No more
+                                    forgotten rewards.
                                 </p>
-                                <p className="flex flex-col text-xs sm:text-base">
-                                    <strong>✓ Set up in 5 minutes</strong>
-                                    <span className="text-[10px] sm:text-xs">
-                                        Print QR code, start today
-                                    </span>
-                                </p>
-                                <p className="flex flex-col text-xs sm:text-base">
-                                    <strong>✓ Unlimited Access</strong>
-                                    <span className="text-[10px] sm:text-xs">
-                                        No subscription fees
-                                    </span>
-                                </p>
-                            </div>
 
-                            <button
-                                onClick={() => setLoginDialogOpen(true)}
-                                className="cursor-pointer rounded-full bg-white px-5 py-2 text-xs font-semibold text-primary shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl sm:px-10 sm:py-4 sm:text-lg md:text-base lg:px-12"
-                            >
-                                <div className="flex flex-col items-center justify-between">
-                                    Create Free Account
-                                    <span className="text-[8px] sm:text-xs">
-                                        No Credit Card Required
-                                    </span>
+                                {/* UPDATED: Free Forever Messages */}
+                                <div className="mx-auto mb-8 flex flex-wrap justify-center gap-4 text-white/90 sm:mb-10 sm:gap-8">
+                                    <p className="flex flex-col text-xs sm:text-base">
+                                        <strong>✓ 100% Free</strong>
+                                        <span className="text-[10px] sm:text-xs">
+                                            Grow your business at zero cost
+                                        </span>
+                                    </p>
+                                    <p className="flex flex-col text-xs sm:text-base">
+                                        <strong>✓ Set up in 5 minutes</strong>
+                                        <span className="text-[10px] sm:text-xs">
+                                            Print QR code, start today
+                                        </span>
+                                    </p>
+                                    <p className="flex flex-col text-xs sm:text-base">
+                                        <strong>✓ Unlimited Access</strong>
+                                        <span className="text-[10px] sm:text-xs">
+                                            No subscription fees
+                                        </span>
+                                    </p>
                                 </div>
-                            </button>
 
-                            <div className="mt-6 text-xs text-white/70 sm:text-sm">
-                                ✓ No hidden fees • ✓ No setup fees • ✓ 24/7
-                                support
+                                <button
+                                    onClick={() => setLoginDialogOpen(true)}
+                                    className="cursor-pointer rounded-full bg-white px-5 py-2 text-xs font-semibold text-primary shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl sm:px-10 sm:py-4 sm:text-lg md:text-base lg:px-12"
+                                >
+                                    <div className="flex flex-col items-center justify-between">
+                                        Create Free Account
+                                        <span className="text-[8px] sm:text-xs">
+                                            No Credit Card Required
+                                        </span>
+                                    </div>
+                                </button>
+
+                                <div className="mt-6 text-xs text-white sm:text-sm">
+                                    ✓ No hidden fees • ✓ No setup fees • ✓ 24/7
+                                    support
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -438,19 +452,19 @@ export default function Welcome() {
                 {/* Stats Section */}
                 <section
                     id="benefits"
-                    className="relative z-10 bg-white px-4 py-16 sm:px-6 sm:py-20 lg:py-28"
+                    className="relative z-10 bg-white px-4 py-8 sm:px-6 sm:py-12 lg:py-16"
                 >
                     <div className="mx-auto max-w-7xl">
                         <div className="mb-12 text-center sm:mb-16">
-                            <h2 className="mb-4 text-3xl font-bold sm:mb-6 sm:text-4xl lg:text-5xl">
+                            <h2 className="mb-4 text-lg font-bold sm:mb-6 sm:text-4xl lg:text-3xl">
                                 Why Loyalty Programs Work
                             </h2>
-                            <p className="mx-auto max-w-3xl px-4 text-base text-black/80 sm:text-lg lg:text-xl">
+                            <p className="mx-auto -mt-2 max-w-3xl px-4 text-xs text-black/80 sm:text-lg lg:text-lg">
                                 The numbers speak for themselves
                             </p>
                         </div>
-                        <div className="grid gap-6 md:grid-cols-3 lg:gap-8">
-                            <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-lg backdrop-blur-md">
+                        <div className="-mt-5 grid gap-6 md:grid-cols-3 lg:gap-8">
+                            <div className="rounded-2xl border border-primary bg-white/10 p-6 shadow-2xl">
                                 <div className="mb-4 flex items-center gap-4">
                                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-400/20">
                                         <TrendingUp className="h-6 w-6 text-green-400" />
@@ -465,12 +479,20 @@ export default function Welcome() {
                                     </div>
                                 </div>
                                 <p className="text-xs text-black/60">
-                                    Studies show loyal customers spend
-                                    significantly more than new ones
+                                    <a
+                                        href="https://emarsys.com/learn/blog/increase-customer-loyalty-retention/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="font-semibold text-green-600 underline decoration-green-400 hover:text-green-700"
+                                    >
+                                        Studies
+                                    </a>{' '}
+                                    show loyal customers spend significantly
+                                    more than new ones
                                 </p>
                             </div>
 
-                            <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-lg backdrop-blur-md">
+                            <div className="rounded-2xl border border-primary bg-white/10 p-6 shadow-2xl">
                                 <div className="mb-4 flex items-center gap-4">
                                     <div className="bg-white-400/20 flex h-12 w-12 items-center justify-center rounded-xl">
                                         <Users className="text-white-400 h-6 w-6" />
@@ -485,12 +507,20 @@ export default function Welcome() {
                                     </div>
                                 </div>
                                 <p className="text-xs text-black/60">
-                                    Customers with loyalty cards visit 5 times
-                                    more often
+                                    Customers with{' '}
+                                    <a
+                                        href="https://www.businessdasher.com/customer-loyalty-statistics/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-black-600 decoration-black-400 font-semibold underline hover:text-blue-700"
+                                    >
+                                        loyalty cards
+                                    </a>{' '}
+                                    visit 5 times more often
                                 </p>
                             </div>
 
-                            <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-lg backdrop-blur-md">
+                            <div className="rounded-2xl border border-primary bg-white/10 p-6 shadow-2xl">
                                 <div className="mb-4 flex items-center gap-4">
                                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-400/20">
                                         <BarChart3 className="h-6 w-6 text-yellow-400" />
@@ -505,14 +535,21 @@ export default function Welcome() {
                                     </div>
                                 </div>
                                 <p className="text-xs text-black/60">
-                                    Just 5% increase in retention can boost
-                                    profits dramatically
+                                    Just{' '}
+                                    <a
+                                        href="https://www.bain.com/insights/retaining-customers-is-the-real-challenge/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="font-semibold text-yellow-600 underline decoration-yellow-400 hover:text-yellow-700"
+                                    >
+                                        5% increase in retention
+                                    </a>{' '}
+                                    can boost profits dramatically
                                 </p>
                             </div>
                         </div>
                     </div>
                 </section>
-
                 {/* Video Demo Section */}
                 <section className="relative z-10 bg-gradient-to-b from-[#f8f9fa] to-white px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
                     <div className="mx-auto max-w-7xl">
