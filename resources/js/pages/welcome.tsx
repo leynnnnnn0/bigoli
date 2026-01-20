@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import {useForm} from '@inertiajs/react';
-import { Phone, Mail, Menu, Award, Gift, Tag, ChevronDown, QrCode, BarChart3, Palette, Wifi, WifiOff, Headphones, LogIn, Play, CheckCircle2, TrendingUp, Users, Sparkles, Globe, ShieldCheck } from 'lucide-react';
+import { Phone, Mail, Menu, Award, Gift, Tag, ChevronDown, QrCode, BarChart3, Palette, Wifi, WifiOff, Headphones, LogIn, Play, CheckCircle2, TrendingUp, Users, Sparkles, Globe, ShieldCheck, Star, Smartphone, Percent, QrCodeIcon, User2, Camera } from 'lucide-react';
+import {
+    Check,
+    Download,
+} from 'lucide-react';
 import { Facebook, Instagram } from "lucide-react";
 import {
   Accordion,
@@ -34,6 +38,24 @@ export default function Welcome() {
     const [activeSection, setActiveSection] = useState('');
     const [loginDialogOpen, setLoginDialogOpen] = useState(false);
     const [isDemo, setIsDemo] = useState(false);
+
+    const steps = [
+        {
+            icon: <User2 className="h-8 w-8 text-white" />,
+            title: 'Create Business Account',
+            desc: 'Sign up in seconds and set up your business profile. Customize your loyalty program with your brand colors and rewards.',
+        },
+        {
+            icon: <QrCodeIcon className="h-8 w-8 text-white" />,
+            title: 'Print Your QR Code',
+            desc: 'Generate and print your unique QR code. Display it at your counter, entrance, or anywhere customers can easily scan it.',
+        },
+        {
+            icon: <Camera className="h-8 w-8 text-white" />,
+            title: 'Customers Scan & Join',
+            desc: 'Customers scan the QR code, register, and instantly join your loyalty program. No paper cards, no hassle!',
+        },
+    ];
 
     useEffect(() => {
         const handleScroll = () => {
@@ -452,7 +474,7 @@ export default function Welcome() {
                 {/* Stats Section */}
                 <section
                     id="benefits"
-                    className="relative z-10 bg-white px-4 py-8 sm:px-6 sm:py-12 lg:py-16"
+                    className="bg-gray/10 relative z-10 px-4 py-8 sm:px-6 sm:py-12 lg:py-16"
                 >
                     <div className="mx-auto max-w-7xl">
                         <div className="mb-12 text-center sm:mb-16">
@@ -550,240 +572,159 @@ export default function Welcome() {
                         </div>
                     </div>
                 </section>
-                {/* Video Demo Section */}
-                <section className="relative z-10 bg-gradient-to-b from-[#f8f9fa] to-white px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
-                    <div className="mx-auto max-w-7xl">
-                        <div className="mb-12 text-center">
-                            <h2 className="mb-4 text-3xl font-bold text-black sm:text-4xl lg:text-5xl">
-                                See It In Action (No Need To Download)
-                            </h2>
-                            <p className="mx-auto max-w-2xl text-base text-black/90 sm:text-lg">
-                                Watch how easy it is for both businesses and
-                                customers
-                            </p>
-                        </div>
-                        <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2 lg:gap-8">
-                            <div className="group">
-                                <div className="rounded-2xl bg-white p-4 shadow-xl transition-all duration-300 hover:shadow-2xl">
-                                    <div
-                                        className="relative mx-auto mb-4 overflow-hidden rounded-xl bg-white"
-                                        style={{ maxWidth: '400px' }}
-                                    >
-                                        <div
-                                            className="relative w-full"
-                                            style={{ paddingBottom: '177.78%' }}
-                                        >
-                                            <div className="absolute inset-0 flex items-center justify-center">
-                                                <div className="text-center">
-                                                    <Play className="mx-auto mb-3 h-16 w-16 text-white/80" />
-                                                    <p className="text-sm text-white/60">
-                                                        Business Demo Video
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <video
-                                                className="absolute inset-0 h-full w-full object-contain"
-                                                controls
-                                                poster={BUSINESSTHUMBANAIL}
-                                            >
-                                                <source
-                                                    src={BUSINESSPOV}
-                                                    type="video/mp4"
-                                                />
-                                            </video>
-                                        </div>
-                                    </div>
-                                    <h3 className="mb-2 text-center text-xl font-bold text-gray-900">
-                                        Business View
-                                    </h3>
-                                    <p className="text-center text-sm text-gray-600">
-                                        See how simple it is to manage your
-                                        loyalty program and track customer
-                                        activity
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="group">
-                                <div className="rounded-2xl bg-white p-4 shadow-xl transition-all duration-300 hover:shadow-2xl">
-                                    <div
-                                        className="relative mx-auto mb-4 overflow-hidden rounded-xl bg-white"
-                                        style={{ maxWidth: '400px' }}
-                                    >
-                                        <div
-                                            className="relative w-full"
-                                            style={{ paddingBottom: '177.78%' }}
-                                        >
-                                            <div className="absolute inset-0 flex items-center justify-center">
-                                                <div className="text-center">
-                                                    <Play className="mx-auto mb-3 h-16 w-16 text-white/80" />
-                                                    <p className="text-sm text-white/60">
-                                                        Customer Demo Video
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <video
-                                                className="absolute inset-0 h-full w-full object-contain"
-                                                controls
-                                                poster={CUSTOMERTHUMBNAIL}
-                                            >
-                                                <source
-                                                    src={CUSTOMERPOV}
-                                                    type="video/mp4"
-                                                />
-                                            </video>
-                                        </div>
-                                    </div>
-                                    <h3 className="mb-2 text-center text-xl font-bold text-gray-900">
-                                        Customer Experience
-                                    </h3>
-                                    <p className="text-center text-sm text-gray-600">
-                                        Watch how customers scan, collect
-                                        stamps, and redeem rewards in seconds
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
 
                 {/* Features Section */}
                 <section
                     id="features"
-                    className="relative z-10 px-4 py-16 sm:px-6 sm:py-20 lg:py-28"
-                    style={{ backgroundColor: '#f8f9fa' }}
+                    className="relative z-10 bg-primary/10 px-4 py-16 sm:px-6 sm:py-20 lg:py-28" // Matching the cream background from image
                 >
                     <div className="mx-auto max-w-7xl">
-                        <div className="mb-12 text-center sm:mb-16 lg:mb-20">
-                            <h2
-                                className="mb-4 text-3xl font-bold sm:mb-6 sm:text-4xl lg:text-5xl"
-                                style={{ color: '#333333' }}
-                            >
-                                Powerful Features for Your Business
-                            </h2>
-                            <p className="mx-auto max-w-3xl px-4 text-base text-gray-600 sm:text-lg lg:text-xl">
+                        {/* Header Section */}
+                        <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+                            <div className="max-w-2xl">
+                                <span className="text-sm font-bold tracking-wider text-primary uppercase">
+                                    Why Choose Us?
+                                </span>
+                                <h2 className="mt-2 text-4xl font-bold text-[#333333] sm:text-5xl">
+                                    Powerful Features for Your{' '}
+                                    <span>Business</span>
+                                </h2>
+                            </div>
+                            <p className="max-w-xs text-base text-gray-500">
                                 Everything you need to run a successful loyalty
-                                program
+                                program without the bloat.
                             </p>
                         </div>
 
-                        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-                            <article className="group rounded-3xl border-2 border-gray-100 bg-white p-6 transition-all duration-300 hover:border-primary hover:shadow-xl lg:p-8">
-                                <div
-                                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 lg:h-16 lg:w-16"
-                                    style={{ backgroundColor: '#F4B942' }}
-                                >
-                                    <BarChart3 className="h-7 w-7 text-white lg:h-8 lg:w-8" />
+                        {/* Bento Grid */}
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            {/* 1. Customer Analytics (Large Red Card) */}
+                            <article className="relative flex flex-col justify-between overflow-hidden rounded-[32px] bg-primary p-8 text-white lg:row-span-2">
+                                <div>
+                                    <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20">
+                                        <BarChart3 className="h-6 w-6 text-white" />
+                                    </div>
+                                    <h3 className="mb-4 text-3xl leading-tight font-bold">
+                                        Customer Analytics
+                                    </h3>
+                                    <p className="text-lg opacity-90">
+                                        Track customer traffic by day, visit
+                                        frequency, and new customer counts to
+                                        make data-driven decisions and plan
+                                        better.
+                                    </p>
                                 </div>
-                                <h3
-                                    className="mb-3 text-xl font-bold lg:text-2xl"
-                                    style={{ color: '#333333' }}
-                                >
-                                    Customer Analytics
-                                </h3>
-                                <p className="text-sm text-gray-600 lg:text-base">
-                                    Track customer traffic by day, visit
-                                    frequency, and new customer counts to make
-                                    data-driven decisions and plan better.
-                                </p>
+                                <div className="mt-12 flex items-center gap-2 text-sm font-semibold">
+                                    <Check className="h-4 w-4" /> Real-time data
+                                    visualization
+                                </div>
                             </article>
 
-                            <article className="group rounded-3xl border-2 border-gray-100 bg-white p-6 transition-all duration-300 hover:border-primary hover:shadow-xl lg:p-8">
-                                <div
-                                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 lg:h-16 lg:w-16"
-                                    style={{ backgroundColor: '#F4B942' }}
-                                >
-                                    <Palette className="h-7 w-7 text-white lg:h-8 lg:w-8" />
+                            {/* 2. Customizable Cards */}
+                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-8 transition-all hover:shadow-xl">
+                                <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-[#F4B942]">
+                                    <Palette className="h-6 w-6" />
                                 </div>
-                                <h3
-                                    className="mb-3 text-xl font-bold lg:text-2xl"
-                                    style={{ color: '#333333' }}
-                                >
+                                <h3 className="mb-2 text-xl font-bold text-[#333333]">
                                     Customizable Cards
                                 </h3>
-                                <p className="text-sm text-gray-600 lg:text-base">
+                                <p className="text-sm text-gray-500">
                                     Design loyalty cards that match your brand
                                     with custom colors, logos, and reward
                                     structures.
                                 </p>
                             </article>
 
-                            <article className="group rounded-3xl border-2 border-gray-100 bg-white p-6 transition-all duration-300 hover:border-primary hover:shadow-xl lg:p-8">
-                                <div
-                                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 lg:h-16 lg:w-16"
-                                    style={{ backgroundColor: '#F4B942' }}
-                                >
-                                    <QrCode className="h-7 w-7 text-white lg:h-8 lg:w-8" />
+                            {/* 3. Scan to Stamp */}
+                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-8 transition-all hover:shadow-xl">
+                                <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-green-500">
+                                    <Wifi className="h-6 w-6" />
                                 </div>
-                                <h3
-                                    className="mb-3 text-xl font-bold lg:text-2xl"
-                                    style={{ color: '#333333' }}
-                                >
-                                    Custom QR Codes
-                                </h3>
-                                <p className="text-sm text-gray-600 lg:text-base">
-                                    Generate unique QR codes for your business
-                                    to display at your location for easy
-                                    customer scanning.
-                                </p>
-                            </article>
-
-                            <article className="group rounded-3xl border-2 border-gray-100 bg-white p-6 transition-all duration-300 hover:border-primary hover:shadow-xl lg:p-8">
-                                <div
-                                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 lg:h-16 lg:w-16"
-                                    style={{ backgroundColor: '#F4B942' }}
-                                >
-                                    <Wifi className="h-7 w-7 text-white lg:h-8 lg:w-8" />
-                                </div>
-                                <h3
-                                    className="mb-3 text-xl font-bold lg:text-2xl"
-                                    style={{ color: '#333333' }}
-                                >
+                                <h3 className="mb-2 text-xl font-bold text-[#333333]">
                                     Scan to Stamp
                                 </h3>
-                                <p className="text-sm text-gray-600 lg:text-base">
+                                <p className="text-sm text-gray-500">
                                     Customers can instantly earn stamps by
                                     scanning your QR code with their smartphone.
                                 </p>
                             </article>
 
-                            <article className="group rounded-3xl border-2 border-gray-100 bg-white p-6 transition-all duration-300 hover:border-primary hover:shadow-xl lg:p-8">
-                                <div
-                                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 lg:h-16 lg:w-16"
-                                    style={{ backgroundColor: '#F4B942' }}
-                                >
-                                    <WifiOff className="h-7 w-7 text-white lg:h-8 lg:w-8" />
+                            {/* 4. Custom QR Codes */}
+                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-8 transition-all hover:shadow-xl">
+                                <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-500">
+                                    <QrCode className="h-6 w-6" />
                                 </div>
-                                <h3
-                                    className="mb-3 text-xl font-bold lg:text-2xl"
-                                    style={{ color: '#333333' }}
-                                >
-                                    Offline Stamp Codes
+                                <h3 className="mb-2 text-xl font-bold text-[#333333]">
+                                    Custom QR Codes
                                 </h3>
-                                <p className="text-sm text-gray-600 lg:text-base">
-                                    Award stamps even without internet
-                                    connection using unique offline codes.
+                                <p className="text-sm text-gray-500">
+                                    Generate unique QR codes for your business
+                                    to display at your location for easy
+                                    scanning.
                                 </p>
                             </article>
 
-                            <article className="group rounded-3xl border-2 border-gray-100 bg-white p-6 transition-all duration-300 hover:border-primary hover:shadow-xl lg:p-8">
-                                <div
-                                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 lg:h-16 lg:w-16"
-                                    style={{ backgroundColor: '#F4B942' }}
-                                >
-                                    <Headphones className="h-7 w-7 text-white lg:h-8 lg:w-8" />
+                            {/* 5. 24/7 Customer Support */}
+                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-8 transition-all hover:shadow-xl">
+                                <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-pink-50 text-pink-500">
+                                    <Headphones className="h-6 w-6" />
                                 </div>
-                                <h3
-                                    className="mb-3 text-xl font-bold lg:text-2xl"
-                                    style={{ color: '#333333' }}
-                                >
-                                    24/7 Customer Support
+                                <h3 className="mb-2 text-xl font-bold text-[#333333]">
+                                    24/7 Support
                                 </h3>
-                                <p className="text-sm text-gray-600 lg:text-base">
+                                <p className="text-sm text-gray-500">
                                     Get help anytime with our ticket-based
-                                    support system. We're always here to assist
-                                    you.
+                                    support system. We're always here to assist.
                                 </p>
+                            </article>
+
+                            {/* 6. Offline Stamp Codes (Wide Dark Card) */}
+                            <article className="flex flex-col justify-between overflow-hidden rounded-[32px] bg-white p-8 text-white sm:col-span-2">
+                                <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
+                                    <div>
+                                        <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl text-red-500">
+                                            <WifiOff className="h-5 w-5" />
+                                        </div>
+                                        <h3 className="mb-2 text-2xl font-bold text-black">
+                                            Offline Stamp Codes
+                                        </h3>
+                                        <p className="max-w-md text-gray-400">
+                                            Award stamps even without internet
+                                            connection using unique offline
+                                            codes. Look more professional, no
+                                            extra cost.
+                                        </p>
+                                    </div>
+
+                                    {/* Action Buttons to match the "Print/SMS/Share" look */}
+                                    <div className="flex gap-2">
+                                        <button className="rounded-full bg-black/70 px-5 py-2 text-xs font-bold hover:bg-black/20">
+                                            Generate
+                                        </button>
+                                        <button className="rounded-full bg-black/70 px-5 py-2 text-xs font-bold hover:bg-black/20">
+                                            Print
+                                        </button>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-8 transition-all hover:shadow-xl">
+                                <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+                                    <Smartphone className="h-6 w-6" />
+                                </div>
+                                <h3 className="mb-2 text-xl font-bold text-[#333333]">
+                                    Downloadable App
+                                </h3>
+                                <p className="mb-4 text-sm text-gray-500">
+                                    A dedicated space for customers to track
+                                    rewards and discover new deals.
+                                </p>
+                                <ul className="space-y-2">
+                                    <li className="flex items-center gap-2 text-xs font-medium text-gray-600">
+                                        <Star className="h-3 w-3 fill-purple-600 text-purple-600" />{' '}
+                                        Real-time stamp tracking
+                                    </li>
+                                </ul>
                             </article>
                         </div>
                     </div>
@@ -795,10 +736,11 @@ export default function Welcome() {
                     className="relative z-10 bg-white px-4 py-16 sm:px-6 sm:py-20 lg:py-28"
                 >
                     <div className="mx-auto max-w-7xl">
+                        {/* Header */}
                         <div className="mb-12 text-center sm:mb-16 lg:mb-20">
                             <h2
                                 className="mb-4 text-3xl font-bold sm:mb-6 sm:text-4xl lg:text-5xl"
-                                style={{ color: '#333333' }}
+                                style={{ color: '#F4B942' }} // Purple from image
                             >
                                 How It Works
                             </h2>
@@ -808,124 +750,76 @@ export default function Welcome() {
                             </p>
                         </div>
 
-                        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
-                            {/* Left Side - Image */}
-                            <img
-                                src={APP}
-                                alt="application user interface"
-                                className="w-full rounded-2xl"
-                            />
-
-                            {/* Right Side - Steps */}
-                            <div className="order-1 space-y-1 lg:order-2 lg:space-y-3">
-                                {/* Step 1 */}
-                                <div className="group flex gap-4 sm:gap-3">
-                                    <div className="flex-shrink-0">
-                                        <div
-                                            className="flex h-12 w-12 items-center justify-center rounded-2xl text-xl font-bold transition-all duration-300 group-hover:scale-110 sm:h-16 sm:w-16 sm:text-2xl"
-                                            style={{
-                                                backgroundColor: '#F4B942',
-                                                color: '#ffffff',
-                                            }}
-                                        >
-                                            1
-                                        </div>
-                                    </div>
-                                    <div className="flex-1 pt-1">
-                                        <h3
-                                            className="mb-2 text-xl font-bold sm:mb-3 sm:text-2xl"
-                                            style={{ color: '#333333' }}
-                                        >
-                                            Create Business Account
-                                        </h3>
-                                        <p className="text-sm leading-relaxed text-gray-600 sm:text-base lg:text-lg">
-                                            Sign up in seconds and set up your
-                                            business profile. Customize your
-                                            loyalty program with your brand
-                                            colors and rewards.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Connector Line */}
-                                <div className="ml-6 h-8 w-0.5 bg-gradient-to-b from-gray-300 to-transparent sm:ml-8"></div>
-
-                                {/* Step 2 */}
-                                <div className="group flex gap-4 sm:gap-6">
-                                    <div className="flex-shrink-0">
-                                        <div
-                                            className="flex h-12 w-12 items-center justify-center rounded-2xl text-xl font-bold transition-all duration-300 group-hover:scale-110 sm:h-16 sm:w-16 sm:text-2xl"
-                                            style={{
-                                                backgroundColor: '#F4B942',
-                                                color: '#ffffff',
-                                            }}
-                                        >
-                                            2
-                                        </div>
-                                    </div>
-                                    <div className="flex-1 pt-1">
-                                        <h3
-                                            className="mb-2 text-xl font-bold sm:mb-3 sm:text-2xl"
-                                            style={{ color: '#333333' }}
-                                        >
-                                            Print Your QR Code
-                                        </h3>
-                                        <p className="text-sm leading-relaxed text-gray-600 sm:text-base lg:text-lg">
-                                            Generate and print your unique QR
-                                            code. Display it at your counter,
-                                            entrance, or anywhere customers can
-                                            easily scan it.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Connector Line */}
-                                <div className="ml-6 h-8 w-0.5 bg-gradient-to-b from-gray-300 to-transparent sm:ml-8"></div>
-
-                                {/* Step 3 */}
-                                <div className="group flex gap-4 sm:gap-6">
-                                    <div className="flex-shrink-0">
-                                        <div
-                                            className="flex h-12 w-12 items-center justify-center rounded-2xl text-xl font-bold transition-all duration-300 group-hover:scale-110 sm:h-16 sm:w-16 sm:text-2xl"
-                                            style={{
-                                                backgroundColor: '#F4B942',
-                                                color: '#ffffff',
-                                            }}
-                                        >
-                                            3
-                                        </div>
-                                    </div>
-                                    <div className="flex-1 pt-1">
-                                        <h3
-                                            className="mb-2 text-xl font-bold sm:mb-3 sm:text-2xl"
-                                            style={{ color: '#333333' }}
-                                        >
-                                            Customers Scan & Join
-                                        </h3>
-                                        <p className="text-sm leading-relaxed text-gray-600 sm:text-base lg:text-lg">
-                                            Customers scan the QR code,
-                                            register, and instantly join your
-                                            loyalty program. No paper cards, no
-                                            hassle!
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* CTA Button */}
-
-                                <div className="mt-6 flex w-full cursor-pointer items-center justify-center rounded-full bg-primary py-3 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl sm:w-auto sm:py-4 sm:text-lg">
-                                    <a
-                                        href="/documentation"
-                                        target="_blank"
-                                        className=""
+                        {/* Steps Horizontal Grid */}
+                        <div className="relative grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
+                            {steps.map((step, index) => (
+                                <div
+                                    key={index}
+                                    className="relative flex flex-col items-center text-center"
+                                >
+                                    {/* Icon Box - Using the organic shape from the screenshot */}
+                                    <div
+                                        className="relative mb-8 flex h-20 w-20 items-center justify-center shadow-lg transition-transform duration-300 hover:scale-110 sm:h-24 sm:w-24"
                                         style={{
                                             backgroundColor: '#F4B942',
-                                            color: '#ffffff',
+                                            borderRadius:
+                                                '30% 70% 70% 30% / 30% 30% 70% 70%',
                                         }}
                                     >
-                                        Full guide
-                                    </a>
+                                        {step.icon}
+                                    </div>
+
+                                    {/* Text Content */}
+                                    <h3
+                                        className="mb-3 text-xl font-bold sm:text-2xl"
+                                        style={{ color: '#F4B942' }}
+                                    >
+                                        {step.title}
+                                    </h3>
+                                    <p className="text-sm leading-relaxed text-gray-600 sm:text-base">
+                                        {step.desc}
+                                    </p>
+
+                                    {/* Curved Connector Arrows (Hidden on mobile) */}
+                                    {index < 2 && (
+                                        <div className="absolute top-0 left-[65%] hidden w-full md:block">
+                                            <svg
+                                                width="100%"
+                                                height="50"
+                                                viewBox="0 0 100 40"
+                                                fill="none"
+                                                className="opacity-40"
+                                            >
+                                                <path
+                                                    d="M0 20C25 5 75 5 100 20"
+                                                    stroke="#94a3b8"
+                                                    strokeWidth="2"
+                                                    strokeDasharray="6 6"
+                                                />
+                                                <polygon
+                                                    points="98,20 90,15 91,20 90,25"
+                                                    fill="#94a3b8"
+                                                />
+                                            </svg>
+                                        </div>
+                                    )}
                                 </div>
+                            ))}
+                        </div>
+
+                        {/* Updated CTA Button */}
+                        <div className="mt-16 flex justify-center">
+                            <div
+                                className="group flex w-full cursor-pointer items-center justify-center rounded-full py-3 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl sm:w-auto sm:px-10 sm:py-4 sm:text-lg"
+                                style={{ backgroundColor: '#F4B942' }}
+                            >
+                                <a
+                                    href="/documentation"
+                                    target="_blank"
+                                    className="text-white"
+                                >
+                                    Full guide
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -934,7 +828,7 @@ export default function Welcome() {
                 {/* PRICING SECTION */}
                 <section
                     id="pricing"
-                    className="relative z-10 bg-white px-4 py-16 sm:px-6 sm:py-20 lg:py-28"
+                    className="relative z-10 bg-primary/10 px-4 py-16 sm:px-6 sm:py-20 lg:py-28"
                 >
                     <div className="mx-auto max-w-7xl">
                         <div className="mb-12 text-center sm:mb-16">
@@ -1053,18 +947,19 @@ export default function Welcome() {
                 {/* FAQ Section */}
                 <section
                     id="faq"
-                    className="relative z-10 bg-white px-4 py-4 sm:px-6 sm:py-12 lg:py-16"
+                    className="relative overflow-hidden bg-slate-50 py-16 sm:py-24"
                 >
-                    <div className="mx-auto max-w-4xl">
-                        <div className="mb-12 text-center sm:mb-16 lg:mb-20">
-                            <h2
-                                className="mb-4 text-3xl font-bold sm:mb-6 sm:text-4xl lg:text-5xl"
-                                style={{ color: '#333333' }}
-                            >
-                                Frequently Asked Questions
+                    {/* Subtle Background Glow for Modern Aesthetic */}
+                    <div className="absolute top-0 left-1/2 -z-10 h-[400px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[120px]" />
+
+                    <div className="mx-auto max-w-3xl px-6">
+                        <div className="mb-16 text-center">
+                            <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+                                Questions? We have answers.
                             </h2>
-                            <p className="px-4 text-base text-gray-600 sm:text-lg lg:text-xl">
-                                Everything you need to know about StampBayan
+                            <p className="mx-auto max-w-lg text-lg text-slate-600">
+                                Everything you need to know about StampBayan and
+                                how digital loyalty works.
                             </p>
                         </div>
 
@@ -1073,136 +968,70 @@ export default function Welcome() {
                             collapsible
                             className="space-y-4"
                         >
-                            <AccordionItem
-                                value="item-1"
-                                className="rounded-2xl border-2 border-gray-100 px-6 transition-colors hover:border-primary"
-                            >
-                                <AccordionTrigger
-                                    className="py-6 text-left text-lg font-bold hover:no-underline sm:text-xl"
-                                    style={{ color: '#333333' }}
+                            {[
+                                {
+                                    id: 'item-1',
+                                    q: 'What is StampBayan?',
+                                    a: "StampBayan is a modern Customer Loyalty Card system where businesses can reward their customers for coming back. Say goodbye to paper punch cards and hello to a digital solution that's easy for both you and your customers.",
+                                },
+                                {
+                                    id: 'item-2',
+                                    q: 'What is your goal?',
+                                    a: "Our goal is to bridge the digital gap for local businesses. We want to show that having a professional loyalty system doesn't have to be expensive—it's actually a powerful tool to help you grow and thrive.",
+                                },
+                                {
+                                    id: 'item-3',
+                                    q: 'How will this help my business?',
+                                    a: 'Increasing customer retention by just 5% can boost profits by up to 95%. Loyal customers spend 67% more than new ones. With StampBayan, you turn one-time visitors into lifelong patrons.',
+                                },
+                                {
+                                    id: 'item-4',
+                                    q: 'What is Customer Analytics?',
+                                    a: (
+                                        <div className="space-y-3">
+                                            <p>
+                                                Our analytics give you a
+                                                bird's-eye view of your business
+                                                performance:
+                                            </p>
+                                            <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                                {[
+                                                    'Customer traffic by day',
+                                                    'Visit frequency',
+                                                    'New customer count',
+                                                    'Peak hours and trends',
+                                                ].map((item) => (
+                                                    <li
+                                                        key={item}
+                                                        className="flex items-center text-sm text-slate-600"
+                                                    >
+                                                        <span className="mr-2 h-1.5 w-1.5 rounded-full bg-primary" />
+                                                        {item}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    ),
+                                },
+                                {
+                                    id: 'item-5',
+                                    q: 'What makes StampBayan different?',
+                                    a: "We believe small businesses deserve enterprise-grade tools. We've stripped away the complexity and high costs of traditional systems, delivering a straightforward solution focused on real growth.",
+                                },
+                            ].map((item) => (
+                                <AccordionItem
+                                    key={item.id}
+                                    value={item.id}
+                                    className="group rounded-2xl border border-slate-200 bg-white px-6 shadow-sm transition-all duration-300 data-[state=open]:border-primary/50 data-[state=open]:shadow-md data-[state=open]:shadow-primary/5"
                                 >
-                                    What is StampBayan?
-                                </AccordionTrigger>
-                                <AccordionContent className="pb-6 text-base leading-relaxed text-gray-600 sm:text-lg">
-                                    StampBayan is a modern Customer Loyalty Card
-                                    system where businesses can reward their
-                                    customers for coming back and build
-                                    relationships with them to strengthen
-                                    customer loyalty. Say goodbye to paper punch
-                                    cards and hello to a digital solution that's
-                                    easy for both you and your customers.
-                                </AccordionContent>
-                            </AccordionItem>
-
-                            <AccordionItem
-                                value="item-2"
-                                className="rounded-2xl border-2 border-gray-100 px-6 transition-colors hover:border-primary"
-                            >
-                                <AccordionTrigger
-                                    className="py-6 text-left text-lg font-bold hover:no-underline sm:text-xl"
-                                    style={{ color: '#333333' }}
-                                >
-                                    What is your goal?
-                                </AccordionTrigger>
-                                <AccordionContent className="pb-6 text-base leading-relaxed text-gray-600 sm:text-lg">
-                                    Our goal is to introduce businesses to
-                                    modern systems so they can see the benefits
-                                    and advantages of using digital loyalty
-                                    programs. We want to show businesses that
-                                    having a system doesn't have to be expensive
-                                    to maintain—it's actually a powerful tool to
-                                    help you grow and thrive.
-                                </AccordionContent>
-                            </AccordionItem>
-
-                            <AccordionItem
-                                value="item-3"
-                                className="rounded-2xl border-2 border-gray-100 px-6 transition-colors hover:border-primary"
-                            >
-                                <AccordionTrigger
-                                    className="py-6 text-left text-lg font-bold hover:no-underline sm:text-xl"
-                                    style={{ color: '#333333' }}
-                                >
-                                    How will this help my business?
-                                </AccordionTrigger>
-                                <AccordionContent className="pb-6 text-base leading-relaxed text-gray-600 sm:text-lg">
-                                    Building strong connections with your
-                                    customers keeps them coming back. Research
-                                    shows that increasing customer retention by
-                                    just 5% can boost profits by 25-95%. Loyal
-                                    customers spend 67% more than new customers
-                                    and are five times more likely to make
-                                    repeat purchases. With StampBayan, you
-                                    create meaningful relationships that turn
-                                    one-time visitors into lifelong patrons.
-                                </AccordionContent>
-                            </AccordionItem>
-
-                            <AccordionItem
-                                value="item-4"
-                                className="rounded-2xl border-2 border-gray-100 px-6 transition-colors hover:border-primary"
-                            >
-                                <AccordionTrigger
-                                    className="py-6 text-left text-lg font-bold hover:no-underline sm:text-xl"
-                                    style={{ color: '#333333' }}
-                                >
-                                    What is Customer Analytics?
-                                </AccordionTrigger>
-                                <AccordionContent className="pb-6 text-base leading-relaxed text-gray-600 sm:text-lg">
-                                    Our Customer Analytics feature gives you
-                                    valuable insights into your business
-                                    performance. You'll see:
-                                    <ul className="mt-3 ml-2 list-inside list-disc space-y-2">
-                                        <li>
-                                            Customer traffic by day - Know when
-                                            your store is busiest
-                                        </li>
-                                        <li>
-                                            Customer visit frequency -
-                                            Understand how often customers
-                                            return
-                                        </li>
-                                        <li>
-                                            New customer count - Track your
-                                            business growth
-                                        </li>
-                                        <li>
-                                            Peak hours and trends - Plan
-                                            staffing and inventory better
-                                        </li>
-                                    </ul>
-                                    <span className="mt-3 block">
-                                        All this data helps you make smarter
-                                        business decisions and serve your
-                                        customers better.
-                                    </span>
-                                </AccordionContent>
-                            </AccordionItem>
-
-                            <AccordionItem
-                                value="item-6"
-                                className="rounded-2xl border-2 border-gray-100 px-6 transition-colors hover:border-primary"
-                            >
-                                <AccordionTrigger
-                                    className="py-6 text-left text-lg font-bold hover:no-underline sm:text-xl"
-                                    style={{ color: '#333333' }}
-                                >
-                                    What makes StampBayan different from other
-                                    loyalty systems?
-                                </AccordionTrigger>
-                                <AccordionContent className="pb-6 text-base leading-relaxed text-gray-600 sm:text-lg">
-                                    At StampBayan, we believe that even small
-                                    businesses deserve access to powerful
-                                    systems. We've designed our platform to be
-                                    affordable because we know that useful tools
-                                    don't have to be expensive. Our system
-                                    focuses on delivering real benefits to your
-                                    business while being incredibly easy to use.
-                                    No complicated setup, no hidden costs—just a
-                                    straightforward solution that helps you
-                                    grow.
-                                </AccordionContent>
-                            </AccordionItem>
+                                    <AccordionTrigger className="py-6 text-left text-lg font-semibold text-slate-900 hover:text-primary hover:no-underline sm:text-xl">
+                                        {item.q}
+                                    </AccordionTrigger>
+                                    <AccordionContent className="pb-6 text-base leading-relaxed text-slate-600 sm:text-lg">
+                                        {item.a}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            ))}
                         </Accordion>
                     </div>
                 </section>
