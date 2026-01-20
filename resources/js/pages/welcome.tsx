@@ -33,11 +33,71 @@ import { MessageSquare, X, Send } from 'lucide-react';
 import { toast } from 'sonner';
 
 
+
 export default function Welcome() {
+    const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
+    const [deferredPrompt, setDeferredPrompt] = useState(null);
+    const [isIOS, setIsIOS] = useState(false);
+    const [isAndroid, setIsAndroid] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState('');
     const [loginDialogOpen, setLoginDialogOpen] = useState(false);
     const [isDemo, setIsDemo] = useState(false);
+
+    useEffect(() => {
+        // Detect iOS
+        const iOS =
+            /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        setIsIOS(iOS);
+
+        // Detect Android
+        const android = /Android/.test(navigator.userAgent);
+        setIsAndroid(android);
+
+        // Listen for beforeinstallprompt (Android Chrome)
+        const handler = (e) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+        };
+
+        window.addEventListener('beforeinstallprompt', handler);
+
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handler);
+        };
+    }, []);
+
+    useEffect(() => {
+        // Check if user just installed and redirect accordingly
+        const userType = localStorage.getItem('stampbayan_user_type');
+        if (
+            userType &&
+            window.matchMedia('(display-mode: standalone)').matches
+        ) {
+            const route =
+                userType === 'customer' ? '/customer/login' : '/login';
+            router.get(route);
+            localStorage.removeItem('stampbayan_user_type'); // Clear after redirect
+        }
+    }, []);
+
+    const handleDownloadApp = (type) => {
+        // Save user type to redirect after install
+        localStorage.setItem('stampbayan_user_type', type);
+
+        if (isAndroid && deferredPrompt) {
+            // Android - trigger native install
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('App installed');
+                }
+                setDeferredPrompt(null);
+                setDownloadDialogOpen(false);
+            });
+        }
+        // For iOS, keep dialog open to show instructions
+    };
 
     const steps = [
         {
@@ -1126,6 +1186,17 @@ export default function Welcome() {
                         reserved.
                     </div>
                 </footer>
+
+                {/* Floating Download Button */}
+                <button
+                    onClick={() => setDownloadDialogOpen(true)}
+                    className="fixed lg:hidden right-6 bottom-6 z-50 flex items-center gap-2 rounded-full bg-gradient-to-r from-primary/80 to-primary/90 px-6 py-3 text-white shadow-2xl transition-all hover:scale-110"
+                >
+                    <Download className="h-5 w-5" />
+                    <span className="hidden font-semibold sm:inline">
+                        Download App
+                    </span>
+                </button>
             </div>
 
             {/* <button
@@ -1139,6 +1210,115 @@ export default function Welcome() {
         <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
         <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
       </button> */}
+
+            {/* Download App Dialog */}
+            <Dialog
+                open={downloadDialogOpen}
+                onOpenChange={setDownloadDialogOpen}
+            >
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle className="text-center text-2xl font-bold">
+                            Download StampBayan
+                        </DialogTitle>
+                        <DialogDescription className="text-center">
+                            Choose your account type to download
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="space-y-4 py-4">
+                        {/* Customer App */}
+                        <button
+                            onClick={() => handleDownloadApp('customer')}
+                            className="group w-full rounded-xl border-2 border-gray-200 p-4 transition-all hover:border-green-500 hover:bg-green-50"
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 group-hover:bg-green-500">
+                                    <svg
+                                        className="h-6 w-6 text-green-600 group-hover:text-white"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                        />
+                                    </svg>
+                                </div>
+                                <div className="flex-1 text-left">
+                                    <h3 className="font-bold">Customer App</h3>
+                                    <p className="text-sm text-gray-600">
+                                        Track rewards
+                                    </p>
+                                </div>
+                                <Download className="h-5 w-5" />
+                            </div>
+                        </button>
+
+                        {/* Business App */}
+                        <button
+                            onClick={() => handleDownloadApp('business')}
+                            className="group w-full rounded-xl border-2 border-gray-200 p-4 transition-all hover:border-blue-500 hover:bg-blue-50"
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 group-hover:bg-blue-500">
+                                    <svg
+                                        className="h-6 w-6 text-blue-600 group-hover:text-white"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                        />
+                                    </svg>
+                                </div>
+                                <div className="flex-1 text-left">
+                                    <h3 className="font-bold">Business App</h3>
+                                    <p className="text-sm text-gray-600">
+                                        Manage program
+                                    </p>
+                                </div>
+                                <Download className="h-5 w-5" />
+                            </div>
+                        </button>
+
+                        {/* iOS Instructions */}
+                        {isIOS && (
+                            <div className="rounded-xl bg-blue-50 p-4">
+                                <div className="mb-2 font-semibold text-blue-900">
+                                    📱 iOS Installation:
+                                </div>
+                                <ol className="space-y-1 text-sm text-blue-800">
+                                    <li>1. Tap Share button in Safari</li>
+                                    <li>2. Tap "Add to Home Screen"</li>
+                                    <li>3. Name it "StampBayan" and tap Add</li>
+                                </ol>
+                            </div>
+                        )}
+
+                        {/* Android Instructions */}
+                        {isAndroid && !deferredPrompt && (
+                            <div className="rounded-xl bg-green-50 p-4">
+                                <div className="mb-2 font-semibold text-green-900">
+                                    📱 Chrome Installation:
+                                </div>
+                                <ol className="space-y-1 text-sm text-green-800">
+                                    <li>1. Tap menu (⋮) in Chrome</li>
+                                    <li>2. Tap "Add to Home screen"</li>
+                                    <li>3. Name it "StampBayan"</li>
+                                </ol>
+                            </div>
+                        )}
+                    </div>
+                </DialogContent>
+            </Dialog>
 
             {/* Suggestion Form Dialog */}
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
