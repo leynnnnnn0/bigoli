@@ -82,21 +82,28 @@ export default function Welcome() {
     }, []);
 
     const handleDownloadApp = (type) => {
-        // Save user type to redirect after install
         localStorage.setItem('stampbayan_user_type', type);
 
-        if (isAndroid && deferredPrompt) {
-            // Android - trigger native install
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('App installed');
-                }
-                setDeferredPrompt(null);
-                setDownloadDialogOpen(false);
-            });
+        if (isAndroid) {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        toast.success('Installing StampBayan...');
+                    }
+                    setDeferredPrompt(null);
+                    setDownloadDialogOpen(false);
+                });
+            } else {
+                // Android but prompt not ready
+                toast.info(
+                    "To install: Click the 3 dots (⋮) in Chrome and select 'Install app'",
+                );
+            }
+        } else if (isIOS) {
+            toast.info('Please follow the steps below to install on iOS.');
+
         }
-        // For iOS, keep dialog open to show instructions
     };
 
     const steps = [
@@ -267,6 +274,8 @@ export default function Welcome() {
                 <meta property="og:site_name" content="StampBayan" />
                 <meta property="og:locale" content="en_PH" />
                 <meta name="robots" content="index, follow" />
+                <meta name="apple-mobile-web-app-title" content="StampBayan" />
+                <meta name="application-name" content="StampBayan" />
 
                 <script type="application/ld+json">
                     {JSON.stringify({
@@ -636,7 +645,7 @@ export default function Welcome() {
                 {/* Features Section */}
                 <section
                     id="features"
-                    className="relative z-10 bg-primary/10 px-4 py-16 sm:px-6 sm:py-20 lg:py-28" // Matching the cream background from image
+                    className="relative z-10 bg-primary/10 px-4 py-12 sm:px-6 sm:py-20 lg:py-28"
                 >
                     <div className="mx-auto max-w-7xl">
                         {/* Header Section */}
@@ -645,43 +654,45 @@ export default function Welcome() {
                                 <span className="text-sm font-bold tracking-wider text-primary uppercase">
                                     Why Choose Us?
                                 </span>
-                                <h2 className="mt-2 text-4xl font-bold text-[#333333] sm:text-5xl">
+                                <h2 className="mt-2 text-3xl font-bold text-[#333333] sm:text-5xl">
                                     Powerful Features for Your{' '}
-                                    <span>Business</span>
+                                    <span className="text-primary">
+                                        Business
+                                    </span>
                                 </h2>
                             </div>
-                            <p className="max-w-xs text-base text-gray-500">
+                            <p className="max-w-md text-base text-gray-500 md:text-right">
                                 Everything you need to run a successful loyalty
                                 program without the bloat.
                             </p>
                         </div>
 
                         {/* Bento Grid */}
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {/* 1. Customer Analytics (Large Red Card) */}
-                            <article className="relative flex flex-col justify-between overflow-hidden rounded-[32px] bg-primary p-8 text-white lg:row-span-2">
+                            <article className="relative flex flex-col justify-between overflow-hidden rounded-[32px] bg-primary p-6 text-white sm:p-8 md:col-span-2 lg:col-span-1 lg:row-span-2">
                                 <div>
                                     <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20">
                                         <BarChart3 className="h-6 w-6 text-white" />
                                     </div>
-                                    <h3 className="mb-4 text-3xl leading-tight font-bold">
+                                    <h3 className="mb-4 text-2xl leading-tight font-bold sm:text-3xl">
                                         Customer Analytics
                                     </h3>
-                                    <p className="text-lg opacity-90">
+                                    <p className="text-base opacity-90 sm:text-lg">
                                         Track customer traffic by day, visit
                                         frequency, and new customer counts to
                                         make data-driven decisions and plan
                                         better.
                                     </p>
                                 </div>
-                                <div className="mt-12 flex items-center gap-2 text-sm font-semibold">
+                                <div className="mt-8 flex items-center gap-2 text-sm font-semibold sm:mt-12">
                                     <Check className="h-4 w-4" /> Real-time data
                                     visualization
                                 </div>
                             </article>
 
                             {/* 2. Customizable Cards */}
-                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-8 transition-all hover:shadow-xl">
+                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-6 transition-all hover:shadow-xl sm:p-8">
                                 <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-[#F4B942]">
                                     <Palette className="h-6 w-6" />
                                 </div>
@@ -696,7 +707,7 @@ export default function Welcome() {
                             </article>
 
                             {/* 3. Scan to Stamp */}
-                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-8 transition-all hover:shadow-xl">
+                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-6 transition-all hover:shadow-xl sm:p-8">
                                 <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-green-500">
                                     <Wifi className="h-6 w-6" />
                                 </div>
@@ -710,7 +721,7 @@ export default function Welcome() {
                             </article>
 
                             {/* 4. Custom QR Codes */}
-                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-8 transition-all hover:shadow-xl">
+                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-6 transition-all hover:shadow-xl sm:p-8">
                                 <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-500">
                                     <QrCode className="h-6 w-6" />
                                 </div>
@@ -725,7 +736,7 @@ export default function Welcome() {
                             </article>
 
                             {/* 5. 24/7 Customer Support */}
-                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-8 transition-all hover:shadow-xl">
+                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-6 transition-all hover:shadow-xl sm:p-8">
                                 <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-pink-50 text-pink-500">
                                     <Headphones className="h-6 w-6" />
                                 </div>
@@ -738,17 +749,17 @@ export default function Welcome() {
                                 </p>
                             </article>
 
-                            {/* 6. Offline Stamp Codes (Wide Dark Card) */}
-                            <article className="flex flex-col justify-between overflow-hidden rounded-[32px] bg-white p-8 text-white sm:col-span-2">
-                                <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
+                            {/* 6. Offline Stamp Codes (Wide Card) */}
+                            <article className="flex flex-col justify-between overflow-hidden rounded-[32px] border-2 border-gray-100 bg-white p-6 sm:p-8 md:col-span-2">
+                                <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
                                     <div>
-                                        <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl text-red-500">
+                                        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 text-red-500">
                                             <WifiOff className="h-5 w-5" />
                                         </div>
                                         <h3 className="mb-2 text-2xl font-bold text-black">
                                             Offline Stamp Codes
                                         </h3>
-                                        <p className="max-w-md text-gray-400">
+                                        <p className="max-w-md text-sm text-gray-500">
                                             Award stamps even without internet
                                             connection using unique offline
                                             codes. Look more professional, no
@@ -756,19 +767,19 @@ export default function Welcome() {
                                         </p>
                                     </div>
 
-                                    {/* Action Buttons to match the "Print/SMS/Share" look */}
                                     <div className="flex gap-2">
-                                        <button className="rounded-full bg-black/70 px-5 py-2 text-xs font-bold hover:bg-black/20">
+                                        <button className="flex-1 rounded-full bg-black px-6 py-2.5 text-xs font-bold text-white hover:bg-gray-800 sm:flex-none">
                                             Generate
                                         </button>
-                                        <button className="rounded-full bg-black/70 px-5 py-2 text-xs font-bold hover:bg-black/20">
+                                        <button className="flex-1 rounded-full border border-gray-200 bg-white px-6 py-2.5 text-xs font-bold text-black hover:bg-gray-50 sm:flex-none">
                                             Print
                                         </button>
                                     </div>
                                 </div>
                             </article>
 
-                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-8 transition-all hover:shadow-xl">
+                            {/* 7. Downloadable App */}
+                            <article className="rounded-[32px] border-2 border-gray-100 bg-white p-6 transition-all hover:shadow-xl sm:p-8 md:col-span-2 lg:col-span-1">
                                 <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
                                     <Smartphone className="h-6 w-6" />
                                 </div>
@@ -1190,7 +1201,7 @@ export default function Welcome() {
                 {/* Floating Download Button */}
                 <button
                     onClick={() => setDownloadDialogOpen(true)}
-                    className="fixed lg:hidden right-6 bottom-6 z-50 flex items-center gap-2 rounded-full bg-gradient-to-r from-primary/80 to-primary/90 px-6 py-3 text-white shadow-2xl transition-all hover:scale-110"
+                    className="fixed right-6 bottom-6 z-50 flex items-center gap-2 rounded-full bg-gradient-to-r from-primary/80 to-primary/90 px-6 py-3 text-white shadow-2xl transition-all hover:scale-110 lg:hidden"
                 >
                     <Download className="h-5 w-5" />
                     <span className="hidden font-semibold sm:inline">
