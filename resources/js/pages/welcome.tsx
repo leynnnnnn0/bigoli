@@ -1,38 +1,48 @@
-import { useState, useEffect } from 'react';
-import { Head } from '@inertiajs/react';
-import {useForm} from '@inertiajs/react';
-import { Phone, Mail, Menu, Award, Gift, Tag, ChevronDown, QrCode, BarChart3, Palette, Wifi, WifiOff, Headphones, LogIn, Play, CheckCircle2, TrendingUp, Users, Sparkles, Globe, ShieldCheck, Star, Smartphone, Percent, QrCodeIcon, User2, Camera } from 'lucide-react';
 import {
-    Check,
-    Download,
-} from 'lucide-react';
-import { Facebook, Instagram } from "lucide-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
 } from '@/components/ui/accordion';
-import homeBackground from '../../images/homeBackground.png';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from '@/components/ui/dialog';
-import APP from '../../images/app.png';
-import LOGO from '../../images/mainLogo.png';
-import { router } from '@inertiajs/react';
-import BUSINESSPOV from "../../videos/business pov.mov";
-import CUSTOMERPOV from "../../videos/customer pov.mov"; 
-import CUSTOMERTHUMBNAIL from "../../images/customer thumbnail.png";
-import BUSINESSTHUMBANAIL from "../../images/business thumbnail.png";
-import { MessageSquare, X, Send } from 'lucide-react';
+import { Head, router, useForm } from '@inertiajs/react';
+import {
+    BarChart3,
+    Camera,
+    Check,
+    CheckCircle2,
+    ChevronDown,
+    Download,
+    Facebook,
+    Globe,
+    Headphones,
+    Instagram,
+    Mail,
+    Palette,
+    Phone,
+    QrCode,
+    QrCodeIcon,
+    Send,
+    Smartphone,
+    Sparkles,
+    Star,
+    TrendingUp,
+    User2,
+    Users,
+    Wifi,
+    WifiOff,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-
-
+import homeBackground from '../../images/homeBackground.png';
+import LOGO from '../../images/mainLogo.png';
 
 export default function Welcome() {
     const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
@@ -102,7 +112,6 @@ export default function Welcome() {
             }
         } else if (isIOS) {
             toast.info('Please follow the steps below to install on iOS.');
-
         }
     };
 
@@ -128,11 +137,18 @@ export default function Welcome() {
         const handleScroll = () => {
             const heroSection = document.querySelector('main');
             if (heroSection) {
-                const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+                const heroBottom =
+                    heroSection.offsetTop + heroSection.offsetHeight;
                 setIsScrolled(window.scrollY > heroBottom - 100);
             }
 
-            const sections = ['benefits', 'features', 'how-it-works', 'pricing', 'faq'];
+            const sections = [
+                'benefits',
+                'features',
+                'how-it-works',
+                'pricing',
+                'faq',
+            ];
             const scrollPosition = window.scrollY + 150;
 
             for (const sectionId of sections) {
@@ -140,8 +156,11 @@ export default function Welcome() {
                 if (section) {
                     const sectionTop = section.offsetTop;
                     const sectionBottom = sectionTop + section.offsetHeight;
-                    
-                    if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+
+                    if (
+                        scrollPosition >= sectionTop &&
+                        scrollPosition < sectionBottom
+                    ) {
                         setActiveSection(sectionId);
                         break;
                     }
@@ -159,72 +178,73 @@ export default function Welcome() {
         if (element) {
             const offset = 100;
             const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - offset;
+            const offsetPosition =
+                elementPosition + window.pageYOffset - offset;
 
             window.scrollTo({
                 top: offsetPosition,
-                behavior: 'smooth'
+                behavior: 'smooth',
             });
         }
     };
 
-    const handleLoginChoice = (type : string) => {
-        let route = "/login";
+    const handleLoginChoice = (type: string) => {
+        let route = '/login';
         setLoginDialogOpen(false);
-        if(type == "customer") {
+        if (type == 'customer') {
             route = '/customer/login';
         }
-        if(isDemo){
+        if (isDemo) {
             router.get(route, {
-            data: {
-                is_demo: true
-            }
-        });
-        }else{
+                data: {
+                    is_demo: true,
+                },
+            });
+        } else {
             router.get(route);
         }
     };
 
     useEffect(() => {
-        if(!loginDialogOpen){
+        if (!loginDialogOpen) {
             setIsDemo(false);
         }
-    },[loginDialogOpen])
+    }, [loginDialogOpen]);
 
     const handleDemoClick = () => {
         setIsDemo(true);
         setLoginDialogOpen(true);
-    }
+    };
 
     const [isOpen, setIsOpen] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const { data, setData, post, processing, reset, errors } = useForm({
-    email: '',
-    suggestion: ''
-  });
-
-  const handleSubmit = () => {
-    if (!data.suggestion.trim()) return;
-    
-    post('/suggestions', {
-      onSuccess: () => {
-        setSubmitSuccess(true);
-
-        toast.success("Thank you for your feedback!");
-        
-        // Reset form and close modal after 2 seconds
-        setTimeout(() => {
-          reset();
-          setSubmitSuccess(false);
-          setIsOpen(false);
-        }, 3000);
-      },
-      onError: (errors) => {
-        console.error('Submission error:', errors);
-      }
+    const { data, setData, post, processing, reset, errors } = useForm({
+        email: '',
+        suggestion: '',
     });
-  };
+
+    const handleSubmit = () => {
+        if (!data.suggestion.trim()) return;
+
+        post('/suggestions', {
+            onSuccess: () => {
+                setSubmitSuccess(true);
+
+                toast.success('Thank you for your feedback!');
+
+                // Reset form and close modal after 2 seconds
+                setTimeout(() => {
+                    reset();
+                    setSubmitSuccess(false);
+                    setIsOpen(false);
+                }, 3000);
+            },
+            onError: (errors) => {
+                console.error('Submission error:', errors);
+            },
+        });
+    };
 
     return (
         <>
@@ -911,7 +931,7 @@ export default function Welcome() {
                             </p>
                         </div>
 
-                        <div className="grid gap-8 md:grid-cols-1 lg:mx-auto lg:max-w-5xl">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:mx-auto lg:max-w-5xl">
                             {/* Free Plan (Starter) */}
                             <div className="flex flex-col rounded-3xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:shadow-md">
                                 <div className="mb-8">
@@ -961,7 +981,7 @@ export default function Welcome() {
                             </div>
 
                             {/* Pro Plan only */}
-                            {/* <div className="relative flex flex-col rounded-3xl border-2 border-primary bg-white p-8 shadow-xl transition-all hover:scale-[1.02]">
+                            <div className="relative flex flex-col rounded-3xl border-2 border-primary bg-white p-8 shadow-xl transition-all hover:scale-[1.02]">
                                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-bold text-white">
                                     FOR GROWING BRANDS
                                 </div>
@@ -971,7 +991,7 @@ export default function Welcome() {
                                     </h3>
                                     <div className="mt-4 flex items-baseline">
                                         <span className="text-4xl font-extrabold tracking-tight text-gray-900">
-                                            ₱199
+                                            ₱99
                                         </span>
                                         <span className="ml-1 text-xl font-semibold text-gray-500">
                                             /month
@@ -1003,14 +1023,21 @@ export default function Welcome() {
                                         <CheckCircle2 className="h-4 w-4 text-gray-400" />
                                         Includes all Free features
                                     </li>
+                                    <li className="flex cursor-pointer items-center gap-3 text-sm text-blue-500 italic underline">
+                                        <CheckCircle2 className="h-4 w-4 text-blue-400" />
+                                        <a href="https://tinybubbles2dartcafe.stampbayan.com/">
+                                            Sample Website
+                                        </a>
+                                    </li>
                                 </ul>
-                                <button
-                                    onClick={() => setLoginDialogOpen(true)}
-                                    className="w-full rounded-xl bg-primary py-3 text-sm font-bold text-white transition-opacity hover:opacity-90"
+                                <a
+                                    href="https://www.facebook.com/profile.php?id=61584319949414"
+                                    target="_blank"
+                                    className="w-full rounded-xl bg-primary py-3 text-center text-sm font-bold text-white transition-opacity hover:opacity-90"
                                 >
-                                    Learn more
-                                </button>
-                            </div> */}
+                                    Inquire Now
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -1445,4 +1472,3 @@ export default function Welcome() {
         </>
     );
 }
-
