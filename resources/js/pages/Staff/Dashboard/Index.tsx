@@ -730,7 +730,7 @@ export default function Index({
                                             </div>
                                         )}
 
-                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                        {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                             <Button
                                                 onClick={generateNewCode}
                                                 disabled={!selectedCardId}
@@ -751,7 +751,7 @@ export default function Index({
                                                 <Ticket className="mr-2 h-5 w-5" />
                                                 Download Tickets
                                             </Button>
-                                        </div>
+                                        </div> */}
                                     </CardContent>
                                 </Card>
                             )}
