@@ -85,7 +85,7 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href='/business/dashboard' prefetch>
-                                <img src={LOGO} alt="logo" className='w-full' />
+                                <img src={LOGO} alt="logo" className='w-full h-12' />
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

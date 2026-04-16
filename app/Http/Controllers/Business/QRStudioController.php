@@ -44,7 +44,13 @@ class QRStudioController extends Controller
         ]);
     }
 
-    $qrUrl = $busines->subdomain ? $busines->subdomain : 'https://stampbayan.com/customer/register?business=' . $busines->qr_token;
+    $subdomain = $busines->subdomain ? "$busines->subdomain" . '/customer/register/?business=' .  $busines->qr_token : null;
+
+    if($subdomain && $qrCode->branch_id){
+        $subdomain = $subdomain . '&branch_id=' . $busines->subdomain->branch_id;
+    }
+
+    $qrUrl = $busines->subdomain ? $subdomain : 'https://stampbayan.com/customer/register?business=' . $busines->qr_token;
     $data = [
         'heading' => $qrCode->heading ?? 'Loyalty Program',
         'subheading' => $qrCode->subheading ?? 'Join our loyalty program by scanning the QR code',
