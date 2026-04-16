@@ -38,7 +38,7 @@ class StampCodesExport implements FromQuery, WithHeadings, WithMapping, WithStyl
     public function map($row): array
     {
         $status = $row->is_expired ? 'Expired' : ($row->used_at ? 'Used' : 'Active');
-        $generatedBy = $row->staff?->email ?? $row->user?->email ?? 'N/A';
+        $generatedBy = $row->staff?->username ?? $row->user?->email ?? 'N/A';
 
         return [
             $row->code,

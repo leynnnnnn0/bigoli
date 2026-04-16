@@ -66,7 +66,13 @@ class DashboardController extends Controller
             $cardExists = $cards->contains('id', $loyaltyCardId);
 
             if ($cardExists) {
-                $code = $this->generateStampCode($loyaltyCardId, $staff->id, $businessId, $selectedBranchId);
+                $code = $this->generateStampCode(
+                    $loyaltyCardId,
+                    $staff->id,
+                    $businessId,
+                    $selectedBranchId,
+                    $request->input('reference_number')  
+                );
             }
         }
 
@@ -110,13 +116,14 @@ class DashboardController extends Controller
             'branches'        => $branches,
             'loyalty_card_id' => $request->input('loyalty_card_id', null),
             'branch_id'       => $selectedBranchId,
+            'reference_number' => $request->input('reference_number'),
             'perkClaims'      => $perkClaims,
             'stampCodes'      => $stampCodes,
             'stats'           => $stats,
         ]);
     }
 
-    private function generateStampCode($loyaltyCardId, $staffId, $businessId, $selectedBranchId = null)
+    private function generateStampCode($loyaltyCardId, $staffId, $businessId,  $selectedBranchId = null, $referenceNumber = null)
     {
         // Expire old unused codes
         StampCode::whereNull('used_at')
@@ -133,11 +140,13 @@ class DashboardController extends Controller
 
         // Create stamp code
         $stampCode = StampCode::create([
-            'user_id'         => FacadesAuth::user()->business->user_id,
+            'user_id'          => Auth::guard('staff')->check() ? null : Auth::id(),
+            'staff_id'         => Auth::guard('staff')->check() ? Auth::id() : null,
             'business_id'     => $businessId,
             'customer_id'     => null,
             'loyalty_card_id' => $loyaltyCardId,
             'branch_id'       => $selectedBranchId ?? null,
+            'reference_number' => $referenceNumber,
             'code'            => $code,
             'used_at'         => null,
             'is_expired'      => false

@@ -131,6 +131,7 @@ interface Props {
         available: number;
         redeemed: number;
     };
+    reference_number?: string;
 }
 
 export default function Index({
@@ -139,10 +140,15 @@ export default function Index({
     branches = [],
     loyalty_card_id,
     branch_id,
+    reference_number,
     perkClaims = [],
     stampCodes = [],
     stats,
 }: Props) {
+    const [referenceNumber, setReferenceNumber] = useState<string>(
+        reference_number ?? '',
+    );
+
     const [loading, setLoading] = useState(false);
     const [downloadingOffline, setDownloadingOffline] = useState(false);
     const [selectedBranchId, setSelectedBranchId] = useState<string>(
@@ -191,11 +197,16 @@ export default function Index({
             setError('Please select a loyalty card');
             return;
         }
+        if (!referenceNumber) {
+            setError('Please enter a reference number');
+            return;
+        }
         setLoading(true);
         setError(null);
         router.get('/staff/dashboard', {
             loyalty_card_id: selectedCardId,
             branch_id: selectedBranchId || undefined,
+            reference_number: referenceNumber, // ← add
         });
         setLoading(false);
     };
@@ -614,6 +625,23 @@ export default function Index({
                                     <CardContent className="space-y-6 p-6">
                                         <BranchAndCardSelectors />
 
+                                        <div>
+                                            <Label className="mb-2 block text-sm font-semibold text-gray-700">
+                                                Reference Number
+                                            </Label>
+                                            <Input
+                                                type="text"
+                                                value={referenceNumber}
+                                                onChange={(e) =>
+                                                    setReferenceNumber(
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                placeholder="Enter reference number (required)"
+                                                className="h-12 w-full"
+                                            />
+                                        </div>
+
                                         {error && (
                                             <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600">
                                                 <span className="font-semibold">
@@ -623,13 +651,14 @@ export default function Index({
                                             </div>
                                         )}
 
-                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
                                             <Button
                                                 onClick={generateCode}
                                                 disabled={
                                                     loading ||
                                                     cards.length === 0 ||
-                                                    !selectedCardId
+                                                    !selectedCardId ||
+                                                    !referenceNumber
                                                 }
                                                 className="h-12 bg-primary"
                                             >
@@ -721,6 +750,23 @@ export default function Index({
 
                                         <BranchAndCardSelectors />
 
+                                        <div>
+                                            <Label className="mb-2 block text-sm font-semibold text-gray-700">
+                                                Reference Number
+                                            </Label>
+                                            <Input
+                                                type="text"
+                                                value={referenceNumber}
+                                                onChange={(e) =>
+                                                    setReferenceNumber(
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                placeholder="Enter reference number (required)"
+                                                className="h-12 w-full"
+                                            />
+                                        </div>
+
                                         {error && (
                                             <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600">
                                                 <span className="font-semibold">
@@ -730,10 +776,13 @@ export default function Index({
                                             </div>
                                         )}
 
-                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
                                             <Button
                                                 onClick={generateNewCode}
-                                                disabled={!selectedCardId}
+                                                disabled={
+                                                    !selectedCardId ||
+                                                    !referenceNumber
+                                                }
                                                 className="h-12 bg-gradient-to-r from-blue-600 to-indigo-600"
                                             >
                                                 <QrCode className="mr-2 h-5 w-5" />
