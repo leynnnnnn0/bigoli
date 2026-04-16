@@ -19,6 +19,7 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
 
     protected $fillable = [
         'business_id',
+        'branch_id',
         'username',
         'email',
         'password',
@@ -82,5 +83,9 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new \App\Notifications\CustomerResetPasswordNotification($token));
+    }
+
+    public function branch(){
+        return $this->belongsTo(Branch::class);
     }
 }

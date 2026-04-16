@@ -1,20 +1,4 @@
-import ModuleHeading from "@/components/module-heading";
-import { Button } from "@/components/ui/button";
-import AppLayout from "@/layouts/app-layout";
-import { Head, useForm, router } from "@inertiajs/react";
-import { Plus, Pencil, Trash2, X, Search } from "lucide-react";
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+import ModuleHeading from '@/components/module-heading';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -24,11 +8,40 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import AppLayout from '@/layouts/app-layout';
+import { Head, router, useForm } from '@inertiajs/react';
+import { Pencil, Plus, Search } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+
+interface Branch {
+    id: number;
+    name: string;
+}
 
 interface Staff {
     id: number;
-    branch: string;
+    branch_id: number;
+    branch_relation: Branch | null; // eager loaded
     username: string;
     remarks?: string;
     is_active: boolean;
@@ -36,100 +49,89 @@ interface Staff {
 
 interface Props {
     staffs: Staff[];
+    branches: Branch[];
     filters: {
         search?: string;
     };
 }
 
-export default function Index({ staffs, filters }: Props) {
+export default function Index({ staffs, branches, filters }: Props) {
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [editingBranch, setEditingBranch] = useState<Staff | null>(null);
+    const [editingStaff, setEditingStaff] = useState<Staff | null>(null);
     const [deleteConfirm, setDeleteConfirm] = useState<Staff | null>(null);
-    const [search, setSearch] = useState("");
-    
+    const [search, setSearch] = useState(filters?.search ?? '');
+
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             router.get(
-                "/business/staffs",
+                '/business/staffs',
                 { search },
-                {
-                    preserveState: true,
-                    preserveScroll: true,
-                    replace: true,
-                }
+                { preserveState: true, preserveScroll: true, replace: true },
             );
         }, 300);
-
         return () => clearTimeout(timeoutId);
     }, [search]);
 
     const form = useForm({
-        branch: "",
-        username: "",
-        password: "",
-        confirm_password: "",
-        remarks: "",
+        branch_id: '',
+        username: '',
+        password: '',
+        confirm_password: '',
+        remarks: '',
         is_active: true,
     });
 
     const openCreateDialog = () => {
-        setEditingBranch(null);
+        setEditingStaff(null);
         form.reset();
         form.clearErrors();
         setDialogOpen(true);
     };
 
-    const openEditDialog = (branch: Staff) => {
-        setEditingBranch(branch);
+    const openEditDialog = (staff: Staff) => {
+        setEditingStaff(staff);
         form.setData({
-            branch: branch.branch,
-            username: branch.username,
-            password: "",
-            confirm_password: "",
-            remarks: branch.remarks || "",
-            is_active: branch.is_active,
+            branch_id: String(staff.branch_id),
+            username: staff.username,
+            password: '',
+            confirm_password: '',
+            remarks: staff.remarks || '',
+            is_active: staff.is_active,
         });
         form.clearErrors();
         setDialogOpen(true);
     };
 
     const handleSubmit = () => {
-        if (editingBranch) {
-            form.put(`/business/staffs/${editingBranch.id}`, {
+        if (editingStaff) {
+            form.put(`/business/staffs/${editingStaff.id}`, {
                 onSuccess: () => {
-                    toast.success("Staff updated successfully");
+                    toast.success('Staff updated successfully');
                     setDialogOpen(false);
                     form.reset();
                 },
-                onError: () => {
-                    toast.error("Failed to update branch");
-                },
+                onError: () => toast.error('Failed to update staff'),
             });
         } else {
-            form.post("/business/staffs", {
+            form.post('/business/staffs', {
                 onSuccess: () => {
-                    toast.success("Staff created successfully");
+                    toast.success('Staff created successfully');
                     setDialogOpen(false);
                     form.reset();
                 },
-                onError: () => {
-                    toast.error("Failed to create branch");
-                },
+                onError: () => toast.error('Failed to create staff'),
             });
         }
     };
 
     const handleDelete = () => {
         if (!deleteConfirm) return;
-
         form.delete(`/business/staffs/${deleteConfirm.id}`, {
             onSuccess: () => {
-                toast.success("Staff deleted successfully");
+                toast.success('Staff deleted successfully');
                 setDeleteConfirm(null);
             },
-            onError: () => {
-                toast.error("Failed to delete branch");
-            },
+            onError: () => toast.error('Failed to delete staff'),
         });
     };
 
@@ -146,100 +148,120 @@ export default function Index({ staffs, filters }: Props) {
                 </Button>
             </ModuleHeading>
 
-            <div className="bg-white rounded-lg shadow overflow-hidden">
+            {/* Search */}
+            <div className="relative mb-4 max-w-sm">
+                <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <Input
+                    className="pl-9"
+                    placeholder="Search staff..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+            </div>
+
+            <div className="overflow-hidden rounded-lg bg-white shadow">
                 <div className="overflow-x-auto">
                     <table className="w-full">
-                        <thead className="bg-gray-50 border-b border-gray-200">
+                        <thead className="border-b border-gray-200 bg-gray-50">
                             <tr>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                                     Branch
                                 </th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                                     Username
                                 </th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                                <th className="hidden px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase md:table-cell">
                                     Remarks
                                 </th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                                     Status
                                 </th>
-                                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-4 py-3 text-right text-xs font-medium tracking-wider text-gray-500 uppercase">
                                     Actions
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {staffs?.map((branch) => (
-                                <tr key={branch.id} className="hover:bg-gray-50">
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                            {staffs?.map((staff) => (
+                                <tr key={staff.id} className="hover:bg-gray-50">
                                     <td className="px-4 py-3 text-sm font-medium text-gray-900">
-                                        {branch.branch}
+                                        {staff.branch_relation?.name ?? '—'}
                                     </td>
                                     <td className="px-4 py-3 text-sm text-gray-500">
-                                        {branch.username}
+                                        {staff.username}
                                     </td>
-                                    <td className="px-4 py-3 text-sm text-gray-500 hidden md:table-cell">
-                                        {branch.remarks || "-"}
+                                    <td className="hidden px-4 py-3 text-sm text-gray-500 md:table-cell">
+                                        {staff.remarks || '—'}
                                     </td>
                                     <td className="px-4 py-3 text-sm">
                                         <span
-                                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                                branch.is_active
-                                                    ? "bg-green-100 text-green-800"
-                                                    : "bg-red-100 text-red-800"
+                                            className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
+                                                staff.is_active
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : 'bg-red-100 text-red-800'
                                             }`}
                                         >
-                                            {branch.is_active ? "Active" : "Inactive"}
+                                            {staff.is_active
+                                                ? 'Active'
+                                                : 'Inactive'}
                                         </span>
                                     </td>
-                                    <td className="px-4 py-3 text-sm text-right">
+                                    <td className="px-4 py-3 text-right text-sm">
                                         <div className="flex justify-end gap-2">
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                onClick={() => openEditDialog(branch)}
+                                                onClick={() =>
+                                                    openEditDialog(staff)
+                                                }
                                             >
-                                                <Pencil className="w-4 h-4" />
+                                                <Pencil className="h-4 w-4" />
                                             </Button>
-                                            {/* <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => setDeleteConfirm(branch)}
-                                            >
-                                                <Trash2 className="w-4 h-4 text-red-600" />
-                                            </Button> */}
                                         </div>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
-                    </table> 
+                    </table>
                 </div>
             </div>
 
             {/* Create/Edit Dialog */}
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>
-                            {editingBranch ? "Edit Staff" : "Create New Staff"}
+                            {editingStaff ? 'Edit Staff' : 'Create New Staff'}
                         </DialogTitle>
                     </DialogHeader>
 
                     <div className="space-y-4">
+                        {/* Branch Dropdown */}
                         <div>
-                            <Label htmlFor="branch">Branch</Label>
-                            <Input
-                                id="branch"
-                                type="text"
-                                value={form.data.branch}
-                                onChange={(e) =>
-                                    form.setData("branch", e.target.value)
+                            <Label htmlFor="branch_id">Branch</Label>
+                            <Select
+                                value={form.data.branch_id}
+                                onValueChange={(val) =>
+                                    form.setData('branch_id', val)
                                 }
-                                placeholder="Enter branch name"
-                            />
-                            {form.errors.branch && (
-                                <p className="text-xs text-red-500 mt-1">
-                                    {form.errors.branch}
+                            >
+                                <SelectTrigger id="branch_id">
+                                    <SelectValue placeholder="Select a branch" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {branches.map((branch) => (
+                                        <SelectItem
+                                            key={branch.id}
+                                            value={String(branch.id)}
+                                        >
+                                            {branch.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {form.errors.branch_id && (
+                                <p className="mt-1 text-xs text-red-500">
+                                    {form.errors.branch_id}
                                 </p>
                             )}
                         </div>
@@ -250,17 +272,19 @@ export default function Index({ staffs, filters }: Props) {
                                 id="username"
                                 type="text"
                                 value={form.data.username}
-                                onChange={(e) => form.setData("username", e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('username', e.target.value)
+                                }
                                 placeholder="Enter username"
                             />
                             {form.errors.username && (
-                                <p className="text-xs text-red-500 mt-1">
+                                <p className="mt-1 text-xs text-red-500">
                                     {form.errors.username}
                                 </p>
                             )}
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                                 <Label htmlFor="password">Password</Label>
                                 <Input
@@ -268,22 +292,22 @@ export default function Index({ staffs, filters }: Props) {
                                     type="password"
                                     value={form.data.password}
                                     onChange={(e) =>
-                                        form.setData("password", e.target.value)
+                                        form.setData('password', e.target.value)
                                     }
                                     placeholder={
-                                        editingBranch
-                                            ? "Leave blank to keep current"
-                                            : "Enter password"
+                                        editingStaff
+                                            ? 'Leave blank to keep current'
+                                            : 'Enter password'
                                     }
                                 />
                                 {form.errors.password && (
-                                    <p className="text-xs text-red-500 mt-1">
+                                    <p className="mt-1 text-xs text-red-500">
                                         {form.errors.password}
                                     </p>
                                 )}
                             </div>
 
-                            {!editingBranch && (
+                            {!editingStaff && (
                                 <div>
                                     <Label htmlFor="confirm_password">
                                         Confirm Password
@@ -294,14 +318,14 @@ export default function Index({ staffs, filters }: Props) {
                                         value={form.data.confirm_password}
                                         onChange={(e) =>
                                             form.setData(
-                                                "confirm_password",
-                                                e.target.value
+                                                'confirm_password',
+                                                e.target.value,
                                             )
                                         }
                                         placeholder="Confirm password"
                                     />
                                     {form.errors.confirm_password && (
-                                        <p className="text-xs text-red-500 mt-1">
+                                        <p className="mt-1 text-xs text-red-500">
                                             {form.errors.confirm_password}
                                         </p>
                                     )}
@@ -309,30 +333,31 @@ export default function Index({ staffs, filters }: Props) {
                             )}
                         </div>
 
-
                         <div>
                             <Label htmlFor="remarks">Remarks</Label>
                             <Textarea
                                 id="remarks"
                                 value={form.data.remarks}
-                                onChange={(e) => form.setData("remarks", e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('remarks', e.target.value)
+                                }
                                 placeholder="Enter remarks"
                                 rows={3}
                             />
                             {form.errors.remarks && (
-                                <p className="text-xs text-red-500 mt-1">
+                                <p className="mt-1 text-xs text-red-500">
                                     {form.errors.remarks}
                                 </p>
                             )}
                         </div>
 
-                        {editingBranch && (
+                        {editingStaff && (
                             <div className="flex items-center space-x-2">
                                 <Switch
                                     id="is_active"
                                     checked={form.data.is_active}
                                     onCheckedChange={(checked) =>
-                                        form.setData("is_active", checked)
+                                        form.setData('is_active', checked)
                                     }
                                 />
                                 <Label htmlFor="is_active">Active</Label>
@@ -346,19 +371,22 @@ export default function Index({ staffs, filters }: Props) {
                             >
                                 Cancel
                             </Button>
-                            <Button onClick={handleSubmit} disabled={form.processing}>
+                            <Button
+                                onClick={handleSubmit}
+                                disabled={form.processing}
+                            >
                                 {form.processing
-                                    ? "Saving..."
-                                    : editingBranch
-                                    ? "Update Staff"
-                                    : "Create Staff"}
+                                    ? 'Saving...'
+                                    : editingStaff
+                                      ? 'Update Staff'
+                                      : 'Create Staff'}
                             </Button>
                         </div>
                     </div>
                 </DialogContent>
             </Dialog>
 
-            {/* Delete Confirmation Dialog */}
+            {/* Delete Confirmation */}
             <AlertDialog
                 open={!!deleteConfirm}
                 onOpenChange={() => setDeleteConfirm(null)}
@@ -367,9 +395,9 @@ export default function Index({ staffs, filters }: Props) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Delete Staff</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Are you sure you want to delete{" "}
-                            <strong>{deleteConfirm?.branch}</strong>? This action
-                            cannot be undone.
+                            Are you sure you want to delete{' '}
+                            <strong>{deleteConfirm?.username}</strong>? This
+                            action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

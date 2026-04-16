@@ -9,6 +9,7 @@ use App\Models\StampCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -20,11 +21,35 @@ class DashboardController extends Controller
         $staff = Auth::guard('staff')->user();
         $businessId = $staff->business_id;
 
-        // Get loyalty cards for this business
-        $cards = LoyaltyCard::where('business_id', $businessId)
-            ->whereDate('valid_until', '>', today())
-            ->select('id', 'name', 'logo')
+        // Get branches assigned to this staff member only
+        $branches = \App\Models\Branch::where('business_id', $businessId)
+            ->where('id', $staff->branch_id)
+            ->select('id', 'name')
             ->get();
+
+        $selectedBranchId = $request->input('branch_id');
+
+        // If staff has a branch assigned and no branch is selected yet, default to their branch
+        if (!$selectedBranchId && $staff->branch_id) {
+            $selectedBranchId = (string) $staff->branch_id;
+        }
+
+        // Get loyalty cards for this business, filtered by branch like Issue Stamp page
+        $cardsQuery = LoyaltyCard::where('business_id', $businessId)
+            ->whereDate('valid_until', '>', today());
+
+        if ($selectedBranchId) {
+            // Cards explicitly assigned to this branch OR cards with NO branch assignments (available everywhere)
+            $cardsQuery->where(function ($q) use ($selectedBranchId) {
+                $q->whereHas('branches', fn($b) => $b->where('branches.id', $selectedBranchId))
+                    ->orWhereDoesntHave('branches');
+            });
+        } else {
+            // No branch selected — show only cards available everywhere (no branch assignments)
+            $cardsQuery->whereDoesntHave('branches');
+        }
+
+        $cards = $cardsQuery->select('id', 'name', 'logo')->get();
 
         // Generate code if loyalty_card_id is provided
         $code = [
@@ -36,22 +61,22 @@ class DashboardController extends Controller
 
         if ($request->has('loyalty_card_id')) {
             $loyaltyCardId = $request->input('loyalty_card_id');
-            
-            // Validate that the card belongs to this business
+
+            // Validate that the card belongs to this business and is in filtered cards
             $cardExists = $cards->contains('id', $loyaltyCardId);
-            
+
             if ($cardExists) {
-                $code = $this->generateStampCode($loyaltyCardId, $staff->id, $businessId);
+                $code = $this->generateStampCode($loyaltyCardId, $staff->id, $businessId, $selectedBranchId);
             }
         }
 
         // Get perk claims
         $perkClaims = PerkClaim::with([
-                'customer:id,username,email',
-                'perk:id,reward,details,stampNumber',
-                'loyalty_card:id,name,logo',
-                'redeemed_by:id,username'
-            ])
+            'customer:id,username,email',
+            'perk:id,reward,details,stampNumber',
+            'loyalty_card:id,name,logo',
+            'redeemed_by:id,username'
+        ])
             ->whereHas('loyalty_card', function ($query) use ($businessId) {
                 $query->where('business_id', $businessId);
             })
@@ -80,16 +105,18 @@ class DashboardController extends Controller
         ];
 
         return Inertia::render('Staff/Dashboard/Index', [
-            'code' => $code,
-            'cards' => $cards,
+            'code'            => $code,
+            'cards'           => $cards,
+            'branches'        => $branches,
             'loyalty_card_id' => $request->input('loyalty_card_id', null),
-            'perkClaims' => $perkClaims,
-            'stampCodes' => $stampCodes,
-            'stats' => $stats,
+            'branch_id'       => $selectedBranchId,
+            'perkClaims'      => $perkClaims,
+            'stampCodes'      => $stampCodes,
+            'stats'           => $stats,
         ]);
     }
 
-    private function generateStampCode($loyaltyCardId, $staffId, $businessId)
+    private function generateStampCode($loyaltyCardId, $staffId, $businessId, $selectedBranchId = null)
     {
         // Expire old unused codes
         StampCode::whereNull('used_at')
@@ -106,19 +133,20 @@ class DashboardController extends Controller
 
         // Create stamp code
         $stampCode = StampCode::create([
-            'user_id' => $staffId,
-            'business_id' => $businessId,
-            'customer_id' => null,
+            'user_id'         => FacadesAuth::user()->business->user_id,
+            'business_id'     => $businessId,
+            'customer_id'     => null,
             'loyalty_card_id' => $loyaltyCardId,
-            'code' => $code,
-            'used_at' => null,
-            'is_expired' => false
+            'branch_id'       => $selectedBranchId ?? null,
+            'code'            => $code,
+            'used_at'         => null,
+            'is_expired'      => false
         ]);
 
         return [
-            'success' => true,
-            'code' => $stampCode->code,
-            'qr_url' => "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={$stampCode->code}",
+            'success'    => true,
+            'code'       => $stampCode->code,
+            'qr_url'     => "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={$stampCode->code}",
             'created_at' => $stampCode->created_at->format('M d, Y h:i A')
         ];
     }
@@ -145,24 +173,25 @@ class DashboardController extends Controller
         // Generate 8 unique codes and save to database
         $tickets = [];
         $stampCodesToInsert = [];
-        
+
         for ($i = 0; $i < 8; $i++) {
             do {
                 $code = strtoupper(Str::random(8));
             } while (
-                StampCode::where('code', $code)->exists() || 
+                StampCode::where('code', $code)->exists() ||
                 in_array($code, array_column($tickets, 'code'))
             );
 
             // Prepare data for database insertion
             $stampCodesToInsert[] = [
-                'user_id' => $staff->id,
-                'business_id' => $businessId,
-                'loyalty_card_id' => $loyaltyCardId, 
-                'code' => $code,
+                'user_id'         => $staff->id,
+                'business_id'     => $businessId,
+                'loyalty_card_id' => $loyaltyCardId,
+                'branch_id'       => $staff->branch_id ?? null,
+                'code'            => $code,
                 'is_offline_code' => true,
-                'created_at' => now(),
-                'updated_at' => now()
+                'created_at'      => now(),
+                'updated_at'      => now()
             ];
 
             // Generate QR code and convert to base64
@@ -171,7 +200,7 @@ class DashboardController extends Controller
             $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrImageData);
 
             $tickets[] = [
-                'code' => $code,
+                'code'           => $code,
                 'qr_code_base64' => $qrCodeBase64
             ];
         }
@@ -180,9 +209,9 @@ class DashboardController extends Controller
         StampCode::insert($stampCodesToInsert);
 
         $html = view('pdf.offline-stamps', [
-            'tickets' => $tickets,
+            'tickets'          => $tickets,
             'registrationLink' => $registrationLink,
-            'businessName' => $business->name
+            'businessName'     => $business->name
         ])->render();
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
@@ -215,7 +244,7 @@ class DashboardController extends Controller
                     'is_redeemed' => true,
                     'redeemed_at' => now(),
                     'redeemed_by' => $staff->id,
-                    'remarks' => $validated['remarks'] ?? null,
+                    'remarks'     => $validated['remarks'] ?? null,
                 ]);
             });
 
@@ -245,7 +274,7 @@ class DashboardController extends Controller
                     'is_redeemed' => false,
                     'redeemed_at' => null,
                     'redeemed_by' => null,
-                    'remarks' => null,
+                    'remarks'     => null,
                 ]);
             });
 

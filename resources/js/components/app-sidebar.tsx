@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { AwardIcon, BookOpen, Code2Icon, Folder, IdCard, LayoutGrid, QrCodeIcon, Stamp, StampIcon, StoreIcon, TicketIcon, Users2Icon } from 'lucide-react';
+import { AwardIcon, BookOpen, Building, Code2Icon, Folder, IdCard, LayoutGrid, QrCodeIcon, Stamp, StampIcon, Store, StoreIcon, TicketIcon, Users2Icon } from 'lucide-react';
 import LOGO from '../../images/mainLogo.png';
 
 const mainNavItems: NavItem[] = [
@@ -22,45 +22,50 @@ const mainNavItems: NavItem[] = [
         href: '/business/dashboard',
         icon: LayoutGrid,
     },
-     {
+    {
         title: 'Staff Accounts',
         href: '/business/staffs',
         icon: StoreIcon,
     },
-      {
+    {
         title: 'Issue Stamp',
         href: '/business/issue-stamp',
         icon: StampIcon,
     },
-     {
+    {
         title: 'Perk Claims',
         href: '/business/perk-claims',
         icon: AwardIcon,
     },
-       {
+    {
         title: 'Stamp Codes',
         href: '/business/stamp-codes',
         icon: Code2Icon,
     },
-      {
+    {
         title: 'Loyalty Cards',
         href: '/business/card-templates',
         icon: IdCard,
     },
-      {
+    {
         title: 'Customers',
         href: '/business/customers',
         icon: Users2Icon,
     },
-          {
+    {
         title: 'QR Studio',
         href: '/business/qr-studio',
         icon: QrCodeIcon,
     },
-     {
+    {
         title: 'Tickets',
         href: '/business/tickets',
         icon: TicketIcon,
+    },
+    {
+        title: 'Branches',
+        href: '/business/branches',
+        icon: Building,
     },
 ];
 

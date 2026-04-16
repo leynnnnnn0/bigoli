@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\Business\StaffController;
 use App\Http\Controllers\Business\CardTempalateController;
 use App\Http\Controllers\Business\CustomerController;
@@ -41,7 +42,7 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/pro-plan', function () {
+Route::get('/pro-plan', function () { 
     return Inertia::render('pro-plan');
 })->name('pro-plan');
 
@@ -49,9 +50,14 @@ Route::get('/documentation', [DocumentationController::class, 'index']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('business')->group(function () {
+        Route::get('/stamp-codes/export', [StampCodeController::class, 'export'])
+            ->name('business.stamp-codes.export');
+            
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::resource('/staffs', StaffController::class);
+
+        Route::resource('/branches', BranchController::class);
 
         Route::get('/issue-stamps/generate-offline', [IssueStampController::class, 'generateOfflineStamps'])
             ->name('business.issue-stamp.generate-offline');

@@ -15,47 +15,59 @@ class IssueStampController extends Controller
 {
     public function index(Request $request)
     {
-        $cards = LoyaltyCard::where('business_id', Auth::user()->business->id)
-            ->whereDate('valid_until', '>', today())
+        $business = Auth::user()->business;
+
+        // Fetch branches for this business
+        $branches = \App\Models\Branch::where('business_id', $business->id)
             ->select('id', 'name')
             ->get();
+
+        $selectedBranchId = $request->input('branch_id');
+
+        // Base query: active cards for this business
+        $cardsQuery = LoyaltyCard::where('business_id', $business->id)
+            ->whereDate('valid_until', '>', today())
+            ->withCount('branches'); // we'll use this to detect "available everywhere"
+
+        if ($selectedBranchId) {
+            // Cards explicitly assigned to this branch OR cards with NO branch assignments (available everywhere)
+            $cardsQuery->where(function ($q) use ($selectedBranchId) {
+                $q->whereHas('branches', fn($b) => $b->where('branches.id', $selectedBranchId))
+                    ->orWhereDoesntHave('branches');
+            });
+        } else {
+            // No branch selected — show only cards available everywhere (no branch assignments)
+            $cardsQuery->whereDoesntHave('branches');
+        }
+
+        $cards = $cardsQuery->select('id', 'name')->get();
 
         // Generate code if loyalty_card_id is provided
         if ($request->has('loyalty_card_id')) {
             $loyaltyCardId = $request->input('loyalty_card_id');
+            $cardExists = LoyaltyCard::where('business_id', $business->id)
+                ->whereDate('valid_until', '>', today())
+                ->where('id', $loyaltyCardId)
+                ->exists();
 
-            // Validate that the card belongs to this business
-            $cardExists = $cards->contains('id', $loyaltyCardId);
-
-            if ($cardExists) {
-                $code = $this->generate($loyaltyCardId);
-            } else {
-                $code = [
-                    'success' => false,
-                    'code' => '',
-                    'qr_url' => '',
-                    'created_at' => ''
-                ];
-            }
+            $code = $cardExists
+                ? $this->generate($loyaltyCardId, $selectedBranchId, $request->input('reference_number'))
+                : ['success' => false, 'code' => '', 'qr_url' => '', 'created_at' => ''];
         } else {
-            $code = [
-                'success' => false,
-                'code' => '',
-                'qr_url' => '',
-                'created_at' => ''
-            ];
+            $code = ['success' => false, 'code' => '', 'qr_url' => '', 'created_at' => ''];
         }
 
-
-
         return Inertia::render('Business/IssueStamp/Index', [
-            'code' => $code,
-            'cards' => $cards,
+            'code'            => $code,
+            'cards'           => $cards,
+            'branches'        => $branches,
             'loyalty_card_id' => $request->input('loyalty_card_id', null),
+            'branch_id'       => $selectedBranchId,
+            'reference_number' => $request->input('reference_number')
         ]);
     }
 
-    private function generate($loyaltyCardId)
+    private function generate($loyaltyCardId, $selectedBranchId, $referenceNumber = null)
     {
         // Expire old unused codes
         StampCode::whereNull('used_at')
@@ -72,13 +84,16 @@ class IssueStampController extends Controller
 
         // Create stamp code
         $stampCode = StampCode::create([
-            'user_id' => Auth::id(),
-            'business_id' => Auth::user()->business->id,
-            'customer_id' => null,
-            'loyalty_card_id' => $loyaltyCardId,
-            'code' => $code,
-            'used_at' => null,
-            'is_expired' => false
+            'user_id'          => Auth::guard('staff')->check() ? null : Auth::id(),
+            'staff_id'         => Auth::guard('staff')->check() ? Auth::id() : null,
+            'business_id'      => Auth::user()->business->id,
+            'customer_id'      => null,
+            'loyalty_card_id'  => $loyaltyCardId,
+            'branch_id'        => $selectedBranchId ?? null,
+            'code'             => $code,
+            'used_at'          => null,
+            'is_expired'       => false,
+            'reference_number' => $referenceNumber,
         ]);
 
         return [

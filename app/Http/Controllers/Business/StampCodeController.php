@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Business;
 
+use App\Exports\StampCodesExport;
 use App\Http\Controllers\Controller;
+use App\Models\Branch;
 use App\Models\CompletedLoyaltyCard;
 use App\Models\LoyaltyCard;
 use App\Models\PerkClaim;
@@ -11,40 +13,135 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StampCodeController extends Controller
 {
+    private function buildQuery(Request $request)
+    {
+        $businessId = Auth::user()->business->id;
+
+        $query = StampCode::with(['customer:id,username,email', 'loyalty_card:id,name', 'branch:id,name', 'user:id,email', 'staff:id,email'])
+            ->where('business_id', $businessId);
+
+        // Search
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%")
+                    ->orWhere('reference_number', 'like', "%{$search}%")
+                    ->orWhereHas(
+                        'customer',
+                        fn($cq) =>
+                        $cq->where('username', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                    );
+            });
+        }
+
+        // Status filter
+        if ($status = $request->input('status')) {
+            match ($status) {
+                'used'    => $query->whereNotNull('used_at')->where('is_expired', false),
+                'expired' => $query->where('is_expired', true),
+                'active'  => $query->whereNull('used_at')->where('is_expired', false),
+                default   => null,
+            };
+        }
+
+        // Type filter
+        if ($request->filled('type')) {
+            $query->where('is_offline_code', $request->input('type') === 'offline');
+        }
+
+        // Loyalty card filter
+        if ($loyaltyCardId = $request->input('loyalty_card_id')) {
+            $query->where('loyalty_card_id', $loyaltyCardId);
+        }
+
+        // Branch filter
+        if ($branchId = $request->input('branch_id')) {
+            $query->where('branch_id', $branchId);
+        }
+
+        // Assignment filter
+        if ($assigned = $request->input('assigned')) {
+            match ($assigned) {
+                'assigned'   => $query->whereNotNull('customer_id'),
+                'unassigned' => $query->whereNull('customer_id'),
+                default      => null,
+            };
+        }
+
+        // Date range filters
+        if ($dateFrom = $request->input('date_from')) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+        if ($dateTo = $request->input('date_to')) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
+
+        // Used date range
+        if ($usedFrom = $request->input('used_from')) {
+            $query->whereDate('used_at', '>=', $usedFrom);
+        }
+        if ($usedTo = $request->input('used_to')) {
+            $query->whereDate('used_at', '<=', $usedTo);
+        }
+
+        // Sort
+        $sortBy  = $request->input('sort_by', 'created_at');
+        $sortDir = $request->input('sort_dir', 'desc');
+        $allowedSorts = ['created_at', 'used_at', 'code', 'is_expired'];
+        if (in_array($sortBy, $allowedSorts)) {
+            $query->orderBy($sortBy, $sortDir === 'asc' ? 'asc' : 'desc');
+        }
+
+        return $query;
+    }
+    
     public function index(Request $request)
     {
-        $search = $request->input('search');
+        $businessId = Auth::user()->business->id;
 
-        $stampCodes = StampCode::with('loyalty_card')->where('business_id', Auth::user()->business->id)
-            ->with('customer:id,username,email')
-            ->when($search, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('code', 'like', "%{$search}%")
-                        ->orWhereHas('customer', function ($customerQuery) use ($search) {
-                            $customerQuery->where('username', 'like', "%{$search}%")
-                                ->orWhere('email', 'like', "%{$search}%");
-                        });
-                });
-            })
-            ->latest()
+        $stampCodes = $this->buildQuery($request)
             ->paginate(10)
             ->withQueryString();
 
-            //
+        $loyaltyCards = LoyaltyCard::where('business_id', $businessId)
+            ->select('id', 'name')->get();
+
+        $branches = Branch::where('business_id', $businessId)
+            ->select('id', 'name')->get();
 
         return Inertia::render('Business/StampCode/Index', [
-            'stampCodes' => $stampCodes,
-            'filters' => [
-                'search' => $search,
-            ],
+            'stampCodes'  => $stampCodes,
+            'loyaltyCards' => $loyaltyCards,
+            'branches'    => $branches,
+            'filters'     => $request->only([
+                'search',
+                'status',
+                'type',
+                'loyalty_card_id',
+                'branch_id',
+                'assigned',
+                'date_from',
+                'date_to',
+                'used_from',
+                'used_to',
+                'sort_by',
+                'sort_dir',
+            ]),
         ]);
     }
 
+    public function export(Request $request)
+    {
+        $query = $this->buildQuery($request);
+        return Excel::download(new StampCodesExport($query), 'stamp-codes-' . now()->format('Y-m-d') . '.xlsx');
+    }
     public function record(Request $request)
     {
+       
         $validated = $request->validate([
             'code' => [
                 'required',
@@ -58,7 +155,7 @@ class StampCodeController extends Controller
                         $fail('This stamp code has expired.');
                     } elseif ($stampCode->used_at !== null) {
                         $fail('This stamp code has already been used.');
-                    }elseif($stampCode->business_id != Auth::guard('customer')->user()->business_id){
+                    }elseif(Auth::guard('customer')->user()->business_id != $stampCode->business_id){
                         $fail('This stamp code does not belong to this business');
                     }
                 },

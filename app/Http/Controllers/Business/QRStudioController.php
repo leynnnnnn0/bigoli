@@ -15,12 +15,19 @@ use Intervention\Image\Drivers\Gd\Driver;
 
 class QRStudioController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-       $qrCode = Auth::user()->business->qr_code;
-        
+        $business = Auth::user()->business;
+        $qrCode = $business->qr_code;
+
+        $branches = \App\Models\Branch::where('business_id', $business->id)
+            ->select('id', 'name')
+            ->get();
+
         return Inertia::render('Business/QRStudio/Index', [
-            'qrCode' => $qrCode
+            'qrCode'    => $qrCode,
+            'branches'  => $branches,
+            'branch_id' => $request->input('branch_id'),
         ]);
     }
 
@@ -80,12 +87,13 @@ class QRStudioController extends Controller
         
         // Validation
         $validated = $request->validate([
-            'heading' => 'required|string|max:100',
-            'subheading' => 'required|string|max:500',
+            'heading'         => 'required|string|max:100',
+            'subheading'      => 'required|string|max:500',
             'backgroundColor' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
-            'textColor' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB
-            'backgroundImage' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240', // 10MB
+            'textColor'       => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
+            'logo'            => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'backgroundImage' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'branch_id'       => 'nullable|integer|exists:branches,id',
         ], [
             'heading.required' => 'Heading is required',
             'heading.max' => 'Heading must not exceed 100 characters',
@@ -102,10 +110,11 @@ class QRStudioController extends Controller
 
         // Prepare data for updateOrCreate
         $data = [
-            'heading' => $validated['heading'],
-            'subheading' => $validated['subheading'],
+            'heading'          => $validated['heading'],
+            'subheading'       => $validated['subheading'],
             'background_color' => $validated['backgroundColor'],
-            'text_color' => $validated['textColor'],
+            'text_color'       => $validated['textColor'],
+            'branch_id'        => $validated['branch_id'] ?? null,
         ];
 
         // Handle logo upload

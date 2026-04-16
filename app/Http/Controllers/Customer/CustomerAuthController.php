@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
@@ -73,10 +74,14 @@ class CustomerAuthController extends Controller
 
         // Optional: Pre-select business from query parameter
         $businessId = $request->query('business');
+
         $selectedBusiness = Business::where('qr_token', $businessId)->firstOrFail();
+
+        $branch_id = $request->query('branch_id') ?? null;
 
         return Inertia::render('Customer/Auth/Register', [
             'selectedBusiness' => $selectedBusiness,
+            'branch_id' => $branch_id
         ]);
     }
 
@@ -87,6 +92,12 @@ class CustomerAuthController extends Controller
     {   
         $validated = $request->validate([
             'business_id' => 'required|exists:businesses,id',
+            'branch_id' => [
+                'nullable',
+                Rule::exists('branches', 'id')->where(function ($query) use ($request) {
+                    $query->where('business_id', $request->business_id);
+                }),
+            ],
             'username' => 'required|string|max:255|unique:customers,username',
             'email' => 'required|email|unique:customers,email',
             'password' => 'required|min:8|confirmed',
@@ -94,6 +105,7 @@ class CustomerAuthController extends Controller
 
         $customer = Customer::create([
             'business_id' => $validated['business_id'],
+            'branch_id' => $validated['branch_id'],
             'username' => $validated['username'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),

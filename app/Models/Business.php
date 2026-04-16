@@ -55,6 +55,11 @@ class Business extends Model
         return $this->hasMany(StampCode::class);
     }
 
+    public function branches()
+    {
+        return $this->hasMany(Branch::class);
+    }
+
     protected static function boot()
     {
         parent::boot();

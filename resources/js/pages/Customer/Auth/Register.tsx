@@ -21,6 +21,7 @@ import {
 import { FormEventHandler } from 'react';
 import { toast } from 'sonner';
 import LOGO from '../../../../images/mainLogo.png';
+import TermsAndAgreement from '@/components/TermsAndAgreement';
 
 interface Business {
     id: number;
@@ -31,18 +32,18 @@ interface Business {
 interface RegisterProps {
     businesses: Business[];
     selectedBusiness?: Business;
+    branch_id: number | null
 }
 
-export default function Register({
-    businesses,
-    selectedBusiness,
-}: RegisterProps) {
+export default function Register({ businesses, selectedBusiness, branch_id }: RegisterProps) {
     const { data, setData, post, processing, errors, reset } = useForm({
         business_id: selectedBusiness?.id?.toString() || '',
         username: '',
         email: '',
         password: '',
         password_confirmation: '',
+        branch_id: branch_id,
+        terms: false,
     });
 
     const submit: FormEventHandler = (e) => {
@@ -219,12 +220,18 @@ export default function Register({
                             <Button
                                 type="submit"
                                 className="h-11 w-full text-base"
-                                disabled={processing}
+                                disabled={processing || !data.terms}
                             >
                                 {processing
                                     ? 'Creating account...'
                                     : 'Create Account'}
                             </Button>
+
+                            <TermsAndAgreement
+                                checked={data.terms}
+                                onCheckedChange={(val) => setData('terms', val)}
+                                error={errors.terms}
+                            />
 
                             <div className="text-center text-sm text-muted-foreground">
                                 Already have an account?{' '}

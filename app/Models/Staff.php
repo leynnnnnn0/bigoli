@@ -18,6 +18,7 @@ class Staff extends Model implements AuthenticatableContract, AuthorizableContra
 
     protected $fillable = [ 
         'business_id',
+        'branch_id',
         'branch',
         'username',
         'password',
@@ -34,6 +35,11 @@ class Staff extends Model implements AuthenticatableContract, AuthorizableContra
     public function business()
     {
         return $this->belongsTo(Business::class);
+    }
+
+    public function branchRelation()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 }
 

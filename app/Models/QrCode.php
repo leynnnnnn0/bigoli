@@ -8,6 +8,7 @@ class QrCode extends Model
 {
      protected $fillable = [
         'business_id',
+        'branch_id',
         'heading',
         'subheading',
         'background_color',

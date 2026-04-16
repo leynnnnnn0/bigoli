@@ -14,25 +14,28 @@ class StaffController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Staff::query();
+        $query = Staff::query()->with('branchRelation');
 
         $query->where('business_id', Auth::user()->business->id);
 
-        // Search functionality
         if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('branch', 'like', "%{$search}%")
-                  ->orWhere('username', 'like', "%{$search}%")
-                  ->orWhere('remarks', 'like', "%{$search}%");
+                $q->whereHas('branchRelation', fn($b) => $b->where('name', 'like', "%{$search}%"))
+                    ->orWhere('username', 'like', "%{$search}%")
+                    ->orWhere('remarks', 'like', "%{$search}%");
             });
         }
 
         $staffs = $query->orderBy('created_at', 'desc')->get();
 
+        $branches = \App\Models\Branch::where('business_id', Auth::user()->business->id)
+            ->orderBy('name')
+            ->get(['id', 'name']);
 
         return Inertia::render('Business/Staff/Index', [
             'staffs' => $staffs,
+            'branches' => $branches,
             'filters' => [
                 'search' => $request->search,
             ],
@@ -42,7 +45,7 @@ class StaffController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'branch' => 'required|string|max:255',
+            'branch_id' => 'required|exists:branches,id',
             'username' => 'required|string|max:255|unique:staff,username',
             'password' => 'required|string|min:8',
             'confirm_password' => 'required|string|same:password',
@@ -51,8 +54,8 @@ class StaffController extends Controller
         ]);
 
         Staff::create([
-            'business_id' => Auth::user()->id,
-            'branch' => $validated['branch'],
+            'business_id' => Auth::user()->business->id,
+            'branch_id' => $validated['branch_id'],
             'username' => $validated['username'],
             'password' => Hash::make($validated['password']),
             'remarks' => $validated['remarks'] ?? null,
@@ -65,7 +68,7 @@ class StaffController extends Controller
     public function update(Request $request, Staff $staff)
     {
         $validated = $request->validate([
-            'branch' => 'required|string|max:255',
+            'branch_id' => 'required|exists:branches,id',
             'username' => [
                 'required',
                 'string',
@@ -77,15 +80,13 @@ class StaffController extends Controller
             'is_active' => 'boolean',
         ]);
 
-
         $data = [
-            'branch' => $validated['branch'],
+            'branch_id' => $validated['branch_id'],
             'username' => $validated['username'],
             'remarks' => $validated['remarks'] ?? null,
             'is_active' => $validated['is_active'],
         ];
 
-        // Only update password if provided
         if (!empty($validated['password'])) {
             $data['password'] = Hash::make($validated['password']);
         }

@@ -79,4 +79,9 @@ class LoyaltyCard extends Model
     {
         return $this->hasMany(StampCode::class);
     }
+
+    public function branches()
+    {
+        return $this->belongsToMany(Branch::class, 'branch_loyalty_cards');
+    }
 }

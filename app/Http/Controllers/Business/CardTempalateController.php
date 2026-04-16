@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
+use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -66,6 +67,8 @@ class CardTempalateController extends Controller
             'perks.*.reward' => 'required_with:perks|string|max:255',
             'perks.*.color' => 'nullable|string|max:7',
             'perks.*.details' => 'nullable|string|max:1000',
+            'branch_ids'   => 'nullable|array',
+            'branch_ids.*' => 'integer|exists:branches,id',
         ]);
 
         DB::beginTransaction();
@@ -178,10 +181,14 @@ class CardTempalateController extends Controller
 
                 // Delete perks that were removed
                 $loyaltyCard->perks()->whereNotIn('id', $existingPerkIds)->delete();
+
+                
             } else {
                 // Delete all perks if none provided
                 $loyaltyCard->perks()->delete();
             }
+
+            $loyaltyCard->branches()->sync($validated['branch_ids'] ?? []);
 
             DB::commit();
 
@@ -195,17 +202,24 @@ class CardTempalateController extends Controller
 
     public function create()
     {
-        return Inertia::render('Business/CardTemplate/Create');
+        return Inertia::render('Business/CardTemplate/Create', [
+            'branches' => Branch::where('business_id', Auth::user()->business->id)
+                ->select('id', 'name')
+                ->get(),
+        ]);
     }
 
     public function edit($id)
     {
         $cardTemplate = Auth::user()->business->loyaltyCards()
-            ->with('perks')
+            ->with(['perks', 'branches:id,name'])  // eager-load branch IDs + names
             ->findOrFail($id);
 
         return Inertia::render('Business/CardTemplate/Edit', [
-            'cardTemplate' => $cardTemplate
+            'cardTemplate' => $cardTemplate,
+            'branches'     => Branch::where('business_id', Auth::user()->business->id)
+                ->select('id', 'name')
+                ->get(),
         ]);
     }
 
@@ -236,6 +250,8 @@ class CardTempalateController extends Controller
             'perks.*.reward' => 'required_with:perks|string|max:255',
             'perks.*.color' => 'nullable|string|max:7',
             'perks.*.details' => 'nullable|string|max:1000',
+            'branch_ids'   => 'nullable|array',
+            'branch_ids.*' => 'integer|exists:branches,id',
         ]);
 
         DB::beginTransaction();
@@ -284,6 +300,11 @@ class CardTempalateController extends Controller
             if (!empty($validated['perks'])) {
                 $loyaltyCard->perks()->createMany($validated['perks']);
             }
+
+            if (!empty($validated['branch_ids'])) {
+                $loyaltyCard->branches()->sync($validated['branch_ids']);
+            }
+
 
             DB::commit();
 
