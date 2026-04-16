@@ -47,7 +47,7 @@ class QRStudioController extends Controller
     $subdomainUrl = $busines->subdomain ? "$busines->subdomain" . '/customer/register/?business=' .  $busines->qr_token : null;
 
     if($subdomainUrl && $qrCode->branch_id){
-        $subdomainUrl = $subdomainUrl . '&branch_id=' . $busines->subdomain->branch_id;
+        $subdomainUrl = $subdomainUrl . '&branch_id=' . $qrCode->branch_id;
     }
 
     $qrUrl = $busines->subdomain ? $subdomainUrl : 'https://stampbayan.com/customer/register?business=' . $busines->qr_token;
