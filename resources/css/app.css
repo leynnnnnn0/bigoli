@@ -103,9 +103,9 @@
     --sidebar-ring: oklch(0.87 0 0);
 
   /* StampBayan Semantic Color */
-    --primary: #F4B942;      /* Blue */
-    --secondary: #E85D75;    /* Red */
-    --accent: #F4B942;       /* Yellow */
+    --primary: #17964A;      /* Blue */
+    --secondary: #EB3B42;    /* Red */
+    --accent: #EB3B42;       /* Yellow */
     --surface: #FFF8F0;      /* Cream */
     --neutral: #F5F5F5;      /* Gray */
     --text: #333333;         /* Charcoal */
