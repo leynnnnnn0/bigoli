@@ -623,7 +623,7 @@ export default function Index({
                                             </div>
                                         )}
 
-                                        {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                             <Button
                                                 onClick={generateCode}
                                                 disabled={
@@ -639,7 +639,7 @@ export default function Index({
                                                     : 'Generate Code'}
                                             </Button>
 
-                                            <Button
+                                            {/* <Button
                                                 onClick={downloadOfflineStamps}
                                                 disabled={
                                                     downloadingOffline ||
@@ -653,10 +653,10 @@ export default function Index({
                                                 {downloadingOffline
                                                     ? 'Generating...'
                                                     : 'Download 8 Tickets'}
-                                            </Button>
+                                            </Button> */}
                                         </div>
 
-                                        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-700">
+                                        {/* <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-700">
                                             <p className="mb-1 font-semibold">
                                                 💡 Quick Tip
                                             </p>
