@@ -38,7 +38,7 @@ export default function TermsAndAgreement({
                     />
                     <Label
                         htmlFor="terms"
-                        className="text-sm leading-snug text-muted-foreground cursor-pointer"
+                        className="text-xs leading-snug text-muted-foreground cursor-pointer"
                     >
                         I have read and agree to the{' '}
                         <button

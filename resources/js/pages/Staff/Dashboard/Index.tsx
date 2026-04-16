@@ -623,7 +623,7 @@ export default function Index({
                                             </div>
                                         )}
 
-                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                        {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                             <Button
                                                 onClick={generateCode}
                                                 disabled={
@@ -666,7 +666,7 @@ export default function Index({
                                                 internet. Print 8 tickets at
                                                 once!
                                             </p>
-                                        </div>
+                                        </div> */}
                                     </CardContent>
                                 </Card>
                             ) : (
