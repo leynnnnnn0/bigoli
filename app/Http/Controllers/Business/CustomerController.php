@@ -35,7 +35,7 @@ class CustomerController extends Controller
 
     public function show($id)
     { 
-            $customer = Customer::with('stamp_codes.loyalty_card')->where('business_id', Auth::user()->business->id)->findOrFail($id);
+            $customer = Customer::with('stamp_codes.loyalty_card', 'stamp_codes.branch')->where('business_id', Auth::user()->business->id)->findOrFail($id);
 
             return Inertia::render('Business/Customer/Show',[
                 'customer' => $customer
