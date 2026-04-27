@@ -193,6 +193,8 @@ class StampCodeController extends Controller
                     ->whereNotNull('used_at')
                     ->count();
 
+  
+
                 // Get the loyalty card
                 $loyaltyCard = LoyaltyCard::with('perks')->find($stampCode->loyalty_card_id);
 
@@ -206,7 +208,18 @@ class StampCodeController extends Controller
                         ->where('perk_id', $perk->id)
                         ->first();
 
-                    if (!$existingClaim) {
+                    // if (!$existingClaim) {
+                    //     PerkClaim::create([
+                    //         'customer_id' => $customerId,
+                    //         'loyalty_card_id' => $stampCode->loyalty_card_id,
+                    //         'perk_id' => $perk->id,
+                    //         'stamps_at_claim' => $totalStamps,
+                    //         'is_redeemed' => false,
+                    //     ]);
+
+                    //     $newlyUnlockedPerks[] = $perk->reward;
+                    // }
+
                         PerkClaim::create([
                             'customer_id' => $customerId,
                             'loyalty_card_id' => $stampCode->loyalty_card_id,
@@ -216,7 +229,6 @@ class StampCodeController extends Controller
                         ]);
 
                         $newlyUnlockedPerks[] = $perk->reward;
-                    }
                 }
 
                 // Check if card is complete

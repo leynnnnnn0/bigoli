@@ -14,6 +14,7 @@ class PerkClaim extends Model
         'is_redeemed',
         'redeemed_at',
         'redeemed_by',
+        'redeemed_by_staff_id',
         'notes',
     ];
 
@@ -41,5 +42,10 @@ class PerkClaim extends Model
     public function redeemed_by()
     {
         return $this->belongsTo(User::class, 'redeemed_by');
+    }
+
+    public function redeemed_by_staff()
+    {
+        return $this->belongsTo(Staff::class, 'redeemed_by_staff_id');
     }
 }

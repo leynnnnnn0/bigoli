@@ -570,7 +570,7 @@ export default function Index({ perkClaims, filters, stats }: Props) {
                     <div>
                       <p className="text-sm text-gray-600">Redeemed By</p>
                       <p className="font-semibold text-sm">
-                        {selectedClaim.redeemed_by?.username || 'N/A'}
+                        {selectedClaim.redeemed_by?.username || selectedClaim.redeemed_by_staff?.username || 'N/A'}
                       </p>
                     </div>
                   </div>

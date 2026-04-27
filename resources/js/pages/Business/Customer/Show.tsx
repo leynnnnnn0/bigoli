@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Mail, User, Calendar, CreditCard, CheckCircle2, Clock } from "lucide-react";
 
+//test
 interface StampCode {
     id: number;
     code: string;

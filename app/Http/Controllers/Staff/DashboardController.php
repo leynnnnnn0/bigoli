@@ -252,7 +252,8 @@ class DashboardController extends Controller
                 $perkClaim->update([
                     'is_redeemed' => true,
                     'redeemed_at' => now(),
-                    'redeemed_by' => $staff->id,
+                    'redeemed_by' => null,
+                    'redeemed_by_staff_id' => $staff->id,
                     'remarks'     => $validated['remarks'] ?? null,
                 ]);
             });
@@ -283,6 +284,7 @@ class DashboardController extends Controller
                     'is_redeemed' => false,
                     'redeemed_at' => null,
                     'redeemed_by' => null,
+                    'redeemed_by_staff_id' => null,
                     'remarks'     => null,
                 ]);
             });

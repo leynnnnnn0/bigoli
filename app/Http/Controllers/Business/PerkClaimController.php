@@ -20,7 +20,8 @@ class PerkClaimController extends Controller
                 'customer:id,username,email',
                 'perk:id,reward,details,stampNumber',
                 'loyalty_card:id,name,logo',
-                'redeemed_by:id,username'
+                'redeemed_by:id,username',
+                'redeemed_by_staff:id,username',
             ])
             ->whereHas('loyalty_card', function ($query) {
                 $query->where('business_id', Auth::user()->business->id);
@@ -76,7 +77,6 @@ class PerkClaimController extends Controller
 
     public function markAsRedeemed(Request $request, PerkClaim $perkClaim)
     {
-        // Verify the perk claim belongs to this business
         if ($perkClaim->loyalty_card->business_id !== Auth::user()->business->id) {
             abort(403, 'Unauthorized action.');
         }
@@ -89,18 +89,24 @@ class PerkClaimController extends Controller
             'remarks' => 'nullable|string|max:500',
         ]);
 
+        dd('test');
+
         try {
             DB::transaction(function () use ($perkClaim, $validated) {
                 $perkClaim->update([
                     'is_redeemed' => true,
                     'redeemed_at' => now(),
-                    'redeemed_by' => Auth::id(),
+                    'redeemed_by' => Auth::guard('staff')->check() ? null : Auth::id(),
+                    'redeemed_by_staff_id' => Auth::guard('staff')->check() ? Auth::id() : null,
                     'remarks' => $validated['remarks'] ?? null,
                 ]);
+
+                dd(Auth::guard('staff')->check() ? null : Auth::id());
             });
 
             return back()->with('success', 'Perk marked as redeemed successfully.');
         } catch (\Exception $e) {
+            dd($e);
             return back()->with('error', 'Failed to mark perk as redeemed. Please try again.');
         }
     }
@@ -123,6 +129,7 @@ class PerkClaimController extends Controller
                     'redeemed_at' => null,
                     'redeemed_by' => null,
                     'remarks' => null,
+                    'redeemed_by_staff_id' => null,
                 ]);
             });
 

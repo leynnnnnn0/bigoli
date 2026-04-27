@@ -11,8 +11,10 @@ import fifth from '../../../public/images/family4.jpg';
 import sixth from '../../../public/images/family5.jpg';
 import seventh from '../../../public/images/family6.jpg';
 import eight from '../../../public/images/family7.jpg';
-import HeroPasta from '../../../public/images/mainLogo.png'; // Consider renaming/replacing with a pasta/pizza PNG
-import MainLogo from '../../../public/images/mainLogo.png'; // Update to Bigoli Logo
+import {
+    default as HeroPasta,
+    default as MainLogo,
+} from '../../../public/images/mainLogo.png'; // Consider renaming/replacing with a pasta/pizza PNG
 import menu1 from '../../../public/images/menu1.jpg';
 import menu2 from '../../../public/images/menu2.jpg';
 import menu3 from '../../../public/images/menu3.jpg';
@@ -164,17 +166,16 @@ export default function Welcome() {
                                 Earn rewards on these signature flavors
                             </p>
                         </div>
-
                         <Carousel
                             opts={{ align: 'start', loop: true }}
-                            className="w-full"
+                            className="w-full overflow-hidden"
                         >
                             <CarouselContent className="-ml-2 md:-ml-4">
                                 {[menu1, menu2, menu3, menu4, menu5].map(
                                     (img, index) => (
                                         <CarouselItem
                                             key={index}
-                                            className="pl-2 md:basis-1/2 lg:basis-1/3"
+                                            className="basis-[85%] pl-2 sm:basis-1/2 md:basis-1/2 md:pl-4 lg:basis-1/3"
                                         >
                                             <div className="group relative overflow-hidden rounded-2xl border-4 border-white bg-white shadow-md">
                                                 <div className="aspect-[4/5] overflow-hidden">
@@ -189,8 +190,9 @@ export default function Welcome() {
                                     ),
                                 )}
                             </CarouselContent>
-                            <CarouselPrevious className="border-[var(--primary)] text-[var(--primary)]" />
-                            <CarouselNext className="border-[var(--primary)] text-[var(--primary)]" />
+                            {/* Hidden on mobile, visible on md+ */}
+                            <CarouselPrevious className="hidden border-[var(--primary)] text-[var(--primary)] md:flex" />
+                            <CarouselNext className="hidden border-[var(--primary)] text-[var(--primary)] md:flex" />
                         </Carousel>
                     </div>
                 </section>
