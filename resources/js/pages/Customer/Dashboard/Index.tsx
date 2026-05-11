@@ -1057,6 +1057,7 @@ export default function Index({
 
                             {/* The Loyalty Card */}
                             <div className="px-4 pb-4">
+                                    
                                 <div
                                     className="overflow-hidden rounded-2xl shadow-lg"
                                     style={{
@@ -1172,6 +1173,16 @@ export default function Index({
                                             >
                                                 {currentCard.footer}
                                             </p>
+                                            <div className="w-full">
+                                                 <p
+                                                className="text-center text-[9px] font-medium opacity-90"
+                                                style={{
+                                                    color: currentCard.textColor,
+                                                }}
+                                                >
+                                                    Valid Until: {currentCard.valid_until_formatted}
+                                            </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
