@@ -254,14 +254,15 @@ class DashboardController extends Controller
                 $perkClaim->update([
                     'is_redeemed' => true,
                     'redeemed_at' => now(),
-                    'redeemed_by' => null,
-                    'redeemed_by_staff_id' => $staff->id,
+                    'redeemed_by' => Auth::guard('staff')->check() ? null : Auth::id(),
+                    'redeemed_by_staff_id' => Auth::guard('staff')->check() ? Auth::id() : null,
                     'remarks'     => $validated['remarks'] ?? null,
                 ]);
             });
 
             return back()->with('success', 'Perk marked as redeemed successfully.');
         } catch (\Exception $e) {
+            dd($e);
             return back()->withErrors(['error' => 'Failed to mark perk as redeemed. Please try again.']);
         }
     }

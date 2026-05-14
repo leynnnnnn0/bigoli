@@ -89,7 +89,6 @@ class PerkClaimController extends Controller
             'remarks' => 'nullable|string|max:500',
         ]);
 
-        dd('test');
 
         try {
             DB::transaction(function () use ($perkClaim, $validated) {
@@ -100,13 +99,11 @@ class PerkClaimController extends Controller
                     'redeemed_by_staff_id' => Auth::guard('staff')->check() ? Auth::id() : null,
                     'remarks' => $validated['remarks'] ?? null,
                 ]);
-
-                dd(Auth::guard('staff')->check() ? null : Auth::id());
             });
 
             return back()->with('success', 'Perk marked as redeemed successfully.');
         } catch (\Exception $e) {
-            dd($e);
+
             return back()->with('error', 'Failed to mark perk as redeemed. Please try again.');
         }
     }
