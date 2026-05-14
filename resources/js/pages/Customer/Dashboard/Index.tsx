@@ -1191,7 +1191,7 @@ export default function Index({
 
                         {/* Recent Stamps — horizontal scroll on mobile */}
                         <div className="bg-white sm:rounded-2xl sm:shadow-sm">
-                            <div className="flex items-center justify-between px-5 pt-4 pb-2">
+                            <div className="flex items-center justify-between px-5 pt-4 pb-2 mb-4">
                                 <h2 className="text-base font-bold text-gray-900">
                                     Recent Stamps
                                 </h2>
@@ -1211,7 +1211,7 @@ export default function Index({
                                             </div>
                                             <div className="min-w-0 flex-1">
                                                 <p className="truncate text-sm font-semibold text-gray-900">
-                                                    {currentCard.name}
+                                                    {stamp.code}
                                                 </p>
                                                 <p className="text-xs text-gray-400">
                                                     {formatDate(stamp.used_at)}
@@ -1477,7 +1477,7 @@ export default function Index({
             {/* ── MOBILE BOTTOM NAV ── */}
             <nav className="pb-safe fixed right-0 bottom-0 left-0 z-50 border-t border-gray-100 bg-white px-2 sm:hidden">
                 <div className="flex items-center justify-around">
-                    {navItems.map((item) => {
+                    {navItems.map((item) => {1
                         const Icon = item.icon;
                         const isActive = activeTab === item.id;
                         return (
