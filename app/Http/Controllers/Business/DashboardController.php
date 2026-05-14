@@ -28,8 +28,10 @@ class DashboardController extends Controller
 
         // StampCodes scope
         $stampsQuery = fn() => $branchId
-            ? $business->stampCodes()->where('branch_id', $branchId)
-            : $business->stampCodes();
+            ? $business->stampCodes()->withTrashed()->where('branch_id', $branchId)
+            : $business->stampCodes()->withTrashed();
+
+        
 
         $customersCount = $customersQuery()->count();
 

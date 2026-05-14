@@ -22,6 +22,7 @@ class StampCodeController extends Controller
         $businessId = Auth::user()->business->id;
 
         $query = StampCode::with(['customer:id,username,email', 'loyalty_card:id,name', 'branch:id,name', 'user:id,email', 'staff:id,username'])
+        ->withTrashed()
             ->where('business_id', $businessId);
 
         // Search

@@ -92,7 +92,9 @@ class DashboardController extends Controller
 
         // Get stamp codes
         $stampCodes = StampCode::with(['loyalty_card:id,name', 'customer:id,username,email'])
+        ->where('staff_id', Auth::id())
             ->where('business_id', $businessId)
+            ->withTrashed()
             ->latest()
             ->limit(50)
             ->get();

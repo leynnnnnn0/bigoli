@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class StampCode extends Model
 {
@@ -21,6 +23,7 @@ class StampCode extends Model
         'is_offline_code',
         'reference_number',
     ];
+
 
     public function staff()
     {
