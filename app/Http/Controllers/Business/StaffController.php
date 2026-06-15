@@ -53,6 +53,13 @@ class StaffController extends Controller
             'is_active' => 'boolean',
         ]);
 
+        abort_unless(
+            \App\Models\Branch::where('id', $validated['branch_id'])
+                ->where('business_id', Auth::user()->business->id)
+                ->exists(),
+            403
+        );
+
         Staff::create([
             'business_id' => Auth::user()->business->id,
             'branch_id' => $validated['branch_id'],
@@ -67,6 +74,8 @@ class StaffController extends Controller
 
     public function update(Request $request, Staff $staff)
     {
+        abort_unless($staff->business_id === Auth::user()->business->id, 403);
+
         $validated = $request->validate([
             'branch_id' => 'required|exists:branches,id',
             'username' => [
@@ -79,6 +88,13 @@ class StaffController extends Controller
             'remarks' => 'nullable|string',
             'is_active' => 'boolean',
         ]);
+
+        abort_unless(
+            \App\Models\Branch::where('id', $validated['branch_id'])
+                ->where('business_id', Auth::user()->business->id)
+                ->exists(),
+            403
+        );
 
         $data = [
             'branch_id' => $validated['branch_id'],
@@ -98,6 +114,8 @@ class StaffController extends Controller
 
     public function destroy(Staff $staff)
     {
+        abort_unless($staff->business_id === Auth::user()->business->id, 403);
+
         $staff->delete();
 
         return redirect()->back()->with('success', 'Staff deleted successfully');

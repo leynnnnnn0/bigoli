@@ -55,11 +55,9 @@ interface IndexProps {
 }
 
 export default function Index({
-    qrUrl,
     qrCode,
     errors,
     branches = [],
-    branch_id,
 }: IndexProps) {
     const [logoPreview, setLogoPreview] = useState<string | null>(
         qrCode?.logo ? '/' + qrCode.logo : null,

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\LoyaltyCard;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,11 @@ class PerkFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'loyalty_card_id' => LoyaltyCard::factory(),
+            'stampNumber' => 3,
+            'reward' => fake()->randomElement(['Free drink', '10% discount', 'Free upgrade']),
+            'details' => fake()->sentence(),
+            'color' => '#000000',
         ];
     }
 }

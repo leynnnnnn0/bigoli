@@ -10,10 +10,9 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { AwardIcon, BookOpen, Building, Code2Icon, Folder, IdCard, LayoutGrid, QrCodeIcon, Stamp, StampIcon, Store, StoreIcon, TicketIcon, Users2Icon } from 'lucide-react';
+import { AwardIcon, BookOpen, Building, Code2Icon, IdCard, LayoutGrid, QrCodeIcon, StampIcon, StoreIcon, TicketIcon, Users2Icon } from 'lucide-react';
 import LOGO from '../../images/mainLogo.png';
 
 const mainNavItems: NavItem[] = [

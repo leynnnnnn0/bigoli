@@ -14,6 +14,9 @@ interface StampCode {
     loyalty_card: {
         name: string;
     };
+    branch?: {
+        name: string;
+    } | null;
 }
 
 interface Customer {
@@ -29,9 +32,6 @@ interface Props {
 }
 
 export default function Show({ customer }: Props) {
-    const usedStamps = customer.stamp_codes.filter(sc => sc.used_at !== null);
-    const unusedStamps = customer.stamp_codes.filter(sc => sc.used_at === null);
-
     return (
         <AppLayout>
             <Head title="Customer Details" />

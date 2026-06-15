@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Business;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Staff>
@@ -17,7 +19,18 @@ class StaffFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'business_id' => Business::factory(),
+            'branch_id' => null,
+            'branch' => null,
+            'username' => fake()->unique()->userName(),
+            'password' => Hash::make('password'),
+            'remarks' => fake()->optional()->sentence(),
+            'is_active' => true,
         ];
+    }
+
+    public function inactive(): static
+    {
+        return $this->state(fn () => ['is_active' => false]);
     }
 }

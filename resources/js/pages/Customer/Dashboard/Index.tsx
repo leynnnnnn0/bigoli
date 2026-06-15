@@ -18,7 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { router, useForm, usePage } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import {
     Award,
     Calendar,
@@ -43,6 +43,10 @@ import LOGO from '../../../../images/mainLogo.png';
 
 import { BrowserQRCodeReader } from '@zxing/browser';
 import { useEffect } from 'react';
+
+type ScannerControls = {
+    stop: () => void;
+};
 
 interface Perk {
     id: number;
@@ -88,11 +92,26 @@ interface CompletedCard {
     stamps_collected: number;
     completed_at: string;
     card_cycle: number;
-    stamps_data: Array<{
-        id: number;
-        code: string;
-        used_at: string;
-    }>;
+    stamps_data:
+        | string
+        | Array<{
+              id: number;
+              code: string;
+              used_at: string;
+          }>;
+}
+
+interface StampFlash {
+    active_card_id?: number;
+    card_completed?: boolean;
+    message?: string;
+    cycle_number?: number;
+}
+
+interface StampHistoryItem {
+    id: number;
+    code: string;
+    used_at: string;
 }
 
 interface PerkClaim {
@@ -143,8 +162,7 @@ export default function Index({
         useState<CompletedCard | null>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const [scanning, setScanning] = useState(false);
-    const { flash } = usePage().props as any;
-    const controlsRef = useRef<any>(null);
+    const controlsRef = useRef<ScannerControls | null>(null);
     const { data, setData, errors, post, processing, reset } = useForm({
         code: '',
         loyalty_card_id: cardTemplates[0]?.id || null,
@@ -253,6 +271,22 @@ export default function Index({
         });
     };
 
+    const getStampFlash = (page: { props: object }) => {
+        const props = page.props as { flash?: unknown };
+
+        return (props.flash && typeof props.flash === 'object'
+            ? (props.flash as StampFlash)
+            : {}) as StampFlash;
+    };
+
+    const getCompletedStamps = (
+        stampsData: CompletedCard['stamps_data'],
+    ): StampHistoryItem[] => {
+        if (Array.isArray(stampsData)) return stampsData;
+
+        return JSON.parse(stampsData) as StampHistoryItem[];
+    };
+
     const handleRecordStamp = () => setMethodDialogOpen(true);
 
     const handleManualEntry = () => {
@@ -288,7 +322,7 @@ export default function Index({
                 (result, error, controls) => {
                     controlsRef.current = controls;
                     if (result) {
-                        const scannedCode = result.text;
+                        const scannedCode = result.getText();
                         router.post(
                             '/stamps/record',
                             {
@@ -297,18 +331,17 @@ export default function Index({
                             },
                             {
                                 onSuccess: (page) => {
+                                    const flash = getStampFlash(page);
                                     const index = cardTemplates.findIndex(
-                                        (card) =>
-                                            card.id ===
-                                            page.props.flash.active_card_id,
+                                        (card) => card.id === flash.active_card_id,
                                     );
                                     if (index !== -1)
                                         setCurrentCardIndex(index);
-                                    if (page.props.flash.card_completed) {
+                                    if (flash.card_completed) {
                                         toast.success(
-                                            `🎉 ${page.props.flash.message}`,
+                                            `🎉 ${flash.message}`,
                                             {
-                                                description: `You completed cycle #${page.props.flash.cycle_number}!`,
+                                                description: `You completed cycle #${flash.cycle_number}!`,
                                             },
                                         );
                                     } else {
@@ -343,11 +376,12 @@ export default function Index({
             );
             controlsRef.current = controls;
         } catch (err) {
-            if (err.name === 'NotAllowedError')
+            const errorName = err instanceof Error ? err.name : '';
+            if (errorName === 'NotAllowedError')
                 toast.error('Camera permission denied.');
-            else if (err.name === 'NotFoundError')
+            else if (errorName === 'NotFoundError')
                 toast.error('No camera found.');
-            else if (err.name === 'NotReadableError')
+            else if (errorName === 'NotReadableError')
                 toast.error('Camera is already in use.');
             else toast.error('Failed to access camera.');
             setScanDialogOpen(false);
@@ -359,7 +393,9 @@ export default function Index({
         if (controlsRef.current) {
             try {
                 controlsRef.current.stop();
-            } catch (e) {}
+            } catch {
+                // Camera controls can already be released by the decoder callback.
+            }
             controlsRef.current = null;
         }
         if (videoRef.current && videoRef.current.srcObject) {
@@ -384,13 +420,14 @@ export default function Index({
         e.preventDefault();
         post('/stamps/record', {
             onSuccess: (page) => {
+                const flash = getStampFlash(page);
                 const index = cardTemplates.findIndex(
-                    (card) => card.id === page.props.flash.active_card_id,
+                    (card) => card.id === flash.active_card_id,
                 );
                 if (index !== -1) setCurrentCardIndex(index);
-                if (page.props.flash.card_completed) {
-                    toast.success(`🎉 ${page.props.flash.message}`, {
-                        description: `You completed cycle #${page.props.flash.cycle_number}!`,
+                if (flash.card_completed) {
+                    toast.success(`🎉 ${flash.message}`, {
+                        description: `You completed cycle #${flash.cycle_number}!`,
                     });
                 } else {
                     toast.success('Stamped Successfully.');
@@ -418,7 +455,7 @@ export default function Index({
         isReward: boolean;
         rewardText?: string;
         color: string;
-        stampImage?: any;
+        stampImage?: string | null;
     }) => {
         const fillColor = isFilled
             ? currentCard.stampFilledColor || color
@@ -429,7 +466,7 @@ export default function Index({
             : null;
         if (stampImage) stampImageUrl = `/${stampImage}`;
 
-        const shapes: Record<string, JSX.Element> = {
+        const shapes: Record<string, React.ReactElement> = {
             circle: (
                 <svg width="100%" height="100%" viewBox="0 0 100 100">
                     <defs>
@@ -1477,7 +1514,7 @@ export default function Index({
             {/* ── MOBILE BOTTOM NAV ── */}
             <nav className="pb-safe fixed right-0 bottom-0 left-0 z-50 border-t border-gray-100 bg-white px-2 sm:hidden">
                 <div className="flex items-center justify-around">
-                    {navItems.map((item) => {1
+                    {navItems.map((item) => {
                         const Icon = item.icon;
                         const isActive = activeTab === item.id;
                         return (
@@ -1701,7 +1738,7 @@ export default function Index({
                                     Stamp History
                                 </h4>
                                 <div className="max-h-60 space-y-2 overflow-y-auto">
-                                    {JSON.parse(
+                                    {getCompletedStamps(
                                         selectedCompletedCard.stamps_data,
                                     ).map((stamp, i) => (
                                         <div

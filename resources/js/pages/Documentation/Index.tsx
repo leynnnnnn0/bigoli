@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { BookOpen, LayoutDashboard, Stamp, Gift, Hash, CreditCard, Users, QrCode, Ticket, Settings, Search, X, Store } from 'lucide-react';
+import React, { type ReactNode, useState } from 'react';
+import { BookOpen, LayoutDashboard, Stamp, Gift, Hash, CreditCard, Users, QrCode, Ticket, Search, X, Store } from 'lucide-react';
 import Dashboard from "../../../images/documentation/dashboard.png";
 import Register from "../../../images/documentation/register.png";
 import Validate from "../../../images/documentation/validate.png";
@@ -8,6 +8,28 @@ import CardTemplate from "../../../images/documentation/card-template.png";
 import QRStudio from "../../../images/documentation/qr-studio.png";
 import QR from "../../../images/documentation/qr.png";
 import CustomerDashboard from "../../../images/documentation/customer-dashboard.png";
+
+interface DocumentationSubsection {
+  title: string;
+  content?: string;
+  items?: string[];
+  steps?: string[];
+  image?: ReactNode;
+}
+
+interface DocumentationSection {
+  title: string;
+  description: string;
+  sections: DocumentationSubsection[];
+}
+
+interface SearchResult {
+  sectionId: string;
+  title: string;
+  description: string;
+  matchType: 'section' | 'subsection' | 'content' | 'item' | 'step';
+}
+
 const Documentation = () => {
   const [activeSection, setActiveSection] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,7 +50,7 @@ const Documentation = () => {
     // { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
-  const content = {
+  const content: Record<string, DocumentationSection> = {
     overview: {
       title: 'System Overview',
       description: 'Welcome to the StampBayan documentation. This comprehensive guide will help you understand and utilize all features of the platform.',
@@ -407,10 +429,10 @@ const Documentation = () => {
     // }
   };
 
-  const searchResults = useMemo(() => {
+  const searchResults = (() => {
     if (!searchTerm.trim()) return [];
 
-    const results = [];
+    const results: SearchResult[] = [];
     const lowerSearch = searchTerm.toLowerCase();
 
     Object.entries(content).forEach(([sectionId, section]) => {
@@ -478,20 +500,20 @@ const Documentation = () => {
     );
 
     return uniqueResults.slice(0, 10);
-  }, [searchTerm]);
+  })();
 
-  const handleSearch = (value) => {
+  const handleSearch = (value: string) => {
     setSearchTerm(value);
     setIsSearching(value.trim().length > 0);
   };
 
-  const handleSearchResultClick = (sectionId) => {
+  const handleSearchResultClick = (sectionId: string) => {
     setActiveSection(sectionId);
     setSearchTerm('');
     setIsSearching(false);
   };
 
-  const renderContent = (section) => {
+  const renderContent = (section: DocumentationSection) => {
     return (
       <div className="space-y-4 sm:space-y-6">
         <div>

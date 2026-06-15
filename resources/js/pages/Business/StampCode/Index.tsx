@@ -63,8 +63,8 @@ interface StampCode {
     is_offline_code: boolean;
     customer: { username: string; email: string } | null;
     branch: { name: string } | null;
-    staff: { email: string } | null;
-    user: { email: string } | null;
+    staff: { username?: string; email: string } | null;
+    user: { username?: string; email: string } | null;
     used_at: string | null;
     is_expired: boolean;
     created_at: string;
@@ -192,10 +192,6 @@ export default function Index({
         setSortBy(col);
         setSortDir(newDir);
         navigate(buildParams({ sort_by: col, sort_dir: newDir }));
-    };
-
-    const handlePageChange = (url: string | null) => {
-        if (url) router.get(url, {}, { preserveState: true });
     };
 
     const buildExportUrl = () => {

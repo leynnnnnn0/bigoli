@@ -29,25 +29,32 @@ import {
     CarouselPrevious,
 } from '@/components/ui/carousel';
 
+interface BeforeInstallPromptEvent extends Event {
+    prompt: () => Promise<void>;
+    userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
+const detectPlatform = (): 'ios' | 'android' | 'other' => {
+    if (typeof navigator === 'undefined') return 'other';
+
+    const userAgent = navigator.userAgent || navigator.vendor;
+    if (/iPad|iPhone|iPod/.test(userAgent)) return 'ios';
+    if (/android/i.test(userAgent)) return 'android';
+
+    return 'other';
+};
+
 export default function Welcome() {
-    const [platform, setPlatform] = useState<'ios' | 'android' | 'other'>(
-        'other',
+    const [platform] = useState<'ios' | 'android' | 'other'>(() =>
+        detectPlatform(),
     );
-    const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+    const [deferredPrompt, setDeferredPrompt] =
+        useState<BeforeInstallPromptEvent | null>(null);
 
     useEffect(() => {
-        const userAgent = navigator.userAgent || navigator.vendor;
-        if (/iPad|iPhone|iPod/.test(userAgent)) {
-            setPlatform('ios');
-        } else if (/android/i.test(userAgent)) {
-            setPlatform('android');
-        } else {
-            setPlatform('other');
-        }
-
         const handleBeforeInstallPrompt = (e: Event) => {
             e.preventDefault();
-            setDeferredPrompt(e);
+            setDeferredPrompt(e as BeforeInstallPromptEvent);
         };
         window.addEventListener(
             'beforeinstallprompt',

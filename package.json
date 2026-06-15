@@ -6,6 +6,8 @@
         "build": "vite build",
         "build:ssr": "vite build && vite build --ssr",
         "dev": "vite",
+        "test:e2e": "npm run build && node e2e/run.mjs",
+        "test:e2e:fast": "node e2e/run.mjs",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",

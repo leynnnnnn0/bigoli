@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+
 export default function ProPlan() {
     const projectDetails = {
         title: 'Custom Business Solution',
@@ -60,7 +62,7 @@ export default function ProPlan() {
     );
 }
 
-const styles = {
+const styles: Record<string, CSSProperties> = {
     container: {
         maxWidth: '1000px',
         margin: '0 auto',

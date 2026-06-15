@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PerkClaim extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'customer_id', 
         'loyalty_card_id',
@@ -15,7 +18,7 @@ class PerkClaim extends Model
         'redeemed_at',
         'redeemed_by',
         'redeemed_by_staff_id',
-        'notes',
+        'remarks',
     ];
 
     protected $casts = [

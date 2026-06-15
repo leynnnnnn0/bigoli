@@ -17,7 +17,8 @@ class SuggestionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'email' => fake()->optional()->safeEmail(),
+            'suggestion' => fake()->sentence(8),
         ];
     }
 }

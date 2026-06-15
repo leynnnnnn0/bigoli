@@ -51,6 +51,7 @@ export default function TermsAndAgreement({
                         of StampBayan.
                     </Label>
                 </div>
+                {error && <p className="pl-7 text-xs text-destructive">{error}</p>}
                 </div>
 
             <Dialog open={open} onOpenChange={setOpen}>

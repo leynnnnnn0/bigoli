@@ -50,6 +50,8 @@ class BranchController extends Controller
 
     public function update(Request $request, Branch $branch)
     {
+        abort_unless($branch->business_id === Auth::user()->business->id, 403);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'nullable|string',
@@ -63,6 +65,8 @@ class BranchController extends Controller
 
     public function destroy(Branch $branch)
     {
+        abort_unless($branch->business_id === Auth::user()->business->id, 403);
+
         if ($branch->loyaltyCards()->exists()) {
             return redirect()->back()->with('error', 'Cannot delete branch because it has loyalty cards linked to it.');
         }

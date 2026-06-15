@@ -35,7 +35,7 @@ interface RegisterProps {
     branch_id: number | null
 }
 
-export default function Register({ businesses, selectedBusiness, branch_id }: RegisterProps) {
+export default function Register({ selectedBusiness, branch_id }: RegisterProps) {
     const { data, setData, post, processing, errors, reset } = useForm({
         business_id: selectedBusiness?.id?.toString() || '',
         username: '',

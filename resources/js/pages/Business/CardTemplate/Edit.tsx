@@ -1,6 +1,19 @@
 import { useState } from 'react';
+import { CardTemplateStampShape } from '@/components/card-template-stamp-shape';
+import type { CardTemplateStampShapeProps } from '@/components/card-template-stamp-shape';
 import ModuleHeading from '@/components/module-heading';
 import AppLayout from '@/layouts/app-layout';
+import {
+    buildCardTemplateForm,
+    CardTemplateImageField,
+    CardTemplatePerkField,
+    StampShapeType,
+} from '@/types/card-template';
+import type {
+    CardTemplateFormData,
+    CardTemplateRecord,
+} from '@/types/card-template';
+import type { BranchOption } from '@/types/stampbayan';
 import { Head, useForm } from '@inertiajs/react';
 import {
     AlertDialog,
@@ -34,12 +47,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { toast } from 'sonner';
 import {
-    Upload,
     ImageIcon,
     Plus,
-    Trash2,
     Sparkles,
-    Terminal,
+    Trash2,
     LucideMessageCircleWarning,
     AlertTriangle,
     MapPin,
@@ -50,44 +61,21 @@ export default function Edit({
     cardTemplate,
     branches = [],
 }: {
-    cardTemplate: any;
-    branches?: { id: number; name: string }[];
+    cardTemplate: CardTemplateRecord;
+    branches?: BranchOption[];
 }) {
-    const { data, setData, put, processing, errors } = useForm({
-        logo: cardTemplate.logo ? `/${cardTemplate.logo}` : null,
-        name: cardTemplate.name || '',
-        heading: cardTemplate.heading || 'LOYALTY CARD',
-        valid_until: cardTemplate.valid_until,
-        subheading:
-            cardTemplate.subheading || 'Collect stamps and earn rewards!',
-        stampsNeeded: cardTemplate.stampsNeeded || 10,
-        mechanics:
-            cardTemplate.mechanics ||
-            'Get 1 stamp per purchase. Collect stamps to unlock rewards!',
-        backgroundColor: cardTemplate.backgroundColor || '#4DB6AC',
-        textColor: cardTemplate.textColor || '#FFFFFF',
-        stampColor: cardTemplate.stampColor || '#4DB6AC',
-        stampFilledColor: cardTemplate.stampFilledColor || '#FF6B6B',
-        stampEmptyColor: cardTemplate.stampEmptyColor || '#E5E7EB',
-        stampImage: cardTemplate.stampImage
-            ? `/${cardTemplate.stampImage}`
-            : null,
-        backgroundImage: cardTemplate.backgroundImage
-            ? `/${cardTemplate.backgroundImage}`
-            : null,
-        footer: cardTemplate.footer || 'your social media • your website',
-        stampShape: cardTemplate.stampShape || 'star',
-        perks: cardTemplate.perks || [],
-        branch_ids:
-            cardTemplate.branches?.map((b: any) => b.id) ?? ([] as number[]),
-    });
+    const { data, setData, put, processing, errors } =
+        useForm<CardTemplateFormData>(buildCardTemplateForm(cardTemplate));
 
-    const handleImageUpload = (field, e) => {
-        const file = e.target.files[0];
+    const handleImageUpload = (
+        field: CardTemplateImageField,
+        e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        const file = e.target.files?.[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setData(field, reader.result);
+                setData(field, String(reader.result));
             };
             reader.readAsDataURL(file);
         }
@@ -100,25 +88,29 @@ export default function Edit({
         ]);
     };
 
-    const updatePerk = (index, field, value) => {
+    const updatePerk = (
+        index: number,
+        field: CardTemplatePerkField,
+        value: string | number,
+    ) => {
         const updatedPerks = data.perks.map((perk, i) =>
             i === index ? { ...perk, [field]: value } : perk,
         );
         setData('perks', updatedPerks);
     };
 
-    const removePerk = (index) => {
+    const removePerk = (index: number) => {
         setData(
             'perks',
             data.perks.filter((_, i) => i !== index),
         );
     };
 
-    const getPerkForStamp = (stampNumber) => {
+    const getPerkForStamp = (stampNumber: number) => {
         return data.perks.find((p) => p.stampNumber === stampNumber);
     };
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setShowConfirmDialog(true);
     };
@@ -142,221 +134,19 @@ export default function Edit({
         });
     };
 
-    const StampShape = ({
-        shape,
-        isFilled,
-        isReward,
-        rewardText,
-        color,
-        details,
-    }) => {
-        const fillColor = isFilled
-            ? data.stampFilledColor || color
-            : data.stampEmptyColor;
-        const strokeColor = isFilled ? '#FFFFFF' : '#D1D5DB';
-
-        const shapes = {
-            circle: (
-                <svg
-                    width="70"
-                    height="70"
-                    viewBox="0 0 100 100"
-                    className="h-full w-full drop-shadow-lg transition-all duration-300 hover:scale-110"
-                >
-                    <defs>
-                        {data.stampImage && (
-                            <pattern
-                                id="stampPattern"
-                                x="0"
-                                y="0"
-                                width="1"
-                                height="1"
-                            >
-                                <image
-                                    href={data.stampImage}
-                                    x="0"
-                                    y="0"
-                                    width="100"
-                                    height="100"
-                                    preserveAspectRatio="xMidYMid slice"
-                                />
-                            </pattern>
-                        )}
-                    </defs>
-                    <circle
-                        cx="50"
-                        cy="50"
-                        r="45"
-                        fill={
-                            data.stampImage && isFilled
-                                ? 'url(#stampPattern)'
-                                : fillColor
-                        }
-                        stroke={strokeColor}
-                        strokeWidth="3"
-                    />
-                </svg>
-            ),
-            star: (
-                <svg
-                    width="70"
-                    height="70"
-                    viewBox="0 0 100 100"
-                    className="h-full w-full drop-shadow-lg transition-all duration-300 hover:scale-110"
-                >
-                    <defs>
-                        {data.stampImage && (
-                            <pattern
-                                id="stampPattern"
-                                x="0"
-                                y="0"
-                                width="1"
-                                height="1"
-                            >
-                                <image
-                                    href={data.stampImage}
-                                    x="0"
-                                    y="0"
-                                    width="100"
-                                    height="100"
-                                    preserveAspectRatio="xMidYMid slice"
-                                />
-                            </pattern>
-                        )}
-                    </defs>
-                    <path
-                        d="M50 5 L55 20 L70 15 L70 30 L85 35 L75 47 L85 59 L70 64 L70 79 L55 74 L50 89 L45 74 L30 79 L30 64 L15 59 L25 47 L15 35 L30 30 L30 15 L45 20 Z"
-                        fill={
-                            data.stampImage && isFilled
-                                ? 'url(#stampPattern)'
-                                : fillColor
-                        }
-                        stroke={strokeColor}
-                        strokeWidth="3"
-                    />
-                </svg>
-            ),
-            square: (
-                <svg
-                    width="70"
-                    height="70"
-                    viewBox="0 0 100 100"
-                    className="h-full w-full drop-shadow-lg transition-all duration-300 hover:scale-110"
-                >
-                    <defs>
-                        {data.stampImage && (
-                            <pattern
-                                id="stampPattern"
-                                x="0"
-                                y="0"
-                                width="1"
-                                height="1"
-                            >
-                                <image
-                                    href={data.stampImage}
-                                    x="0"
-                                    y="0"
-                                    width="100"
-                                    height="100"
-                                    preserveAspectRatio="xMidYMid slice"
-                                />
-                            </pattern>
-                        )}
-                    </defs>
-                    <rect
-                        x="10"
-                        y="10"
-                        width="80"
-                        height="80"
-                        rx="12"
-                        fill={
-                            data.stampImage && isFilled
-                                ? 'url(#stampPattern)'
-                                : fillColor
-                        }
-                        stroke={strokeColor}
-                        strokeWidth="3"
-                    />
-                </svg>
-            ),
-            hexagon: (
-                <svg
-                    width="70"
-                    height="70"
-                    viewBox="0 0 100 100"
-                    className="h-full w-full drop-shadow-lg transition-all duration-300 hover:scale-110"
-                >
-                    <defs>
-                        {data.stampImage && (
-                            <pattern
-                                id="stampPattern"
-                                x="0"
-                                y="0"
-                                width="1"
-                                height="1"
-                            >
-                                <image
-                                    href={data.stampImage}
-                                    x="0"
-                                    y="0"
-                                    width="100"
-                                    height="100"
-                                    preserveAspectRatio="xMidYMid slice"
-                                />
-                            </pattern>
-                        )}
-                    </defs>
-                    <path
-                        d="M50 5 L90 27.5 L90 72.5 L50 95 L10 72.5 L10 27.5 Z"
-                        fill={
-                            data.stampImage && isFilled
-                                ? 'url(#stampPattern)'
-                                : fillColor
-                        }
-                        stroke={strokeColor}
-                        strokeWidth="3"
-                    />
-                </svg>
-            ),
-        };
-
-        return (
-            <div className="group relative">
-                {shapes[shape]}
-                {isReward && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <span
-                            className="px-1 text-center text-[10px] leading-tight font-bold text-white drop-shadow-lg"
-                            style={{
-                                textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
-                            }}
-                        >
-                            {rewardText}
-                        </span>
-                    </div>
-                )}
-                {isFilled && !isReward && !data.stampImage && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <Sparkles
-                            size={20}
-                            className="animate-pulse text-white"
-                        />
-                    </div>
-                )}
-                {isReward && details && (
-                    <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 transform opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                        <div className="max-w-[200px] rounded-lg bg-gray-900 px-3 py-2 text-center text-xs whitespace-nowrap text-white shadow-xl">
-                            <div className="mb-1 font-bold">{rewardText}</div>
-                            <div className="text-gray-300">{details}</div>
-                            <div className="absolute top-full left-1/2 -mt-1 -translate-x-1/2 transform">
-                                <div className="border-4 border-transparent border-t-gray-900"></div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </div>
-        );
-    };
+    const StampShape = (
+        props: Omit<
+            CardTemplateStampShapeProps,
+            'filledColor' | 'emptyColor' | 'stampImage'
+        >,
+    ) => (
+        <CardTemplateStampShape
+            {...props}
+            filledColor={data.stampFilledColor}
+            emptyColor={data.stampEmptyColor}
+            stampImage={data.stampImage}
+        />
+    );
 
     return (
         <AppLayout>
@@ -515,7 +305,10 @@ export default function Edit({
                                             <Select
                                                 value={data.stampShape}
                                                 onValueChange={(value) =>
-                                                    setData('stampShape', value)
+                                                    setData(
+                                                        'stampShape',
+                                                        value as StampShapeType,
+                                                    )
                                                 }
                                             >
                                                 <SelectTrigger className="text-xs md:text-sm">
@@ -927,7 +720,8 @@ export default function Edit({
                                                             <Textarea
                                                                 placeholder="e.g., Get 10% discount on your next purchase"
                                                                 value={
-                                                                    perk.details
+                                                                    perk.details ??
+                                                                    ''
                                                                 }
                                                                 onChange={(e) =>
                                                                     updatePerk(

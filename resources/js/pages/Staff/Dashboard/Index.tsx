@@ -1,3 +1,4 @@
+import { BranchAndCardSelectors } from '@/components/branch-card-selectors';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,13 +13,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import {
     Table,
     TableBody,
     TableCell,
@@ -28,6 +22,12 @@ import {
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
+import type {
+    BranchOption,
+    LoyaltyCardOption,
+    PerkClaim,
+    StampCodeRecord,
+} from '@/types/stampbayan';
 import { Head, router } from '@inertiajs/react';
 import {
     Award,
@@ -45,73 +45,9 @@ import {
     User,
     X,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import LOGO from '../../../../images/mainLogo.png';
-
-interface StampCode {
-    code: string;
-    qr_url: string;
-    created_at: string;
-}
-
-interface LoyaltyCard {
-    id: number;
-    name: string;
-    logo?: string;
-}
-
-interface Branch {
-    id: number;
-    name: string;
-}
-
-interface PerkClaim {
-    id: number;
-    customer_id: number;
-    loyalty_card_id: number;
-    perk_id: number;
-    stamps_at_claim: number;
-    is_redeemed: boolean;
-    redeemed_at: string | null;
-    remarks: string | null;
-    created_at: string;
-    customer: {
-        id: number;
-        username: string;
-        email: string;
-    };
-    perk: {
-        id: number;
-        reward: string;
-        details: string | null;
-        stampNumber: number;
-    };
-    loyalty_card: {
-        id: number;
-        name: string;
-        logo: string | null;
-    };
-    redeemed_by?: {
-        id: number;
-        username: string;
-    };
-}
-
-interface StampCodeRecord {
-    id: number;
-    code: string;
-    customer: {
-        username: string;
-        email: string;
-    } | null;
-    used_at: string | null;
-    is_expired: boolean;
-    created_at: string;
-    loyalty_card: {
-        name: string;
-    };
-}
 
 interface Props {
     code?: {
@@ -120,8 +56,8 @@ interface Props {
         qr_url: string;
         created_at: string;
     };
-    cards?: LoyaltyCard[];
-    branches?: Branch[];
+    cards?: LoyaltyCardOption[];
+    branches?: BranchOption[];
     loyalty_card_id?: string;
     branch_id?: string;
     perkClaims?: PerkClaim[];
@@ -150,7 +86,6 @@ export default function Index({
     );
 
     const [loading, setLoading] = useState(false);
-    const [downloadingOffline, setDownloadingOffline] = useState(false);
     const [selectedBranchId, setSelectedBranchId] = useState<string>(
         branch_id ?? '',
     );
@@ -172,14 +107,6 @@ export default function Index({
     // Stamp Codes state
     const [codeSearch, setCodeSearch] = useState('');
     const [activeTab, setActiveTab] = useState('issue-stamp');
-
-    useEffect(() => {
-        if (loyalty_card_id) setSelectedCardId(loyalty_card_id.toString());
-    }, [loyalty_card_id]);
-
-    useEffect(() => {
-        if (branch_id) setSelectedBranchId(branch_id);
-    }, [branch_id]);
 
     // When branch changes, reload so server returns filtered cards
     const handleBranchChange = (value: string) => {
@@ -212,41 +139,6 @@ export default function Index({
     };
 
     const generateNewCode = generateCode;
-
-    const downloadOfflineStamps = async () => {
-        if (!selectedCardId) {
-            setError('Please select a loyalty card');
-            return;
-        }
-        setDownloadingOffline(true);
-        setError(null);
-        try {
-            const params = new URLSearchParams({ id: selectedCardId });
-            if (selectedBranchId) params.append('branch_id', selectedBranchId);
-            const response = await fetch(
-                `/staff/generate-offline?${params.toString()}`,
-                {
-                    method: 'GET',
-                    headers: { Accept: 'application/pdf' },
-                },
-            );
-            if (!response.ok)
-                throw new Error('Failed to generate offline stamps');
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `loyalty-stamps-${new Date().toISOString().split('T')[0]}.pdf`;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        } catch (err) {
-            setError('Failed to download offline stamps. Please try again.');
-        } finally {
-            setDownloadingOffline(false);
-        }
-    };
 
     const formatDate = (dateString: string | null) => {
         if (!dateString) return 'N/A';
@@ -347,78 +239,16 @@ export default function Index({
                 .includes(codeSearch.toLowerCase()),
     );
 
-    // Reusable branch + card selectors (mirrors Business Issue Stamp page)
-    const BranchAndCardSelectors = () => (
-        <div className="space-y-4">
-            {/* Branch Selector — only shown if staff has a branch assigned */}
-            {branches.length > 0 && (
-                <div>
-                    <Label className="mb-2 block text-sm font-semibold text-gray-700">
-                        <span className="flex items-center gap-1.5">
-                            <MapPin className="h-4 w-4" />
-                            Branch
-                        </span>
-                    </Label>
-                    <Select
-                        value={selectedBranchId}
-                        onValueChange={handleBranchChange}
-                    >
-                        <SelectTrigger className="h-12 w-full">
-                            <SelectValue placeholder="Select your branch" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {branches.map((branch) => (
-                                <SelectItem
-                                    key={branch.id}
-                                    value={branch.id.toString()}
-                                >
-                                    {branch.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <p className="mt-1 text-xs text-gray-400">
-                        {selectedBranchId
-                            ? 'Showing cards available at this branch and cards available everywhere.'
-                            : 'Showing cards available at all branches.'}
-                    </p>
-                </div>
-            )}
-
-            {/* Loyalty Card Selector */}
-            <div>
-                <Label className="mb-2 block text-sm font-semibold text-gray-700">
-                    Select Loyalty Card
-                </Label>
-                {cards.length > 0 ? (
-                    <Select
-                        value={selectedCardId}
-                        onValueChange={setSelectedCardId}
-                    >
-                        <SelectTrigger className="h-12 w-full">
-                            <SelectValue placeholder="Select a loyalty card" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {cards.map((card) => (
-                                <SelectItem
-                                    key={card.id}
-                                    value={card.id.toString()}
-                                >
-                                    {card.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                ) : (
-                    <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-700">
-                        No loyalty cards available
-                        {branches.length > 0
-                            ? ' for the selected branch.'
-                            : '. Contact administrator.'}
-                    </div>
-                )}
-            </div>
-        </div>
+    const branchAndCardSelectors = (
+        <BranchAndCardSelectors
+            branches={branches}
+            cards={cards}
+            selectedBranchId={selectedBranchId}
+            selectedCardId={selectedCardId}
+            onBranchChange={handleBranchChange}
+            onCardChange={setSelectedCardId}
+            tone="staff"
+        />
     );
 
     return (
@@ -623,7 +453,7 @@ export default function Index({
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent className="space-y-6 p-6">
-                                        <BranchAndCardSelectors />
+                                        {branchAndCardSelectors}
 
                                         <div>
                                             <Label className="mb-2 block text-sm font-semibold text-gray-700">
@@ -748,7 +578,7 @@ export default function Index({
                                             </p>
                                         </div>
 
-                                        <BranchAndCardSelectors />
+                                        {branchAndCardSelectors}
 
                                         <div>
                                             <Label className="mb-2 block text-sm font-semibold text-gray-700">

@@ -48,7 +48,7 @@ Route::get('/pro-plan', function () {
 
 Route::get('/documentation', [DocumentationController::class, 'index']);
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::prefix('business')->group(function () {
         Route::get('/stamp-codes/export', [StampCodeController::class, 'export'])
             ->name('business.stamp-codes.export');

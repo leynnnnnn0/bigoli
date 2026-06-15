@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -28,5 +29,21 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (AuthenticationException $e, $request) {
+            if ($request->expectsJson()) {
+                return null;
+            }
+
+            $guards = $e->guards();
+
+            if (in_array('customer', $guards, true)) {
+                return redirect()->guest(route('customer.login'));
+            }
+
+            if (in_array('staff', $guards, true)) {
+                return redirect()->guest(route('staff.login'));
+            }
+
+            return redirect()->guest(route('login'));
+        });
     })->create();

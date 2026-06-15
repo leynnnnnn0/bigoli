@@ -11,6 +11,15 @@ use Inertia\Inertia;
 
 class PerkClaimController extends Controller
 {
+    private function currentBusinessId(): int
+    {
+        if (Auth::guard('staff')->check()) {
+            return Auth::guard('staff')->user()->business_id;
+        }
+
+        return Auth::user()->business->id;
+    }
+
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -24,7 +33,7 @@ class PerkClaimController extends Controller
                 'redeemed_by_staff:id,username',
             ])
             ->whereHas('loyalty_card', function ($query) {
-                $query->where('business_id', Auth::user()->business->id);
+                $query->where('business_id', $this->currentBusinessId());
             })
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
@@ -55,13 +64,13 @@ class PerkClaimController extends Controller
 
         $stats = [
             'total' => PerkClaim::whereHas('loyalty_card', function ($query) {
-                $query->where('business_id', Auth::user()->business->id);
+                $query->where('business_id', $this->currentBusinessId());
             })->count(),
             'available' => PerkClaim::whereHas('loyalty_card', function ($query) {
-                $query->where('business_id', Auth::user()->business->id);
+                $query->where('business_id', $this->currentBusinessId());
             })->where('is_redeemed', false)->count(),
             'redeemed' => PerkClaim::whereHas('loyalty_card', function ($query) {
-                $query->where('business_id', Auth::user()->business->id);
+                $query->where('business_id', $this->currentBusinessId());
             })->where('is_redeemed', true)->count(),
         ];
 
@@ -77,7 +86,7 @@ class PerkClaimController extends Controller
 
     public function markAsRedeemed(Request $request, PerkClaim $perkClaim)
     {
-        if ($perkClaim->loyalty_card->business_id !== Auth::user()->business->id) {
+        if ($perkClaim->loyalty_card->business_id !== $this->currentBusinessId()) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -96,7 +105,7 @@ class PerkClaimController extends Controller
                     'is_redeemed' => true,
                     'redeemed_at' => now(),
                     'redeemed_by' => Auth::guard('staff')->check() ? null : Auth::id(),
-                    'redeemed_by_staff_id' => Auth::guard('staff')->check() ? Auth::id() : null,
+                    'redeemed_by_staff_id' => Auth::guard('staff')->check() ? Auth::guard('staff')->id() : null,
                     'remarks' => $validated['remarks'] ?? null,
                 ]);
             });
@@ -111,7 +120,7 @@ class PerkClaimController extends Controller
     public function undoRedeem(PerkClaim $perkClaim)
     {
         // Verify the perk claim belongs to this business
-        if ($perkClaim->loyalty_card->business_id !== Auth::user()->business->id) {
+        if ($perkClaim->loyalty_card->business_id !== $this->currentBusinessId()) {
             abort(403, 'Unauthorized action.');
         }
 
