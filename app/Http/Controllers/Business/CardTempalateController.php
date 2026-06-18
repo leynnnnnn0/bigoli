@@ -16,9 +16,6 @@ class CardTempalateController extends Controller
     {
         $cardTemplates = Auth::user()->business->loyaltyCards()
             ->with('perks')
-            ->with(['stamp_codes' => function ($q) {
-                $q->whereNotNull('used_at');
-            }])
             ->latest()
             ->get();
 

@@ -81,7 +81,8 @@ class DashboardController extends Controller
             'customer:id,username,email',
             'perk:id,reward,details,stampNumber',
             'loyalty_card:id,name,logo',
-            'redeemed_by:id,username'
+            'redeemed_by:id,username',
+            'redeemed_by_staff:id,username',
         ])
             ->whereHas('loyalty_card', function ($query) use ($businessId) {
                 $query->where('business_id', $businessId);
