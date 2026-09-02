@@ -3,79 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Models\Branch;
-use Illuminate\Http\Request;
+use App\Http\Requests\Business\BranchIndexRequest;
+use App\Http\Requests\Business\StoreBranchRequest;
+use App\Http\Requests\Business\UpdateBranchRequest;
+use App\Services\BranchService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class BranchController extends Controller
 {
-    public function index(Request $request)
+    public function index(BranchIndexRequest $request, BranchService $branches)
     {
-        $query = Branch::query();
-
-        $query->where('business_id', Auth::user()->business->id);
-
-        if ($request->has('search') && $request->search) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%");
-            });
-        }
-
-        $branches = $query->orderBy('created_at', 'desc')->get();
-
-        return Inertia::render('Business/Branch/Index', [
-            'branches' => $branches,
-            'filters' => [
-                'search' => $request->search,
-            ],
-        ]);
+        return Inertia::render('Business/Branch/Index', $branches->pageData(
+            Auth::user()->business,
+            $request->validated(),
+        ));
     }
 
-    public function store(Request $request)
+    public function store(StoreBranchRequest $request, BranchService $branches)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'nullable|string',
-            'remarks' => 'nullable|string',
-        ]);
-
-        $validated['business_id'] = Auth::user()->business->id;
-
-        Branch::create($validated);
+        $branches->create(Auth::user()->business, $request->validated());
 
         return redirect()->back()->with('success', 'Branch created successfully');
     }
 
-    public function update(Request $request, Branch $branch)
+    public function update(UpdateBranchRequest $request, Branch $branch, BranchService $branches)
     {
-        abort_unless($branch->business_id === Auth::user()->business->id, 403);
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'nullable|string',
-            'remarks' => 'nullable|string',
-        ]);
-
-        $branch->update($validated);
+        $branches->update(Auth::user()->business, $branch, $request->validated());
 
         return redirect()->back()->with('success', 'Branch updated successfully');
     }
 
-    public function destroy(Branch $branch)
+    public function destroy(Branch $branch, BranchService $branches)
     {
-        abort_unless($branch->business_id === Auth::user()->business->id, 403);
-
-        if ($branch->loyaltyCards()->exists()) {
-            return redirect()->back()->with('error', 'Cannot delete branch because it has loyalty cards linked to it.');
+        if ($message = $branches->delete(Auth::user()->business, $branch)) {
+            return back()->with('error', $message);
         }
 
-        if ($branch->stampCodes()->exists()) {
-            return redirect()->back()->with('error', 'Cannot delete branch because it has stamp codes linked to it.');
-        }
-
-        $branch->delete();
-        return redirect()->back()->with('success', 'Branch deleted successfully');
+        return back()->with('success', 'Branch deleted successfully');
     }
 }
