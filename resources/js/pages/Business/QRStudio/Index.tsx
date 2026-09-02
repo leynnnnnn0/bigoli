@@ -35,6 +35,8 @@ interface QRCodeData {
     textColor: string;
     backgroundImage: File | null;
     logo: File | null;
+    remove_logo: boolean;
+    remove_background_image: boolean;
     branch_id: number | null;
 }
 
@@ -78,6 +80,8 @@ export default function Index({
         textColor: qrCode?.text_color || '#000000',
         backgroundImage: null,
         logo: null,
+        remove_logo: false,
+        remove_background_image: false,
         branch_id: qrCode?.branch_id ?? null,
     });
 
@@ -105,6 +109,7 @@ export default function Index({
             reader.onload = (e) => setLogoPreview(e.target?.result as string);
             reader.readAsDataURL(file);
             setData('logo', file);
+            setData('remove_logo', false);
         }
     };
 
@@ -120,6 +125,7 @@ export default function Index({
                 setBackgroundPreview(e.target?.result as string);
             reader.readAsDataURL(file);
             setData('backgroundImage', file);
+            setData('remove_background_image', false);
         }
     };
 
@@ -145,12 +151,14 @@ export default function Index({
     const removeLogo = () => {
         setLogoPreview(null);
         setData('logo', null);
+        setData('remove_logo', true);
         if (logoInputRef.current) logoInputRef.current.value = '';
     };
 
     const removeBackground = () => {
         setBackgroundPreview(null);
         setData('backgroundImage', null);
+        setData('remove_background_image', true);
         if (backgroundInputRef.current) backgroundInputRef.current.value = '';
     };
 
