@@ -10,13 +10,10 @@ use App\Http\Controllers\Business\IssueStampController;
 use App\Http\Controllers\Business\PerkClaimController;
 use App\Http\Controllers\Business\StampCodeController;
 use App\Http\Controllers\Business\TicketController;
-use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\Customer\CustomerAuthController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
-use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
 use App\Http\Controllers\Staff\StaffAuthController;
-use App\Http\Controllers\SuggestionController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,15 +28,9 @@ Route::get('/sitemap.xml', function () {
         ->header('Content-Type', 'text/xml');
 });
 
-Route::post('/api/chat', [ChatBotController::class, 'chat'])->middleware('auth');
-
-Route::post('/suggestions', [SuggestionController::class, 'store'])->name('suggestions.store');
-
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
-
-Route::get('/documentation', [DocumentationController::class, 'index']);
 
 Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::prefix('business')->group(function () {
@@ -48,9 +39,9 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
             
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        Route::resource('/staffs', StaffController::class);
+        Route::resource('/staffs', StaffController::class)->only(['index', 'store', 'update', 'destroy']);
 
-        Route::resource('/branches', BranchController::class);
+        Route::resource('/branches', BranchController::class)->only(['index', 'store', 'update', 'destroy']);
 
         Route::get('/issue-stamps/generate-offline', [IssueStampController::class, 'generateOfflineStamps'])
             ->name('business.issue-stamp.generate-offline');
@@ -59,7 +50,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
         Route::get('/qr-studio', [QRStudioController::class, 'index']);
         Route::get('/qr-studio/download', [QRStudioController::class, 'download']);
         Route::post('/qr-studio/update', [QRStudioController::class, 'update']);
-        Route::resource('/customers', CustomerController::class);
+        Route::resource('/customers', CustomerController::class)->only(['index', 'show']);
         Route::get('/issue-stamp', [IssueStampController::class, 'index']);
         Route::post('/issue-stamp/scan-customer', [StampCodeController::class, 'recordCustomerScan']);
         Route::get('/stamp-codes', [StampCodeController::class, 'index']);

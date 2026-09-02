@@ -77,8 +77,4 @@ class CustomerAuthController extends Controller
         return redirect()->route('customer.login')->with('status', __($status));
     }
 
-    public function getGuide()
-    {
-        return Inertia::render('Customer/Auth/Guide');
-    }
 }

@@ -1,4 +1,3 @@
-import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -12,7 +11,7 @@ import {
 } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { AwardIcon, BookOpen, Building, Code2Icon, IdCard, LayoutGrid, QrCodeIcon, StampIcon, StoreIcon, TicketIcon, Users2Icon } from 'lucide-react';
+import { AwardIcon, Building, Code2Icon, IdCard, LayoutGrid, QrCodeIcon, StampIcon, StoreIcon, TicketIcon, Users2Icon } from 'lucide-react';
 import LOGO from '../../images/mainLogo.png';
 
 const mainNavItems: NavItem[] = [
@@ -65,14 +64,6 @@ const mainNavItems: NavItem[] = [
         title: 'Branches',
         href: '/business/branches',
         icon: Building,
-    },
-];
-
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Documentation',
-        href: '/documentation',
-        icon: BookOpen,
     },
 ];
 
