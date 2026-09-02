@@ -3,254 +3,82 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Customer;
-use App\Models\Business;
-use Illuminate\Auth\Events\PasswordReset;
+use App\Http\Requests\Customer\CustomerAuthPageRequest;
+use App\Http\Requests\Customer\CustomerLoginRequest;
+use App\Http\Requests\Customer\RegisterCustomerRequest;
+use App\Http\Requests\Customer\ResetCustomerPasswordRequest;
+use App\Http\Requests\Customer\SendCustomerResetLinkRequest;
+use App\Services\CustomerAuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class CustomerAuthController extends Controller
 {
-    /**
-     * Show login form
-     */
-    public function index(Request $request)
+    public function index(CustomerAuthPageRequest $request, CustomerAuthService $customerAuth)
     {
-        $isDemo = $request->query('data') ? $request->query('data')['is_demo'] : false;
-
-        // Optional: Get business from query parameter or subdomain
-        $businessId = $request->query('token');
-        $business = $businessId ? Business::where('qr_token', $businessId)->firstOrFail() : null;
-
-        return Inertia::render('Customer/Auth/Login', [
-            'business' => $business,
-            'status' => session('status'),
-            'isDemo' => $isDemo
-        ]);
+        return Inertia::render('Customer/Auth/Login', $customerAuth->loginPageData(
+            $request->validated('token'),
+            $request->boolean('data.is_demo'),
+        ));
     }
 
-    /**
-     * Handle login with rate limiting
-     */
-    public function login(Request $request)
+    public function login(CustomerLoginRequest $request, CustomerAuthService $customerAuth)
     {
-     
-        $this->checkTooManyFailedAttempts($request);
+        $customerAuth->login($request, $request->validated());
 
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        if (Auth::guard('customer')->attempt(
-            $credentials, 
-            $request->boolean('remember')
-        )) {
-            $request->session()->regenerate();
-            RateLimiter::clear($this->throttleKey($request));
-            
-            return redirect()->intended(route('customer.dashboard'));
-        }
-
-        RateLimiter::hit($this->throttleKey($request));
-
-        throw ValidationException::withMessages([
-            'email' => __('auth.failed'),
-        ]);
+        return redirect()->intended(route('customer.dashboard'));
     }
 
-    /**
-     * Show registration form
-     */
-    public function showRegister(Request $request)
+    public function showRegister(CustomerAuthPageRequest $request, CustomerAuthService $customerAuth)
     {
-
-        // Optional: Pre-select business from query parameter
-        $businessId = $request->query('business');
-
-        $selectedBusiness = Business::where('qr_token', $businessId)->firstOrFail();
-
-        $branch_id = $request->query('branch_id') ?? null;
-
-        return Inertia::render('Customer/Auth/Register', [
-            'selectedBusiness' => $selectedBusiness,
-            'branch_id' => $branch_id
-        ]);
+        return Inertia::render('Customer/Auth/Register', $customerAuth->registrationPageData(
+            (string) $request->validated('business'),
+            $request->integer('branch_id') ?: null,
+        ));
     }
 
-    /**
-     * Handle registration
-     */
-    public function register(Request $request)
-    {   
-        $validated = $request->validate([
-            'business_id' => 'required|exists:businesses,id',
-            'branch_id' => [
-                'nullable',
-                Rule::exists('branches', 'id')->where(function ($query) use ($request) {
-                    $query->where('business_id', $request->business_id);
-                }),
-            ],
-            'username' => 'required|string|max:255|unique:customers,username',
-            'email' => 'required|email|unique:customers,email',
-            'password' => 'required|min:8|confirmed',
-        ]);
-
-        $customer = Customer::create([
-            'business_id' => $validated['business_id'],
-            'branch_id' => $validated['branch_id'],
-            'username' => $validated['username'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
-
+    public function register(RegisterCustomerRequest $request, CustomerAuthService $customerAuth)
+    {
+        $customer = $customerAuth->register($request->validated());
         Auth::guard('customer')->login($customer);
 
         return redirect()->route('customer.dashboard');
     }
 
-    /**
-     * Handle logout
-     */
     public function logout(Request $request)
     {
         Auth::guard('customer')->logout();
-        
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         return redirect()->route('customer.login');
     }
 
-    /**
-     * Get the rate limiting throttle key
-     */
-    protected function throttleKey(Request $request): string
-    {
-        return strtolower($request->input('email')) . '|' . $request->ip();
-    }
-
-    /**
-     * Check if too many failed login attempts
-     */
-    protected function checkTooManyFailedAttempts(Request $request): void
-    {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey($request), 5)) {
-            return;
-        } 
-
-        $seconds = RateLimiter::availableIn($this->throttleKey($request));
-
-        throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
-        ]);
-    }
-
-     /**
-     * Show forgot password form
-     */
     public function showForgotPassword()
     {
-        return Inertia::render('Customer/Auth/ForgotPassword', [
-            'status' => session('status'),
-        ]);
+        return Inertia::render('Customer/Auth/ForgotPassword', ['status' => session('status')]);
     }
 
-    /**
-     * Handle forgot password request
-     */
-    public function sendResetLink(Request $request)
+    public function sendResetLink(SendCustomerResetLinkRequest $request, CustomerAuthService $customerAuth)
     {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
-
-        // Rate limiting for reset link requests
-        $throttleKey = 'password-reset:' . $request->ip();
-        
-        if (RateLimiter::tooManyAttempts($throttleKey, 3)) {
-            $seconds = RateLimiter::availableIn($throttleKey);
-            
-            throw ValidationException::withMessages([
-                'email' => trans('passwords.throttled', [
-                    'seconds' => $seconds,
-                    'minutes' => ceil($seconds / 60),
-                ]),
-            ]);
-        }
-
-        $status = Password::broker('customers')->sendResetLink(
-            $request->only('email')
-        );
-
-        RateLimiter::hit($throttleKey, 60); // 1 minute cooldown
-
-        if ($status === Password::RESET_LINK_SENT) {
-            return back()->with('status', __($status));
-        }
-
-        throw ValidationException::withMessages([
-            'email' => [__($status)],
-        ]);
+        return back()->with('status', __($customerAuth->sendResetLink($request, $request->validated('email'))));
     }
 
-    /**
-     * Show reset password form
-     */
     public function showResetPassword(Request $request, string $token)
     {
-        return Inertia::render('Customer/Auth/ResetPassword', [
-            'email' => $request->email,
-            'token' => $token,
-        ]);
+        return Inertia::render('Customer/Auth/ResetPassword', ['email' => $request->email, 'token' => $token]);
     }
 
-    /**
-     * Handle password reset
-     */
-    public function resetPassword(Request $request)
+    public function resetPassword(ResetCustomerPasswordRequest $request, CustomerAuthService $customerAuth)
     {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
-        ]);
+        $status = $customerAuth->resetPassword($request->validated());
 
-        $status = Password::broker('customers')->reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (Customer $customer, string $password) {
-                $customer->forceFill([
-                    'password' => Hash::make($password)
-                ])->setRememberToken(Str::random(60));
-
-                $customer->save();
-
-                event(new PasswordReset($customer));
-            }
-        );
-
-        if ($status === Password::PASSWORD_RESET) {
-            return redirect()->route('customer.login')->with('status', __($status));
-        }
-
-        throw ValidationException::withMessages([
-            'email' => [__($status)],
-        ]);
+        return redirect()->route('customer.login')->with('status', __($status));
     }
 
     public function getGuide()
     {
         return Inertia::render('Customer/Auth/Guide');
     }
-
 }
