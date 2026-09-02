@@ -1,4 +1,5 @@
 import { BranchAndCardSelectors } from '@/components/branch-card-selectors';
+import { CustomerQrScanner } from '@/components/customer-qr-scanner';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import type { BranchOption, LoyaltyCardOption } from '@/types/stampbayan';
@@ -152,6 +153,15 @@ export default function Index({
                             >
                                 {loading ? 'Generating...' : 'Generate Code'}
                             </button>
+                            <CustomerQrScanner
+                                endpoint="/business/issue-stamp/scan-customer"
+                                data={{
+                                    loyalty_card_id: selectedCardId,
+                                    branch_id: selectedBranchId || undefined,
+                                    reference_number: referenceNumber,
+                                }}
+                                disabled={!selectedCardId || !referenceNumber}
+                            />
                         </div>
                     </div>
                 ) : (
@@ -259,6 +269,15 @@ export default function Index({
                             >
                                 Generate New Code
                             </button>
+                            <CustomerQrScanner
+                                endpoint="/business/issue-stamp/scan-customer"
+                                data={{
+                                    loyalty_card_id: selectedCardId,
+                                    branch_id: selectedBranchId || undefined,
+                                    reference_number: referenceNumber,
+                                }}
+                                disabled={!selectedCardId || !referenceNumber}
+                            />
                         </div>
                     </div>
                 )}

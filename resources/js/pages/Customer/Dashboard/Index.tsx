@@ -143,6 +143,7 @@ interface Props {
     customer: {
         username: string;
     };
+    customerQrSvg: string;
 }
 
 export default function Index({
@@ -152,6 +153,7 @@ export default function Index({
     customerName,
     perkClaims,
     customer,
+    customerQrSvg,
 }: Props) {
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
     const [activeTab, setActiveTab] = useState('home');
@@ -231,6 +233,7 @@ export default function Index({
     };
 
     const currentCard = cardTemplates[currentCardIndex];
+    const customerQrUrl = `data:image/svg+xml;utf8,${encodeURIComponent(customerQrSvg)}`;
 
     const currentCardStamps = useMemo(() => {
         if (!stampCodes || !currentCard) return [];
@@ -1194,6 +1197,18 @@ export default function Index({
                                                 {currentCard.mechanics}
                                             </p>
                                         </div>
+                                        <div className="mb-3 flex justify-center">
+                                            <div className="rounded-xl bg-white p-2 text-center shadow-lg">
+                                                <img
+                                                    src={customerQrUrl}
+                                                    alt="Personal customer QR code"
+                                                    className="h-28 w-28"
+                                                />
+                                                <p className="mt-1 text-[9px] font-semibold text-gray-700">
+                                                    Scan here
+                                                </p>
+                                            </div>
+                                        </div>
                                         <div
                                             className="border-t pt-2"
                                             style={{
@@ -1224,6 +1239,7 @@ export default function Index({
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                         {/* Recent Stamps — horizontal scroll on mobile */}

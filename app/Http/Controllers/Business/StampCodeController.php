@@ -6,12 +6,15 @@ use App\Exports\StampCodesExport;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use App\Models\CompletedLoyaltyCard;
+use App\Models\Customer;
 use App\Models\LoyaltyCard;
 use App\Models\PerkClaim;
 use App\Models\StampCode;
+use App\Services\LoyaltyStampService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -302,5 +305,74 @@ class StampCodeController extends Controller
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Failed to record stamp. Please try again.']);
         }
+    }
+
+    public function recordCustomerScan(Request $request, LoyaltyStampService $loyaltyStamps)
+    {
+        $validated = $request->validate([
+            'customer_qr' => ['required', 'string'],
+            'loyalty_card_id' => ['required', 'integer', 'exists:loyalty_cards,id'],
+            'branch_id' => ['nullable', 'integer'],
+            'reference_number' => ['required', 'string', 'max:255'],
+        ]);
+
+        $business = Auth::user()->business;
+        $customer = $this->customerFromQrPayload($validated['customer_qr']);
+
+        if (! $customer || (int) $customer->business_id !== (int) $business->id) {
+            return back()->withErrors(['customer_qr' => 'This customer QR code is invalid for this business.']);
+        }
+
+        $branchId = $validated['branch_id'] ?? null;
+        if ($branchId && ! Branch::where('business_id', $business->id)->whereKey($branchId)->exists()) {
+            return back()->withErrors(['branch_id' => 'Please select a valid branch.']);
+        }
+
+        $card = LoyaltyCard::where('business_id', $business->id)
+            ->whereDate('valid_until', '>', today())
+            ->whereKey($validated['loyalty_card_id'])
+            ->when($branchId, fn ($query) => $query->where(fn ($cards) => $cards
+                ->whereHas('branches', fn ($branches) => $branches->whereKey($branchId))
+                ->orWhereDoesntHave('branches')))
+            ->first();
+
+        if (! $card) {
+            return back()->withErrors(['loyalty_card_id' => 'Please select a valid loyalty card.']);
+        }
+
+        return DB::transaction(function () use ($business, $customer, $card, $branchId, $validated, $loyaltyStamps) {
+            $stampCode = StampCode::create([
+                'user_id' => Auth::id(),
+                'business_id' => $business->id,
+                'customer_id' => $customer->id,
+                'loyalty_card_id' => $card->id,
+                'branch_id' => $branchId,
+                'reference_number' => $validated['reference_number'],
+                'code' => 'SCAN-'.Str::upper(Str::random(16)),
+                'used_at' => now(),
+                'is_expired' => false,
+                'is_offline_code' => false,
+            ]);
+
+            return back()->with($loyaltyStamps->apply($stampCode, $customer->id));
+        });
+    }
+
+    private function customerFromQrPayload(string $payload): ?Customer
+    {
+        $parts = explode(':', $payload);
+
+        if (count($parts) !== 5 || $parts[0] !== 'stampbayan' || $parts[1] !== 'customer') {
+            return null;
+        }
+
+        [, , $customerId, $businessId, $signature] = $parts;
+        $expected = substr(hash_hmac('sha256', "{$customerId}|{$businessId}", config('app.key')), 0, 24);
+
+        if (! hash_equals($expected, $signature)) {
+            return null;
+        }
+
+        return Customer::whereKey($customerId)->where('business_id', $businessId)->first();
     }
 }

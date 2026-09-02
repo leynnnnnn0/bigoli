@@ -61,6 +61,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
         Route::post('/qr-studio/update', [QRStudioController::class, 'update']);
         Route::resource('/customers', CustomerController::class);
         Route::get('/issue-stamp', [IssueStampController::class, 'index']);
+        Route::post('/issue-stamp/scan-customer', [StampCodeController::class, 'recordCustomerScan']);
         Route::get('/stamp-codes', [StampCodeController::class, 'index']);
 
 
@@ -147,6 +148,7 @@ Route::name('staff.')->prefix('staff')->group(function () {
         Route::get('/dashboard', [StaffDashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/generate-offline', [StaffDashboardController::class, 'generateOfflineStamps'])->name('generate-offline');
+        Route::post('/scan-customer', [StaffDashboardController::class, 'recordCustomerScan'])->name('scan-customer');
         Route::post('/perk-claims/{perkClaim}/redeem', [StaffDashboardController::class, 'markAsRedeemed'])->name('perk-claims.redeem');
         Route::post('/perk-claims/{perkClaim}/undo', [StaffDashboardController::class, 'undoRedeem'])->name('perk-claims.undo');
 

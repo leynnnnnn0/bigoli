@@ -1,4 +1,5 @@
 import { BranchAndCardSelectors } from '@/components/branch-card-selectors';
+import { CustomerQrScanner } from '@/components/customer-qr-scanner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -567,6 +568,11 @@ export default function Index({
                                             ? 'Generating...'
                                             : 'Generate Code'}
                                     </Button>
+                                    <CustomerQrScanner
+                                        endpoint="/staff/scan-customer"
+                                        data={{ loyalty_card_id: selectedCardId, reference_number: referenceNumber }}
+                                        disabled={!selectedCardId || !referenceNumber}
+                                    />
                                 </SectionShell>
                             ) : (
                                 <SectionShell
@@ -637,6 +643,11 @@ export default function Index({
                                         <QrCode className="mr-2 h-5 w-5" />
                                         Generate New
                                     </Button>
+                                    <CustomerQrScanner
+                                        endpoint="/staff/scan-customer"
+                                        data={{ loyalty_card_id: selectedCardId, reference_number: referenceNumber }}
+                                        disabled={!selectedCardId || !referenceNumber}
+                                    />
                                 </SectionShell>
                             )}
                         </TabsContent>
