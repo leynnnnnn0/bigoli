@@ -3,43 +3,25 @@
 namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
-use App\Models\Customer;
-use Illuminate\Http\Request;
+use App\Http\Requests\Business\CustomerIndexRequest;
+use App\Services\CustomerService;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
 {
-    public function index(Request $request)
+    public function index(CustomerIndexRequest $request, CustomerService $customers)
     {
-        $search = $request->input('search');
-
-        $customers = Customer::where('business_id', Auth::user()->business->id)
-            ->when($search, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('username', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%");
-                });
-            })
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
-
-        return Inertia::render('Business/Customer/Index', [
-            'customers' => $customers,
-            'filters' => [
-                'search' => $search,
-            ],
-        ]);
+        return Inertia::render('Business/Customer/Index', $customers->pageData(
+            Auth::user()->business,
+            $request->validated(),
+        ));
     }
 
-    public function show($id)
-    { 
-            $customer = Customer::with('stamp_codes.loyalty_card', 'stamp_codes.branch')->where('business_id', Auth::user()->business->id)->findOrFail($id);
-
-            return Inertia::render('Business/Customer/Show',[
-                'customer' => $customer
-            ]);
-        
+    public function show(int $id, CustomerService $customers)
+    {
+        return Inertia::render('Business/Customer/Show', [
+            'customer' => $customers->find(Auth::user()->business, $id),
+        ]);
     }
 }
