@@ -1,7 +1,13 @@
 import { BranchAndCardSelectors } from '@/components/branch-card-selectors';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
 import {
     Dialog,
     DialogContent,
@@ -10,6 +16,14 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -28,23 +42,27 @@ import type {
     PerkClaim,
     StampCodeRecord,
 } from '@/types/stampbayan';
+import { cn } from '@/lib/utils';
 import { Head, router } from '@inertiajs/react';
 import {
     Award,
     Calendar,
     Check,
+    CreditCard,
     Eye,
+    Gift,
+    History,
+    Home,
     LogOut,
     MapPin,
-    Menu,
     QrCode,
+    ScanLine,
     Search,
     Sparkles,
-    Ticket,
     Undo2,
     User,
-    X,
 } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import LOGO from '../../../../images/mainLogo.png';
@@ -68,6 +86,110 @@ interface Props {
         redeemed: number;
     };
     reference_number?: string;
+}
+
+const tabItems = [
+    { id: 'issue-stamp', label: 'Issue', desktopLabel: 'Issue Stamp', icon: Home },
+    { id: 'perk-claims', label: 'Rewards', desktopLabel: 'Perk Claims', icon: Gift },
+    { id: 'stamp-codes', label: 'Codes', desktopLabel: 'Stamp Codes', icon: History },
+] as const;
+
+type StaffTab = (typeof tabItems)[number]['id'];
+
+function StaffStatCard({
+    label,
+    value,
+    icon: Icon,
+    tone,
+}: {
+    label: string;
+    value: number;
+    icon: typeof Award;
+    tone: 'blue' | 'green' | 'violet';
+}) {
+    const tones = {
+        blue: 'bg-blue-50 text-blue-600',
+        green: 'bg-green-50 text-green-600',
+        violet: 'bg-violet-50 text-violet-600',
+    };
+
+    return (
+        <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100">
+            <div className="flex items-center justify-between">
+                <div>
+                    <p className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                        {label}
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-gray-900">
+                        {value}
+                    </p>
+                </div>
+                <div
+                    className={cn(
+                        'flex h-12 w-12 items-center justify-center rounded-2xl',
+                        tones[tone],
+                    )}
+                >
+                    <Icon className="h-6 w-6" />
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function SectionShell({
+    title,
+    description,
+    icon: Icon,
+    children,
+}: {
+    title: string;
+    description?: string;
+    icon: typeof Award;
+    children: ReactNode;
+}) {
+    return (
+        <Card className="overflow-hidden border-0 bg-white shadow-sm ring-1 ring-gray-100 sm:rounded-2xl">
+            <CardHeader className="border-b border-gray-100 px-5 py-4">
+                <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                        <Icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                        <CardTitle className="text-base font-bold text-gray-900">
+                            {title}
+                        </CardTitle>
+                        {description && (
+                            <CardDescription className="text-sm text-gray-400">
+                                {description}
+                            </CardDescription>
+                        )}
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent className="space-y-5 p-5">{children}</CardContent>
+        </Card>
+    );
+}
+
+function EmptyState({
+    icon: Icon,
+    title,
+    description,
+}: {
+    icon: typeof Award;
+    title: string;
+    description: string;
+}) {
+    return (
+        <div className="rounded-2xl bg-white p-10 text-center ring-1 ring-gray-100">
+            <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-50">
+                <Icon className="h-7 w-7 text-gray-300" />
+            </div>
+            <h3 className="font-bold text-gray-900">{title}</h3>
+            <p className="mt-1 text-sm text-gray-400">{description}</p>
+        </div>
+    );
 }
 
 export default function Index({
@@ -94,7 +216,6 @@ export default function Index({
             (cards.length > 0 ? cards[0].id.toString() : ''),
     );
     const [error, setError] = useState<string | null>(null);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     // Perk Claims state
     const [selectedClaim, setSelectedClaim] = useState<PerkClaim | null>(null);
@@ -106,7 +227,7 @@ export default function Index({
 
     // Stamp Codes state
     const [codeSearch, setCodeSearch] = useState('');
-    const [activeTab, setActiveTab] = useState('issue-stamp');
+    const [activeTab, setActiveTab] = useState<StaffTab>('issue-stamp');
 
     // When branch changes, reload so server returns filtered cards
     const handleBranchChange = (value: string) => {
@@ -250,402 +371,283 @@ export default function Index({
             tone="staff"
         />
     );
+    const selectedBranch = branches.find(
+        (branch) => branch.id.toString() === selectedBranchId,
+    );
 
     return (
         <>
             <Head title="Staff Dashboard" />
 
-            <div className="min-h-screen bg-white">
-                {/* Top Navigation */}
-                <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
-                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="flex h-16 items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <img
-                                    src={LOGO}
-                                    alt="business logo"
-                                    className="h-12"
-                                />
-                            </div>
+            <div className="flex min-h-screen flex-col bg-gray-50">
+                <header className="sticky top-0 z-40 border-b border-gray-100 bg-white shadow-sm">
+                    <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-6">
+                        <div className="flex items-center gap-8">
+                            <img
+                                src={LOGO}
+                                alt="business logo"
+                                className="h-10 w-auto"
+                            />
+                            <nav className="hidden gap-8 sm:flex">
+                                {tabItems.map((item) => (
+                                    <button
+                                        key={item.id}
+                                        onClick={() => setActiveTab(item.id)}
+                                        className={cn(
+                                            'border-b-2 pb-1 text-sm font-semibold transition-colors',
+                                            activeTab === item.id
+                                                ? 'border-primary text-primary'
+                                                : 'border-transparent text-gray-500 hover:text-gray-900',
+                                        )}
+                                    >
+                                        {item.desktopLabel}
+                                    </button>
+                                ))}
+                            </nav>
+                        </div>
 
-                            {/* Desktop Navigation */}
-                            <div className="hidden items-center gap-4 md:flex">
-                                {/* Show assigned branch badge in nav */}
-                                {branches.length > 0 && selectedBranchId && (
-                                    <div className="flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-sm text-gray-600">
-                                        <MapPin className="h-3.5 w-3.5 text-blue-500" />
-                                        <span>
-                                            {
-                                                branches.find(
-                                                    (b) =>
-                                                        b.id.toString() ===
-                                                        selectedBranchId,
-                                                )?.name
-                                            }
-                                        </span>
-                                    </div>
-                                )}
-                                <Button
-                                    variant="ghost"
-                                    onClick={handleLogout}
-                                    className="flex items-center gap-2"
-                                >
-                                    <LogOut className="h-4 w-4" />
-                                    Logout
-                                </Button>
-                            </div>
-
-                            {/* Mobile Menu Button */}
-                            <button
-                                onClick={() =>
-                                    setMobileMenuOpen(!mobileMenuOpen)
-                                }
-                                className="rounded-lg p-2 hover:bg-gray-100 md:hidden"
-                            >
-                                {mobileMenuOpen ? (
-                                    <X className="h-6 w-6" />
-                                ) : (
-                                    <Menu className="h-6 w-6" />
-                                )}
-                            </button>
+                        <div className="flex items-center gap-3">
+                            {selectedBranch && (
+                                <div className="hidden items-center gap-2 rounded-full bg-gray-50 px-3 py-1.5 text-sm font-medium text-gray-600 ring-1 ring-gray-100 sm:flex">
+                                    <MapPin className="h-3.5 w-3.5 text-primary" />
+                                    <span>{selectedBranch.name}</span>
+                                </div>
+                            )}
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <button className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200">
+                                        <User className="h-5 w-5 text-gray-600" />
+                                    </button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>
+                                        Staff Account
+                                    </DropdownMenuLabel>
+                                    {selectedBranch && (
+                                        <>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuLabel className="flex items-center gap-2 text-xs font-normal text-gray-500">
+                                                <MapPin className="h-3.5 w-3.5" />
+                                                {selectedBranch.name}
+                                            </DropdownMenuLabel>
+                                        </>
+                                    )}
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={handleLogout}>
+                                        <LogOut className="mr-2 h-4 w-4" />
+                                        Logout
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                     </div>
-
-                    {/* Mobile Menu */}
-                    {mobileMenuOpen && (
-                        <div className="border-t border-gray-200 bg-white md:hidden">
-                            <div className="space-y-2 px-4 py-3">
-                                {branches.length > 0 && selectedBranchId && (
-                                    <div className="flex items-center gap-2 py-2 text-sm text-gray-600">
-                                        <MapPin className="h-4 w-4 text-blue-500" />
-                                        <span>
-                                            Branch:{' '}
-                                            {
-                                                branches.find(
-                                                    (b) =>
-                                                        b.id.toString() ===
-                                                        selectedBranchId,
-                                                )?.name
-                                            }
-                                        </span>
-                                    </div>
-                                )}
-                                <Button
-                                    variant="ghost"
-                                    onClick={handleLogout}
-                                    className="w-full justify-start gap-2"
-                                >
-                                    <LogOut className="h-4 w-4" />
-                                    Logout
-                                </Button>
-                            </div>
-                        </div>
-                    )}
-                </nav>
+                </header>
 
                 {/* Main Content */}
-                <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+                <main className="mx-auto w-full max-w-7xl flex-1 px-0 pb-24 sm:px-6 sm:py-8 sm:pb-8">
                     {/* Welcome Section */}
-                    <div className="mb-8">
-                        <h2 className="mb-2 text-3xl font-bold text-gray-900">
-                            Welcome Back! 👋
-                        </h2>
-                        <p className="text-gray-600">
-                            Manage customer loyalty and rewards
-                        </p>
+                    <div className="bg-white px-5 py-5 shadow-sm sm:mb-6 sm:rounded-2xl sm:p-6 sm:ring-1 sm:ring-gray-100">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                                <p className="text-xs font-medium text-gray-400">
+                                    Staff workspace
+                                </p>
+                                <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">
+                                    Manage stamps and rewards
+                                </h1>
+                                <p className="mt-1 text-sm text-gray-500">
+                                    Generate stamp codes, redeem rewards, and
+                                    review recent customer activity.
+                                </p>
+                            </div>
+                            <Button
+                                onClick={() => setActiveTab('issue-stamp')}
+                                className="h-11 rounded-xl bg-primary px-5 text-white hover:bg-primary/80"
+                            >
+                                <ScanLine className="mr-2 h-4 w-4" />
+                                Issue Stamp
+                            </Button>
+                        </div>
                     </div>
 
                     {/* Stats Cards */}
-                    <div className="mb-8 hidden grid-cols-1 gap-6 md:grid md:grid-cols-3">
-                        <Card className="shadow-lg">
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-black">
-                                            Total Claims
-                                        </p>
-                                        <p className="mt-2 text-4xl font-bold">
-                                            {stats?.total || 0}
-                                        </p>
-                                    </div>
-                                    <Award className="h-12 w-12 text-blue-200" />
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card className="shadow-lg">
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-black">
-                                            Available
-                                        </p>
-                                        <p className="mt-2 text-4xl font-bold">
-                                            {stats?.available || 0}
-                                        </p>
-                                    </div>
-                                    <Sparkles className="h-12 w-12 text-green-200" />
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card className="shadow-lg">
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-black">
-                                            Redeemed
-                                        </p>
-                                        <p className="mt-2 text-4xl font-bold">
-                                            {stats?.redeemed || 0}
-                                        </p>
-                                    </div>
-                                    <Check className="h-12 w-12 text-purple-200" />
-                                </div>
-                            </CardContent>
-                        </Card>
+                    <div className="grid grid-cols-1 gap-4 px-4 py-4 sm:grid-cols-3 sm:px-0 sm:py-0">
+                        <StaffStatCard
+                            label="Total Claims"
+                            value={stats?.total || 0}
+                            icon={Award}
+                            tone="blue"
+                        />
+                        <StaffStatCard
+                            label="Available"
+                            value={stats?.available || 0}
+                            icon={Sparkles}
+                            tone="green"
+                        />
+                        <StaffStatCard
+                            label="Redeemed"
+                            value={stats?.redeemed || 0}
+                            icon={Check}
+                            tone="violet"
+                        />
                     </div>
 
                     {/* Tabs Section */}
                     <Tabs
                         value={activeTab}
-                        onValueChange={setActiveTab}
-                        className="space-y-6"
+                        onValueChange={(value) =>
+                            setActiveTab(value as StaffTab)
+                        }
+                        className="space-y-4 px-4 sm:mt-6 sm:px-0"
                     >
-                        <TabsList className="grid w-full grid-cols-3 bg-white p-1 shadow-sm">
-                            <TabsTrigger
-                                value="issue-stamp"
-                                className="flex items-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-                            >
-                                <QrCode className="h-4 w-4" />
-                                <span className="hidden sm:inline">
-                                    Issue Stamp
-                                </span>
-                            </TabsTrigger>
-                            <TabsTrigger
-                                value="perk-claims"
-                                className="flex items-center gap-2 data-[state=active]:bg-green-600 data-[state=active]:text-white"
-                            >
-                                <Award className="h-4 w-4" />
-                                <span className="hidden sm:inline">
-                                    Perk Claims
-                                </span>
-                            </TabsTrigger>
-                            <TabsTrigger
-                                value="stamp-codes"
-                                className="flex items-center gap-2 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
-                            >
-                                <Ticket className="h-4 w-4" />
-                                <span className="hidden sm:inline">
-                                    Stamp Codes
-                                </span>
-                            </TabsTrigger>
+                        <TabsList className="hidden w-full grid-cols-3 rounded-2xl bg-white p-1 shadow-sm ring-1 ring-gray-100 sm:grid">
+                            {tabItems.map((item) => {
+                                const Icon = item.icon;
+                                return (
+                                    <TabsTrigger
+                                        key={item.id}
+                                        value={item.id}
+                                        className="flex items-center gap-2 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-white"
+                                    >
+                                        <Icon className="h-4 w-4" />
+                                        <span>{item.desktopLabel}</span>
+                                    </TabsTrigger>
+                                );
+                            })}
                         </TabsList>
 
                         {/* ISSUE STAMP TAB */}
                         <TabsContent value="issue-stamp" className="space-y-6">
                             {!code?.success ? (
-                                <Card className="border-0 shadow-lg">
-                                    <CardHeader>
-                                        <CardTitle className="flex items-center gap-2">
-                                            <QrCode className="h-5 w-5" />
-                                            Generate New Stamp Code
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="space-y-6 p-6">
-                                        {branchAndCardSelectors}
+                                <SectionShell
+                                    title="Generate Stamp Code"
+                                    description="Create a one-time code for the customer to scan or enter."
+                                    icon={QrCode}
+                                >
+                                    {branchAndCardSelectors}
 
-                                        <div>
-                                            <Label className="mb-2 block text-sm font-semibold text-gray-700">
-                                                Reference Number
-                                            </Label>
-                                            <Input
-                                                type="text"
-                                                value={referenceNumber}
-                                                onChange={(e) =>
-                                                    setReferenceNumber(
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                placeholder="Enter reference number (required)"
-                                                className="h-12 w-full"
-                                            />
+                                    <div>
+                                        <Label className="mb-2 block text-sm font-semibold text-gray-700">
+                                            Reference Number
+                                        </Label>
+                                        <Input
+                                            type="text"
+                                            value={referenceNumber}
+                                            onChange={(e) =>
+                                                setReferenceNumber(
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="Enter receipt or order reference"
+                                            className="h-12 rounded-xl border-gray-200 bg-gray-50"
+                                        />
+                                    </div>
+
+                                    {error && (
+                                        <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-sm text-red-600">
+                                            <span className="font-semibold">
+                                                Error:
+                                            </span>{' '}
+                                            {error}
                                         </div>
+                                    )}
 
-                                        {error && (
-                                            <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600">
-                                                <span className="font-semibold">
-                                                    Error:
-                                                </span>{' '}
-                                                {error}
-                                            </div>
-                                        )}
-
-                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
-                                            <Button
-                                                onClick={generateCode}
-                                                disabled={
-                                                    loading ||
-                                                    cards.length === 0 ||
-                                                    !selectedCardId ||
-                                                    !referenceNumber
-                                                }
-                                                className="h-12 bg-primary"
-                                            >
-                                                <QrCode className="mr-2 h-5 w-5" />
-                                                {loading
-                                                    ? 'Generating...'
-                                                    : 'Generate Code'}
-                                            </Button>
-
-                                            {/* <Button
-                                                onClick={downloadOfflineStamps}
-                                                disabled={
-                                                    downloadingOffline ||
-                                                    cards.length === 0 ||
-                                                    !selectedCardId
-                                                }
-                                                variant="outline"
-                                                className="h-12 border-2"
-                                            >
-                                                <Ticket className="mr-2 h-5 w-5" />
-                                                {downloadingOffline
-                                                    ? 'Generating...'
-                                                    : 'Download 8 Tickets'}
-                                            </Button> */}
-                                        </div>
-
-                                        {/* <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-700">
-                                            <p className="mb-1 font-semibold">
-                                                💡 Quick Tip
-                                            </p>
-                                            <p>
-                                                Offline stamps are perfect for
-                                                events or areas without
-                                                internet. Print 8 tickets at
-                                                once!
-                                            </p>
-                                        </div> */}
-                                    </CardContent>
-                                </Card>
+                                    <Button
+                                        onClick={generateCode}
+                                        disabled={
+                                            loading ||
+                                            cards.length === 0 ||
+                                            !selectedCardId ||
+                                            !referenceNumber
+                                        }
+                                        className="h-12 rounded-xl bg-primary text-white hover:bg-primary/80"
+                                    >
+                                        <QrCode className="mr-2 h-5 w-5" />
+                                        {loading
+                                            ? 'Generating...'
+                                            : 'Generate Code'}
+                                    </Button>
+                                </SectionShell>
                             ) : (
-                                <Card className="border-0 shadow-lg">
-                                    <CardHeader className="border-b bg-gradient-to-r from-green-50 to-emerald-50">
-                                        <div className="flex items-center gap-3">
-                                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-500">
-                                                <Check className="h-6 w-6 text-white" />
-                                            </div>
-                                            <div>
-                                                <CardTitle>
-                                                    Code Generated Successfully!
-                                                    🎉
-                                                </CardTitle>
-                                                <p className="mt-1 text-sm text-gray-600">
-                                                    Generated on{' '}
-                                                    {code?.created_at}
+                                <SectionShell
+                                    title="Code Generated"
+                                    description={`Generated on ${code?.created_at}`}
+                                    icon={Check}
+                                >
+                                    <div className="rounded-2xl bg-gray-50 p-4 ring-1 ring-gray-100">
+                                        <div className="flex flex-col items-center">
+                                            <img
+                                                src={code?.qr_url}
+                                                alt="QR Code"
+                                                className="aspect-square w-full max-w-72 rounded-2xl bg-white p-3 shadow-sm"
+                                            />
+                                            <div className="mt-5 text-center">
+                                                <p className="mb-2 text-sm text-gray-500">
+                                                    Manual code
                                                 </p>
-                                            </div>
-                                        </div>
-                                    </CardHeader>
-                                    <CardContent className="space-y-6 p-6">
-                                        <div className="rounded-xl border-2 border-gray-200 bg-white p-6">
-                                            <div className="flex flex-col items-center">
-                                                <img
-                                                    src={code?.qr_url}
-                                                    alt="QR Code"
-                                                    className="h-72 w-72 rounded-lg shadow-lg"
-                                                />
-                                                <div className="mt-6 text-center">
-                                                    <p className="mb-2 text-sm text-gray-600">
-                                                        Or enter manually:
+                                                <div className="inline-block rounded-2xl bg-white px-6 py-3 shadow-sm ring-1 ring-gray-100">
+                                                    <p className="font-mono text-2xl font-bold tracking-wider text-gray-900 sm:text-3xl">
+                                                        {code?.code}
                                                     </p>
-                                                    <div className="inline-block rounded-lg bg-gray-100 px-8 py-4">
-                                                        <p className="font-mono text-3xl font-bold tracking-wider text-gray-900">
-                                                            {code?.code}
-                                                        </p>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
-                                            <p className="mb-1 text-sm font-semibold text-yellow-800">
-                                                ⚠️ Important
-                                            </p>
-                                            <p className="text-sm text-yellow-700">
-                                                Code expires in 15 minutes if
-                                                unused.
-                                            </p>
+                                    <div className="rounded-xl border border-yellow-100 bg-yellow-50 p-4 text-sm text-yellow-800">
+                                        This code expires in 15 minutes if it is
+                                        not used.
+                                    </div>
+
+                                    {branchAndCardSelectors}
+
+                                    <div>
+                                        <Label className="mb-2 block text-sm font-semibold text-gray-700">
+                                            Reference Number
+                                        </Label>
+                                        <Input
+                                            type="text"
+                                            value={referenceNumber}
+                                            onChange={(e) =>
+                                                setReferenceNumber(
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="Enter receipt or order reference"
+                                            className="h-12 rounded-xl border-gray-200 bg-gray-50"
+                                        />
+                                    </div>
+
+                                    {error && (
+                                        <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-sm text-red-600">
+                                            <span className="font-semibold">
+                                                Error:
+                                            </span>{' '}
+                                            {error}
                                         </div>
+                                    )}
 
-                                        {branchAndCardSelectors}
-
-                                        <div>
-                                            <Label className="mb-2 block text-sm font-semibold text-gray-700">
-                                                Reference Number
-                                            </Label>
-                                            <Input
-                                                type="text"
-                                                value={referenceNumber}
-                                                onChange={(e) =>
-                                                    setReferenceNumber(
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                placeholder="Enter reference number (required)"
-                                                className="h-12 w-full"
-                                            />
-                                        </div>
-
-                                        {error && (
-                                            <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600">
-                                                <span className="font-semibold">
-                                                    Error:
-                                                </span>{' '}
-                                                {error}
-                                            </div>
-                                        )}
-
-                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
-                                            <Button
-                                                onClick={generateNewCode}
-                                                disabled={
-                                                    !selectedCardId ||
-                                                    !referenceNumber
-                                                }
-                                                className="h-12 bg-gradient-to-r from-blue-600 to-indigo-600"
-                                            >
-                                                <QrCode className="mr-2 h-5 w-5" />
-                                                Generate New
-                                            </Button>
-                                            {/* <Button
-                                                onClick={downloadOfflineStamps}
-                                                disabled={
-                                                    downloadingOffline ||
-                                                    !selectedCardId
-                                                }
-                                                variant="outline"
-                                                className="h-12 border-2"
-                                            >
-                                                <Ticket className="mr-2 h-5 w-5" />
-                                                Download Tickets
-                                            </Button> */}
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                    <Button
+                                        onClick={generateNewCode}
+                                        disabled={
+                                            !selectedCardId || !referenceNumber
+                                        }
+                                        className="h-12 rounded-xl bg-primary text-white hover:bg-primary/80"
+                                    >
+                                        <QrCode className="mr-2 h-5 w-5" />
+                                        Generate New
+                                    </Button>
+                                </SectionShell>
                             )}
                         </TabsContent>
 
                         {/* PERK CLAIMS TAB */}
                         <TabsContent value="perk-claims" className="space-y-6">
-                            <Card className="border-0 shadow-lg">
-                                <CardHeader>
-                                    <CardTitle className="flex items-center gap-2">
-                                        <Award className="h-5 w-5" />
-                                        Customer Perk Claims
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4 p-6">
+                            <SectionShell
+                                title="Customer Perk Claims"
+                                description="Review available rewards and mark redemptions."
+                                icon={Award}
+                            >
                                     <div className="relative">
                                         <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
                                         <Input
@@ -655,15 +657,15 @@ export default function Index({
                                             onChange={(e) =>
                                                 setPerkSearch(e.target.value)
                                             }
-                                            className="h-12 pl-10"
+                                            className="h-12 rounded-xl border-gray-200 bg-gray-50 pl-10"
                                         />
                                     </div>
 
                                     {/* Desktop Table */}
-                                    <div className="hidden overflow-x-auto rounded-lg border lg:block">
+                                    <div className="hidden overflow-x-auto rounded-2xl border border-gray-100 lg:block">
                                         <Table>
                                             <TableHeader>
-                                                <TableRow className="bg-gray-50">
+                                                <TableRow className="bg-gray-50/80">
                                                     <TableHead className="font-semibold">
                                                         Customer
                                                     </TableHead>
@@ -688,7 +690,7 @@ export default function Index({
                                                         (claim) => (
                                                             <TableRow
                                                                 key={claim.id}
-                                                                className="hover:bg-gray-50"
+                                                                className="hover:bg-gray-50/80"
                                                             >
                                                                 <TableCell>
                                                                     <div className="font-medium">
@@ -781,10 +783,7 @@ export default function Index({
                                                             className="py-12 text-center text-gray-500"
                                                         >
                                                             <Award className="mx-auto mb-3 h-12 w-12 text-gray-300" />
-                                                            <p>
-                                                                No perk claims
-                                                                found.
-                                                            </p>
+                                                            <p>No perk claims found.</p>
                                                         </TableCell>
                                                     </TableRow>
                                                 )}
@@ -798,7 +797,7 @@ export default function Index({
                                             filteredPerkClaims.map((claim) => (
                                                 <Card
                                                     key={claim.id}
-                                                    className="shadow-md"
+                                                    className="border-0 shadow-sm ring-1 ring-gray-100"
                                                 >
                                                     <CardContent className="space-y-3 p-4">
                                                         <div className="flex items-start justify-between">
@@ -841,7 +840,7 @@ export default function Index({
                                                                 </span>
                                                             </div>
                                                             <div className="flex items-center gap-2">
-                                                                <Ticket className="h-4 w-4 text-gray-400" />
+                                                                <CreditCard className="h-4 w-4 text-gray-400" />
                                                                 <span>
                                                                     {
                                                                         claim
@@ -908,26 +907,23 @@ export default function Index({
                                                 </Card>
                                             ))
                                         ) : (
-                                            <div className="py-12 text-center text-gray-500">
-                                                <Award className="mx-auto mb-3 h-12 w-12 text-gray-300" />
-                                                <p>No perk claims found.</p>
-                                            </div>
+                                            <EmptyState
+                                                icon={Award}
+                                                title="No perk claims"
+                                                description="Unlocked customer rewards will appear here."
+                                            />
                                         )}
                                     </div>
-                                </CardContent>
-                            </Card>
+                            </SectionShell>
                         </TabsContent>
 
                         {/* STAMP CODES TAB */}
                         <TabsContent value="stamp-codes" className="space-y-6">
-                            <Card className="border-0 shadow-lg">
-                                <CardHeader>
-                                    <CardTitle className="flex items-center gap-2">
-                                        <Ticket className="h-5 w-5" />
-                                        Stamp Code History
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4 p-6">
+                            <SectionShell
+                                title="Stamp Code History"
+                                description="Search recent codes and customer usage."
+                                icon={History}
+                            >
                                     <div className="relative">
                                         <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
                                         <Input
@@ -937,15 +933,15 @@ export default function Index({
                                             onChange={(e) =>
                                                 setCodeSearch(e.target.value)
                                             }
-                                            className="h-12 pl-10"
+                                            className="h-12 rounded-xl border-gray-200 bg-gray-50 pl-10"
                                         />
                                     </div>
 
                                     {/* Desktop Table */}
-                                    <div className="hidden overflow-x-auto rounded-lg border lg:block">
+                                    <div className="hidden overflow-x-auto rounded-2xl border border-gray-100 lg:block">
                                         <Table>
                                             <TableHeader>
-                                                <TableRow className="bg-gray-50">
+                                                <TableRow className="bg-gray-50/80">
                                                     <TableHead className="font-semibold">
                                                         Card
                                                     </TableHead>
@@ -972,7 +968,7 @@ export default function Index({
                                                                 key={
                                                                     stampCode.id
                                                                 }
-                                                                className="hover:bg-gray-50"
+                                                                className="hover:bg-gray-50/80"
                                                             >
                                                                 <TableCell className="font-medium">
                                                                     {
@@ -1029,7 +1025,7 @@ export default function Index({
                                                             colSpan={5}
                                                             className="py-12 text-center text-gray-500"
                                                         >
-                                                            <Ticket className="mx-auto mb-3 h-12 w-12 text-gray-300" />
+                                                            <History className="mx-auto mb-3 h-12 w-12 text-gray-300" />
                                                             <p>
                                                                 No stamp codes
                                                                 found.
@@ -1048,7 +1044,7 @@ export default function Index({
                                                 (stampCode) => (
                                                     <Card
                                                         key={stampCode.id}
-                                                        className="shadow-md"
+                                                        className="border-0 shadow-sm ring-1 ring-gray-100"
                                                     >
                                                         <CardContent className="space-y-3 p-4">
                                                             <div className="flex items-start justify-between">
@@ -1127,17 +1123,56 @@ export default function Index({
                                                 ),
                                             )
                                         ) : (
-                                            <div className="py-12 text-center text-gray-500">
-                                                <Ticket className="mx-auto mb-3 h-12 w-12 text-gray-300" />
-                                                <p>No stamp codes found.</p>
-                                            </div>
+                                            <EmptyState
+                                                icon={History}
+                                                title="No stamp codes"
+                                                description="Generated stamp codes will appear here."
+                                            />
                                         )}
                                     </div>
-                                </CardContent>
-                            </Card>
+                            </SectionShell>
                         </TabsContent>
                     </Tabs>
-                </div>
+                </main>
+
+                <nav className="fixed right-0 bottom-0 left-0 z-50 border-t border-gray-100 bg-white px-2 sm:hidden">
+                    <div className="flex items-center justify-around">
+                        {tabItems.map((item) => {
+                            const Icon = item.icon;
+                            const isActive = activeTab === item.id;
+                            return (
+                                <button
+                                    key={item.id}
+                                    onClick={() => setActiveTab(item.id)}
+                                    className={cn(
+                                        'flex flex-1 flex-col items-center gap-0.5 px-3 py-3 transition-colors',
+                                        isActive
+                                            ? 'text-primary'
+                                            : 'text-gray-400',
+                                    )}
+                                >
+                                    <div
+                                        className={cn(
+                                            'relative rounded-xl p-1.5 transition-all',
+                                            isActive && 'bg-primary/10',
+                                        )}
+                                    >
+                                        <Icon className="h-5 w-5" />
+                                        {item.id === 'perk-claims' &&
+                                            (stats?.available || 0) > 0 && (
+                                                <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
+                                                    {stats?.available}
+                                                </span>
+                                            )}
+                                    </div>
+                                    <span className="text-[10px] font-semibold">
+                                        {item.label}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </nav>
             </div>
 
             {/* Dialogs */}

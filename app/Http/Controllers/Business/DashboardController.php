@@ -15,23 +15,18 @@ class DashboardController extends Controller
         $business = Auth::user()->business;
         $branches = $business->branches()->orderBy('name')->get(['id', 'name']);
 
-        // Resolve selected branch (null = all branches)
         $branchId = $request->branch_id ?? null;
         $branchFilter = fn($q) => $branchId
             ? $q->where('branch_id', $branchId)
             : $q;
 
-        // Customers scope
         $customersQuery = fn() => $branchId
             ? $business->customers()->where('branch_id', $branchId)
             : $business->customers();
 
-        // StampCodes scope
         $stampsQuery = fn() => $branchId
             ? $business->stampCodes()->withTrashed()->where('branch_id', $branchId)
             : $business->stampCodes()->withTrashed();
-
-        
 
         $customersCount = $customersQuery()->count();
 
