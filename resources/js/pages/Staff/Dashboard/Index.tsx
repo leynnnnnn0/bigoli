@@ -115,23 +115,23 @@ function StaffStatCard({
     };
 
     return (
-        <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100">
+        <div className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-gray-100 sm:p-5">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                    <p className="text-[10px] font-semibold tracking-wide text-gray-400 uppercase sm:text-xs">
                         {label}
                     </p>
-                    <p className="mt-2 text-3xl font-bold text-gray-900">
+                    <p className="mt-1 text-2xl font-bold text-gray-900 sm:mt-2 sm:text-3xl">
                         {value}
                     </p>
                 </div>
                 <div
                     className={cn(
-                        'flex h-12 w-12 items-center justify-center rounded-2xl',
+                        'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-12 sm:w-12 sm:rounded-2xl',
                         tones[tone],
                     )}
                 >
-                    <Icon className="h-6 w-6" />
+                    <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </div>
             </div>
         </div>
@@ -461,18 +461,11 @@ export default function Index({
                                     review recent customer activity.
                                 </p>
                             </div>
-                            <Button
-                                onClick={() => setActiveTab('issue-stamp')}
-                                className="h-11 rounded-xl bg-primary px-5 text-white hover:bg-primary/80"
-                            >
-                                <ScanLine className="mr-2 h-4 w-4" />
-                                Issue Stamp
-                            </Button>
                         </div>
                     </div>
 
                     {/* Stats Cards */}
-                    <div className="grid grid-cols-1 gap-4 px-4 py-4 sm:grid-cols-3 sm:px-0 sm:py-0">
+                    <div className="grid grid-cols-3 gap-2 px-4 py-4 sm:gap-4 sm:px-0 sm:py-0">
                         <StaffStatCard
                             label="Total Claims"
                             value={stats?.total || 0}
@@ -561,7 +554,7 @@ export default function Index({
                                             !selectedCardId ||
                                             !referenceNumber
                                         }
-                                        className="h-12 rounded-xl bg-primary text-white hover:bg-primary/80"
+                                        className="h-12 rounded-xl bg-primary text-white hover:bg-primary/80 w-full"
                                     >
                                         <QrCode className="mr-2 h-5 w-5" />
                                         {loading
