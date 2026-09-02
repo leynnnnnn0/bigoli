@@ -37,7 +37,9 @@ class StaffController extends Controller
 
     public function destroy(Staff $staff, StaffService $staffs)
     {
-        $staffs->delete(Auth::user()->business, $staff);
+        if ($message = $staffs->delete(Auth::user()->business, $staff)) {
+            return redirect()->back()->with('error', $message);
+        }
 
         return redirect()->back()->with('success', 'Staff deleted successfully');
     }

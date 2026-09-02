@@ -28,8 +28,8 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
-import { Head, router, useForm } from '@inertiajs/react';
-import { Pencil, Plus, Search } from 'lucide-react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { Pencil, Plus, Search, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -56,6 +56,16 @@ interface Props {
 }
 
 export default function Index({ staffs, branches, filters }: Props) {
+    const { props } = usePage<{
+        flash?: { error?: string; success?: string };
+    }>();
+
+    useEffect(() => {
+        if (props.flash?.error) {
+            toast.error(props.flash.error);
+        }
+    }, [props.flash]);
+
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editingStaff, setEditingStaff] = useState<Staff | null>(null);
     const [deleteConfirm, setDeleteConfirm] = useState<Staff | null>(null);
@@ -127,8 +137,14 @@ export default function Index({ staffs, branches, filters }: Props) {
     const handleDelete = () => {
         if (!deleteConfirm) return;
         form.delete(`/business/staffs/${deleteConfirm.id}`, {
-            onSuccess: () => {
-                toast.success('Staff deleted successfully');
+            onSuccess: (page) => {
+                const flash = page.props.flash as
+                    | { error?: string }
+                    | undefined;
+
+                if (!flash?.error) {
+                    toast.success('Staff deleted successfully');
+                }
                 setDeleteConfirm(null);
             },
             onError: () => toast.error('Failed to delete staff'),
@@ -216,6 +232,16 @@ export default function Index({ staffs, branches, filters }: Props) {
                                                 }
                                             >
                                                 <Pencil className="h-4 w-4" />
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() =>
+                                                    setDeleteConfirm(staff)
+                                                }
+                                                aria-label={`Delete ${staff.username}`}
+                                            >
+                                                <Trash2 className="h-4 w-4 text-red-600" />
                                             </Button>
                                         </div>
                                     </td>

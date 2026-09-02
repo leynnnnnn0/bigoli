@@ -41,6 +41,16 @@ class Staff extends Model implements AuthenticatableContract, AuthorizableContra
     {
         return $this->belongsTo(Branch::class, 'branch_id');
     }
+
+    public function stampCodes()
+    {
+        return $this->hasMany(StampCode::class);
+    }
+
+    public function redeemedPerkClaims()
+    {
+        return $this->hasMany(PerkClaim::class, 'redeemed_by_staff_id');
+    }
 }
 
 // test

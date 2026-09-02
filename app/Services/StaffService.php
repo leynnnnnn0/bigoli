@@ -62,10 +62,20 @@ class StaffService
         $staff->update($data);
     }
 
-    public function delete(Business $business, Staff $staff): void
+    public function delete(Business $business, Staff $staff): ?string
     {
         $this->ensureStaffBelongsToBusiness($business, $staff);
+
+        if (
+            $staff->stampCodes()->withTrashed()->exists()
+            || $staff->redeemedPerkClaims()->exists()
+        ) {
+            return 'This staff account cannot be deleted because it has recorded activity.';
+        }
+
         $staff->delete();
+
+        return null;
     }
 
     private function ensureBranchBelongsToBusiness(Business $business, int $branchId): void
