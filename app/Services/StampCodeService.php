@@ -7,6 +7,7 @@ use App\Models\Business;
 use App\Models\Customer;
 use App\Models\LoyaltyCard;
 use App\Models\StampCode;
+use App\Models\Staff;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -108,6 +109,35 @@ class StampCodeService
                 'used_at' => now(),
                 'is_expired' => false,
                 'is_offline_code' => false,
+            ]);
+
+            return $loyaltyStamps->apply($stampCode, $customer->id);
+        });
+    }
+
+    public function recordStaffCustomerScan(Staff $staff, array $input, LoyaltyStampService $loyaltyStamps): array
+    {
+        $business = $staff->business;
+        $customer = $this->customerFromQrPayload($input['customer_qr']);
+        if (! $customer || $customer->business_id !== $business->id) {
+            throw ValidationException::withMessages(['customer_qr' => 'This customer QR code is invalid for this business.']);
+        }
+
+        $card = $business->loyaltyCards()
+            ->whereDate('valid_until', '>', today())
+            ->whereKey($input['loyalty_card_id'])
+            ->where(fn (Builder $cards) => $cards->whereDoesntHave('branches')
+                ->orWhereHas('branches', fn (Builder $branches) => $branches->whereKey($staff->branch_id)))
+            ->first();
+        if (! $card) {
+            throw ValidationException::withMessages(['loyalty_card_id' => 'Please select a valid loyalty card.']);
+        }
+
+        return DB::transaction(function () use ($staff, $business, $customer, $card, $input, $loyaltyStamps) {
+            $stampCode = StampCode::create([
+                'staff_id' => $staff->id, 'business_id' => $business->id, 'customer_id' => $customer->id,
+                'loyalty_card_id' => $card->id, 'branch_id' => $staff->branch_id, 'reference_number' => $input['reference_number'],
+                'code' => $this->scanCode(), 'used_at' => now(), 'is_expired' => false, 'is_offline_code' => false,
             ]);
 
             return $loyaltyStamps->apply($stampCode, $customer->id);

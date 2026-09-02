@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Business;
+use App\Models\Staff;
 use App\Models\StampCode;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -32,7 +33,29 @@ class IssueStampService
         ];
     }
 
-    public function offlineStamps(Business $business, int $loyaltyCardId, int $userId): array
+    public function staffPageData(Staff $staff, array $input): array
+    {
+        $business = $staff->business;
+        $branchId = $staff->branch_id;
+        abort_unless(! $branchId || ! isset($input['branch_id']) || (int) $input['branch_id'] === $branchId, 403);
+
+        $cards = $this->activeCards($business, $branchId)->get(['id', 'name', 'logo']);
+        $cardId = $input['loyalty_card_id'] ?? null;
+        $code = $cardId && $cards->contains('id', $cardId)
+            ? $this->generate($business, $cardId, $branchId, $input['reference_number'] ?? null, null, $staff->id)
+            : $this->emptyCode();
+
+        return [
+            'code' => $code,
+            'cards' => $cards,
+            'branches' => $business->branches()->when($branchId, fn ($query) => $query->whereKey($branchId))->get(['id', 'name']),
+            'loyalty_card_id' => $cardId,
+            'branch_id' => $branchId,
+            'reference_number' => $input['reference_number'] ?? null,
+        ];
+    }
+
+    public function offlineStamps(Business $business, int $loyaltyCardId, ?int $userId, ?int $staffId = null, ?int $branchId = null): array
     {
         $loyaltyCard = $business->loyaltyCards()->findOrFail($loyaltyCardId);
         $registrationLink = $business->subdomain ?: 'https://stampbayan.com/customer/register?business='.$business->qr_token;
@@ -42,8 +65,10 @@ class IssueStampService
 
         StampCode::insert(collect($codes)->map(fn (string $code) => [
             'user_id' => $userId,
+            'staff_id' => $staffId,
             'business_id' => $business->id,
             'loyalty_card_id' => $loyaltyCard->id,
+            'branch_id' => $branchId,
             'code' => $code,
             'is_offline_code' => true,
             'created_at' => now(),
@@ -71,7 +96,7 @@ class IssueStampService
             );
     }
 
-    private function generate(Business $business, int $cardId, ?int $branchId, ?string $referenceNumber, int $userId): array
+    private function generate(Business $business, int $cardId, ?int $branchId, ?string $referenceNumber, ?int $userId, ?int $staffId = null): array
     {
         $business->stampCodes()
             ->whereNull('used_at')
@@ -81,6 +106,7 @@ class IssueStampService
 
         $stampCode = StampCode::create([
             'user_id' => $userId,
+            'staff_id' => $staffId,
             'business_id' => $business->id,
             'loyalty_card_id' => $cardId,
             'branch_id' => $branchId,
