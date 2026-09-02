@@ -21,7 +21,6 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Laravel\Fortify\Features;
 
 Route::get('/sitemap.xml', function () {
     $pages = [
@@ -37,14 +36,8 @@ Route::post('/api/chat', [ChatBotController::class, 'chat'])->middleware('auth')
 Route::post('/suggestions', [SuggestionController::class, 'store'])->name('suggestions.store');
 
 Route::get('/', function () {
-    return Inertia::render('welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
+    return Inertia::render('welcome');
 })->name('home');
-
-Route::get('/pro-plan', function () { 
-    return Inertia::render('pro-plan');
-})->name('pro-plan');
 
 Route::get('/documentation', [DocumentationController::class, 'index']);
 

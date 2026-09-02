@@ -1,7 +1,6 @@
 import React, { type ReactNode, useState } from 'react';
 import { BookOpen, LayoutDashboard, Stamp, Gift, Hash, CreditCard, Users, QrCode, Ticket, Search, X, Store } from 'lucide-react';
 import Dashboard from "../../../images/documentation/dashboard.png";
-import Register from "../../../images/documentation/register.png";
 import Validate from "../../../images/documentation/validate.png";
 import Login from "../../../images/documentation/login.png";
 import CardTemplate from "../../../images/documentation/card-template.png";
@@ -83,22 +82,11 @@ const Documentation = () => {
       sections: [
         {
           title: 'Quick Setup Guide',
-          content: 'Get your loyalty program up and running in just 5 easy steps. This guide will walk you through the entire process from registration to customer engagement.',
+          content: 'Get your loyalty program up and running in just a few steps. This guide walks authorized staff through setup and customer engagement.',
           image: <img src={Dashboard} alt="Quick Setup Guide" className="w-full rounded-lg shadow-md mb-2" />
         },
         {
-          title: 'Step 1: Register Your Account',
-          content: 'Create your business account to get started with the platform.',
-          steps: [
-            'Visit the registration page',
-            'Enter your business name, username, email address, and password',
-            'Click "Create Account"',
-            'Check your email inbox for the verification email'
-          ],
-           image: <img src={Register} alt="Quick Setup Guide" className="w-full rounded-lg shadow-md mb-2" />
-        },
-        {
-          title: 'Step 2: Validate Your Email',
+          title: 'Step 1: Validate Your Email',
           content: 'Verify your email address to activate your account and ensure secure access.',
           steps: [
             'Open the verification email sent to your inbox',
@@ -109,7 +97,7 @@ const Documentation = () => {
       image: <img src={Validate} alt="Quick Setup Guide" className="w-full rounded-lg shadow-md mb-2" />
         },
         {
-          title: 'Step 3: Login to Your Account',
+          title: 'Step 2: Login to Your Account',
           content: 'Access your dashboard using your credentials.',
           steps: [
             'Go to the login page',
@@ -120,7 +108,7 @@ const Documentation = () => {
       image: <img src={Login} alt="Quick Setup Guide" className="w-full rounded-lg shadow-md mb-2" />
         },
         {
-          title: 'Step 4: Create Your Loyalty Card Template',
+          title: 'Step 3: Create Your Loyalty Card Template',
           content: 'Design your first loyalty card that customers will use to collect stamps.',
           steps: [
             'Navigate to "Loyalty Cards" from the sidebar menu',
@@ -134,7 +122,7 @@ const Documentation = () => {
     image: <img src={CardTemplate} alt="Quick Setup Guide" className="w-full rounded-lg shadow-md mb-2" />
         },
         {
-          title: 'Step 5: Design and Print Your QR Code',
+          title: 'Step 4: Design and Print Your QR Code',
           content: 'Create a custom QR code that customers will scan to register and collect stamps.',
           steps: [
             'Go to "QR Studio" from the sidebar menu',
@@ -146,7 +134,7 @@ const Documentation = () => {
       image: <img src={QRStudio} alt="Quick Setup Guide" className="w-full rounded-lg shadow-md mb-2" />
         },
         {
-          title: 'Step 6: Display and Start Collecting Customers',
+          title: 'Step 5: Display and Start Collecting Customers',
           content: 'Place your QR code where customers can easily scan it.',
           items: [
             'Display the printed QR code at your store entrance',
