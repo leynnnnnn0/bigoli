@@ -7,17 +7,14 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
 import { store } from '@/routes/login';
-import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/react';
 interface LoginProps {
     status?: string;
-    canResetPassword: boolean;
     isDemo: boolean
 }
 
 export default function Login({
     status,
-    canResetPassword,
     isDemo,
 }: LoginProps) {
     return (
@@ -52,18 +49,7 @@ export default function Login({
                             </div>
 
                             <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
-                                    {canResetPassword && (
-                                        <TextLink
-                                            href={request()}
-                                            className="ml-auto text-sm"
-                                            tabIndex={5}
-                                        >
-                                            Forgot password?
-                                        </TextLink>
-                                    )}
-                                </div>
+                                <Label htmlFor="password">Password</Label>
                                 <Input
                                     id="password"
                                     type="password"
