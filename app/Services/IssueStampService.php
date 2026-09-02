@@ -50,7 +50,7 @@ class IssueStampService
             'cards' => $cards,
             'branches' => $business->branches()->when($branchId, fn ($query) => $query->whereKey($branchId))->get(['id', 'name']),
             'loyalty_card_id' => $cardId,
-            'branch_id' => $branchId,
+            'branch_id' => $branchId ? (string) $branchId : null,
             'reference_number' => $input['reference_number'] ?? null,
         ];
     }
