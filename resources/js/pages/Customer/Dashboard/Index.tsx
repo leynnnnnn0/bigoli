@@ -179,7 +179,6 @@ export default function Index({
         errors: profileErrors,
         post: postProfile,
         processing: profileProcessing,
-        reset: resetProfile,
     } = useForm({
         username: customer.username,
     });
@@ -202,7 +201,6 @@ export default function Index({
         postProfile('/customer/profile/update', {
             onSuccess: () => {
                 toast.success('Profile updated successfully');
-                resetProfile();
             },
             onError: (e) => {
                 if (e.error) {
@@ -767,7 +765,7 @@ export default function Index({
         ? `/${currentCard.backgroundImage}`
         : null;
 
-    const ProfileDialog = () => (
+    const profileDialog = (
         <Dialog open={profileDialogOpen} onOpenChange={setProfileDialogOpen}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
@@ -916,7 +914,7 @@ export default function Index({
     if (!cardTemplates || cardTemplates.length === 0) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <ProfileDialog />
+                {profileDialog}
                 <header className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
                     <img src={LOGO} alt="business logo" className="h-10" />
                     <DropdownMenu>
@@ -960,7 +958,7 @@ export default function Index({
 
     return (
         <div className="flex min-h-screen flex-col bg-gray-50">
-            <ProfileDialog />
+            {profileDialog}
 
             {/* ── DESKTOP HEADER (hidden on mobile) ── */}
             <header className="hidden items-center justify-between border-b border-gray-200 bg-white px-6 py-4 shadow-sm sm:flex">
