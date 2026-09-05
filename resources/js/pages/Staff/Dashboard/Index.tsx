@@ -57,7 +57,6 @@ import {
     LogOut,
     MapPin,
     QrCode,
-    ScanLine,
     Search,
     Sparkles,
     Undo2,
@@ -446,53 +445,13 @@ export default function Index({
 
                 {/* Main Content */}
                 <main className="mx-auto w-full max-w-7xl flex-1 px-0 pb-24 sm:px-6 sm:py-8 sm:pb-8">
-                    {/* Welcome Section */}
-                    <div className="bg-white px-5 py-5 shadow-sm sm:mb-6 sm:rounded-2xl sm:p-6 sm:ring-1 sm:ring-gray-100">
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                            <div>
-                                <p className="text-xs font-medium text-gray-400">
-                                    Staff workspace
-                                </p>
-                                <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">
-                                    Manage stamps and rewards
-                                </h1>
-                                <p className="mt-1 text-sm text-gray-500">
-                                    Generate stamp codes, redeem rewards, and
-                                    review recent customer activity.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Stats Cards */}
-                    <div className="grid grid-cols-3 gap-2 px-4 py-4 sm:gap-4 sm:px-0 sm:py-0">
-                        <StaffStatCard
-                            label="Total Claims"
-                            value={stats?.total || 0}
-                            icon={Award}
-                            tone="blue"
-                        />
-                        <StaffStatCard
-                            label="Available"
-                            value={stats?.available || 0}
-                            icon={Sparkles}
-                            tone="green"
-                        />
-                        <StaffStatCard
-                            label="Redeemed"
-                            value={stats?.redeemed || 0}
-                            icon={Check}
-                            tone="violet"
-                        />
-                    </div>
-
                     {/* Tabs Section */}
                     <Tabs
                         value={activeTab}
                         onValueChange={(value) =>
                             setActiveTab(value as StaffTab)
                         }
-                        className="space-y-4 px-4 sm:mt-6 sm:px-0"
+                        className="space-y-4 px-4 pt-4 sm:px-0 sm:pt-0"
                     >
                         <TabsList className="hidden w-full grid-cols-3 rounded-2xl bg-white p-1 shadow-sm ring-1 ring-gray-100 sm:grid">
                             {tabItems.map((item) => {
@@ -647,6 +606,27 @@ export default function Index({
 
                         {/* PERK CLAIMS TAB */}
                         <TabsContent value="perk-claims" className="space-y-6">
+                            <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                                <StaffStatCard
+                                    label="Total Claims"
+                                    value={stats?.total || 0}
+                                    icon={Award}
+                                    tone="blue"
+                                />
+                                <StaffStatCard
+                                    label="Available"
+                                    value={stats?.available || 0}
+                                    icon={Sparkles}
+                                    tone="green"
+                                />
+                                <StaffStatCard
+                                    label="Redeemed"
+                                    value={stats?.redeemed || 0}
+                                    icon={Check}
+                                    tone="violet"
+                                />
+                            </div>
+
                             <SectionShell
                                 title="Customer Perk Claims"
                                 description="Review available rewards and mark redemptions."
