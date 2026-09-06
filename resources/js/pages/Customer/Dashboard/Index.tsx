@@ -27,6 +27,7 @@ import {
     ChevronRight,
     Gift,
     Home,
+    LogOut,
     Plus,
     ScanLine,
     Settings,
@@ -35,7 +36,6 @@ import {
     Trophy,
     Type,
     User,
-    X,
 } from 'lucide-react';
 import React, { useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -1482,45 +1482,66 @@ export default function Index({
 
                 {/* ── ACCOUNT TAB (mobile only, replaces dropdown) ── */}
                 {activeTab === 'account' && (
-                    <div className="space-y-3 px-4 py-4">
-                        <div className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm">
-                            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-                                <User className="h-7 w-7 text-primary" />
+                    <div className="mx-auto w-full max-w-lg px-5 py-6">
+                        <div>
+                            <h1 className="text-xl font-semibold tracking-tight text-gray-950">
+                                Account
+                            </h1>
+                            <p className="mt-1 text-sm text-gray-500">
+                                Manage your profile and sign-in details.
+                            </p>
+                        </div>
+
+                        <div className="mt-6 flex items-center gap-3 border-b border-gray-200 pb-6">
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-50">
+                                <User className="h-6 w-6 text-emerald-600" />
                             </div>
-                            <div>
-                                <p className="text-lg font-bold text-gray-900">
-                                    {customerName}
+                            <div className="min-w-0">
+                                <p className="truncate text-base font-semibold text-gray-950 capitalize">
+                                    {customer.username}
                                 </p>
-                                <p className="text-sm text-gray-400">
+                                <p className="truncate text-sm text-gray-500">
                                     @{customer.username}
                                 </p>
                             </div>
                         </div>
-                        <button
-                            onClick={() => setProfileDialogOpen(true)}
-                            className="flex w-full items-center justify-between rounded-2xl bg-white p-4 shadow-sm active:bg-gray-50"
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10">
-                                    <Settings className="h-4 w-4 text-primary" />
+
+                        <div className="mt-6 divide-y divide-gray-200 overflow-hidden rounded-xl border border-gray-200 bg-white">
+                            <button
+                                onClick={() => setProfileDialogOpen(true)}
+                                className="flex w-full items-center gap-3 px-4 py-4 text-left transition-colors active:bg-gray-50"
+                            >
+                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50">
+                                    <Settings className="h-4 w-4 text-emerald-600" />
                                 </div>
-                                <span className="text-sm font-semibold text-gray-900">
-                                    Edit Profile
-                                </span>
-                            </div>
-                            <ChevronRight className="h-4 w-4 text-gray-400" />
-                        </button>
-                        <button
-                            onClick={() => router.post('/customer/logout')}
-                            className="flex w-full items-center gap-3 rounded-2xl bg-white p-4 shadow-sm active:bg-red-50"
-                        >
-                            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-50">
-                                <X className="h-4 w-4 text-red-500" />
-                            </div>
-                            <span className="text-sm font-semibold text-red-500">
-                                Logout
-                            </span>
-                        </button>
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-sm font-medium text-gray-900">
+                                        Profile settings
+                                    </p>
+                                    <p className="mt-0.5 text-xs text-gray-500">
+                                        Update your information or password
+                                    </p>
+                                </div>
+                                <ChevronRight className="h-4 w-4 shrink-0 text-gray-400" />
+                            </button>
+
+                            <button
+                                onClick={() => router.post('/customer/logout')}
+                                className="flex w-full items-center gap-3 px-4 py-4 text-left transition-colors active:bg-red-50"
+                            >
+                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-50">
+                                    <LogOut className="h-4 w-4 text-red-600" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-sm font-medium text-red-600">
+                                        Log out
+                                    </p>
+                                    <p className="mt-0.5 text-xs text-gray-500">
+                                        Sign out of this account
+                                    </p>
+                                </div>
+                            </button>
+                        </div>
                     </div>
                 )}
             </main>
