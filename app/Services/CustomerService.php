@@ -28,7 +28,7 @@ class CustomerService
     {
         return $business->customers()
             ->with([
-                'stamp_codes:id,customer_id,loyalty_card_id,branch_id,code,used_at,is_expired',
+                'stamp_codes:id,customer_id,loyalty_card_id,branch_id,code,used_at',
                 'stamp_codes.loyalty_card:id,name',
                 'stamp_codes.branch:id,name',
             ])

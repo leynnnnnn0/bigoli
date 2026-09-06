@@ -14,8 +14,6 @@ use Illuminate\Validation\ValidationException;
 
 class StampCodeService
 {
-    public function __construct(private readonly StampCodeExpirationService $expiration) {}
-
     public function pageData(Business $business, array $filters): array
     {
         return [
@@ -28,8 +26,6 @@ class StampCodeService
 
     public function query(int $businessId, array $filters): Builder
     {
-        $this->expiration->expire($businessId);
-
         return StampCode::query()
             ->with(['customer:id,username,email', 'loyalty_card:id,name', 'branch:id,name', 'user:id,email', 'staff:id,username'])
             ->withTrashed()
@@ -41,9 +37,8 @@ class StampCodeService
                         ->where('username', 'like', "%{$term}%")
                         ->orWhere('email', 'like', "%{$term}%"));
             }))
-            ->when(($filters['status'] ?? null) === 'used', fn (Builder $query) => $query->whereNotNull('used_at')->where('is_expired', false))
-            ->when(($filters['status'] ?? null) === 'expired', fn (Builder $query) => $query->where('is_expired', true))
-            ->when(($filters['status'] ?? null) === 'active', fn (Builder $query) => $query->whereNull('used_at')->where('is_expired', false))
+            ->when(($filters['status'] ?? null) === 'used', fn (Builder $query) => $query->whereNotNull('used_at'))
+            ->when(($filters['status'] ?? null) === 'active', fn (Builder $query) => $query->whereNull('used_at'))
             ->when($filters['type'] ?? null, fn (Builder $query, string $type) => $query->where('is_offline_code', $type === 'offline'))
             ->when($filters['loyalty_card_id'] ?? null, fn (Builder $query, int $cardId) => $query->where('loyalty_card_id', $cardId))
             ->when($filters['branch_id'] ?? null, fn (Builder $query, int $branchId) => $query->where('branch_id', $branchId))
@@ -58,13 +53,10 @@ class StampCodeService
 
     public function redeemForCustomer(Customer $customer, string $code, LoyaltyStampService $loyaltyStamps): ?array
     {
-        $this->expiration->expire($customer->business_id);
-
         return DB::transaction(function () use ($customer, $code, $loyaltyStamps) {
             $stampCode = StampCode::where('code', $code)
                 ->where('business_id', $customer->business_id)
                 ->whereNull('used_at')
-                ->where('is_expired', false)
                 ->lockForUpdate()
                 ->first();
 

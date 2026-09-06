@@ -16,7 +16,7 @@ class StampCodeIndexRequest extends FormRequest
     {
         return [
             'search' => ['nullable', 'string', 'max:255'],
-            'status' => ['nullable', Rule::in(['used', 'expired', 'active'])],
+            'status' => ['nullable', Rule::in(['used', 'active'])],
             'type' => ['nullable', Rule::in(['online', 'offline'])],
             'loyalty_card_id' => ['nullable', 'integer', 'exists:loyalty_cards,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
@@ -25,7 +25,7 @@ class StampCodeIndexRequest extends FormRequest
             'date_to' => ['nullable', 'date'],
             'used_from' => ['nullable', 'date'],
             'used_to' => ['nullable', 'date'],
-            'sort_by' => ['nullable', Rule::in(['created_at', 'used_at', 'code', 'is_expired'])],
+            'sort_by' => ['nullable', Rule::in(['created_at', 'used_at', 'code'])],
             'sort_dir' => ['nullable', Rule::in(['asc', 'desc'])],
         ];
     }

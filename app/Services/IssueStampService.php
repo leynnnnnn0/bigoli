@@ -9,12 +9,8 @@ use Illuminate\Support\Str;
 
 class IssueStampService
 {
-    public function __construct(private readonly StampCodeExpirationService $expiration) {}
-
     public function pageData(Business $business, array $input, int $userId): array
     {
-        $this->expiration->expire($business->id);
-
         $branchId = $input['branch_id'] ?? null;
         if ($branchId) {
             abort_unless($business->branches()->whereKey($branchId)->exists(), 403);
@@ -39,7 +35,6 @@ class IssueStampService
     public function staffPageData(Staff $staff, array $input): array
     {
         $business = $staff->business;
-        $this->expiration->expire($business->id);
         $branchId = $staff->branch_id;
         abort_unless(! $branchId || ! isset($input['branch_id']) || (int) $input['branch_id'] === $branchId, 403);
 

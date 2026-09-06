@@ -327,9 +327,6 @@ export default function Index({
     };
 
     const getStatusBadge = (stampCode: StampCodeRecord) => {
-        if (stampCode.is_expired) {
-            return <Badge className="bg-red-500 text-white">Expired</Badge>;
-        }
         if (stampCode.used_at) {
             return <Badge className="bg-green-500 text-white">Used</Badge>;
         }
@@ -550,11 +547,6 @@ export default function Index({
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div className="rounded-xl border border-yellow-100 bg-yellow-50 p-4 text-sm text-yellow-800">
-                                        This code expires in 15 minutes if it is
-                                        not used.
                                     </div>
 
                                     {branchAndCardSelectors}

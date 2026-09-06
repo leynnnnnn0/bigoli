@@ -41,7 +41,7 @@ test('IS-03 requires a reference number whenever an online stamp code is request
     expect($business->stampCodes()->count())->toBe(0);
 });
 
-test('IS-06 expires stale online codes when viewed and before customer redemption', function () {
+test('online stamp codes do not expire and remain redeemable until used', function () {
     [$business, $owner] = requirementOwner();
     $card = LoyaltyCard::factory()->for($business)->create(['stampsNeeded' => 10]);
     $customer = Customer::factory()->for($business)->create();
@@ -56,7 +56,8 @@ test('IS-06 expires stale online codes when viewed and before customer redemptio
     ]);
 
     $this->actingAs($owner)->get('/business/issue-stamp')->assertOk();
-    expect($viewedCode->fresh()->is_expired)->toBeTrue();
+    expect($viewedCode->fresh()->is_expired)->toBeFalse()
+        ->and($viewedCode->fresh()->used_at)->toBeNull();
 
     $redeemedCode = StampCode::factory()->create([
         'user_id' => $owner->id,
@@ -64,16 +65,16 @@ test('IS-06 expires stale online codes when viewed and before customer redemptio
         'loyalty_card_id' => $card->id,
         'code' => 'STALEREDEEM',
         'created_at' => now()->subMinutes(16),
-        'is_expired' => false,
+        'is_expired' => true,
         'is_offline_code' => false,
     ]);
 
     $this->actingAs($customer, 'customer')
         ->post('/stamps/record', ['code' => $redeemedCode->code, 'loyalty_card_id' => $card->id])
-        ->assertSessionHasErrors('code');
+        ->assertSessionHasNoErrors();
 
     expect($redeemedCode->fresh()->is_expired)->toBeTrue()
-        ->and($redeemedCode->fresh()->used_at)->toBeNull();
+        ->and($redeemedCode->fresh()->used_at)->not->toBeNull();
 });
 
 test('LC-03 creates a card when optional perk color is omitted', function () {
@@ -113,7 +114,7 @@ test('LC-06 rejects rewards outside the loyalty card stamp range', function () {
     expect($business->loyaltyCards()->count())->toBe(0);
 });
 
-test('C-06 exposes expired state in customer stamp history', function () {
+test('customer stamp history ignores the legacy expiration flag', function () {
     [$business, $owner] = requirementOwner();
     $branch = Branch::factory()->for($business)->create();
     $card = LoyaltyCard::factory()->for($business)->create();
@@ -130,7 +131,8 @@ test('C-06 exposes expired state in customer stamp history', function () {
     $this->actingAs($owner)
         ->get("/business/customers/{$customer->id}")
         ->assertInertia(fn (Assert $page) => $page
-            ->where('customer.stamp_codes.0.is_expired', true));
+            ->missing('customer.stamp_codes.0.is_expired')
+            ->where('customer.stamp_codes.0.used_at', null));
 });
 
 test('B-07 blocks branch deletion when soft-deleted stamp history remains linked', function () {

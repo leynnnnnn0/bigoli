@@ -64,7 +64,6 @@ export interface StampCodeRecord {
     branch?: BranchOption | null;
     reference_number?: string | null;
     used_at: string | null;
-    is_expired: boolean;
     created_at: string;
     loyalty_card: {
         name: string;

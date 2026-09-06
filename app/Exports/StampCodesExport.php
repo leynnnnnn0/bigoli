@@ -2,14 +2,15 @@
 
 namespace App\Exports;
 
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class StampCodesExport implements FromQuery, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
+class StampCodesExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     public function __construct(protected $query) {}
 
@@ -37,7 +38,7 @@ class StampCodesExport implements FromQuery, WithHeadings, WithMapping, WithStyl
 
     public function map($row): array
     {
-        $status = $row->is_expired ? 'Expired' : ($row->used_at ? 'Used' : 'Active');
+        $status = $row->used_at ? 'Used' : 'Active';
         $generatedBy = $row->staff?->username ?? $row->user?->email ?? 'N/A';
 
         return [
@@ -50,8 +51,8 @@ class StampCodesExport implements FromQuery, WithHeadings, WithMapping, WithStyl
             $generatedBy,
             $status,
             $row->is_offline_code ? 'Offline' : 'Online',
-            $row->used_at ? \Carbon\Carbon::parse($row->used_at)->format('Y-m-d H:i') : 'N/A',
-            \Carbon\Carbon::parse($row->created_at)->format('Y-m-d H:i'),
+            $row->used_at ? Carbon::parse($row->used_at)->format('Y-m-d H:i') : 'N/A',
+            Carbon::parse($row->created_at)->format('Y-m-d H:i'),
         ];
     }
 

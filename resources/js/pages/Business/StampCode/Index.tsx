@@ -66,7 +66,6 @@ interface StampCode {
     staff: { username?: string; email: string } | null;
     user: { username?: string; email: string } | null;
     used_at: string | null;
-    is_expired: boolean;
     created_at: string;
     loyalty_card: { name: string };
 }
@@ -228,8 +227,6 @@ export default function Index({
     };
 
     const getStatusBadge = (sc: StampCode) => {
-        if (sc.is_expired)
-            return <Badge className="bg-red-500 text-white">Expired</Badge>;
         if (sc.used_at)
             return <Badge className="bg-green-500 text-white">Used</Badge>;
         return <Badge variant="default">Active</Badge>;
@@ -347,9 +344,6 @@ export default function Index({
                                         </SelectItem>
                                         <SelectItem value="used">
                                             Used
-                                        </SelectItem>
-                                        <SelectItem value="expired">
-                                            Expired
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -481,9 +475,6 @@ export default function Index({
                                         </SelectItem>
                                         <SelectItem value="code">
                                             Code
-                                        </SelectItem>
-                                        <SelectItem value="is_expired">
-                                            Expiry
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -685,7 +676,7 @@ export default function Index({
                                 <SortableHead col="code" label="Code" />
                                 <TableHead>Customer</TableHead>
                                 <TableHead>Branch</TableHead>
-                                <SortableHead col="is_expired" label="Status" />
+                                <TableHead>Status</TableHead>
                                 <TableHead>Type</TableHead>
                                 <SortableHead col="used_at" label="Used At" />
                                 <SortableHead
