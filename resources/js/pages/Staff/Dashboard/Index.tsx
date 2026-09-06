@@ -35,7 +35,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import type {
     BranchOption,
@@ -100,37 +100,24 @@ function StaffStatCard({
     label,
     value,
     icon: Icon,
-    tone,
 }: {
     label: string;
     value: number;
     icon: typeof Award;
-    tone: 'blue' | 'green' | 'violet';
 }) {
-    const tones = {
-        blue: 'bg-blue-50 text-blue-600',
-        green: 'bg-green-50 text-green-600',
-        violet: 'bg-violet-50 text-violet-600',
-    };
-
     return (
-        <div className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-gray-100 sm:p-5">
-            <div className="flex items-center justify-between">
-                <div>
-                    <p className="text-[10px] font-semibold tracking-wide text-gray-400 uppercase sm:text-xs">
+        <div className="min-w-0 rounded-xl border border-gray-200 bg-white p-3 sm:p-5">
+            <div className="flex min-w-0 flex-col-reverse items-start justify-between gap-3 sm:flex-row sm:gap-2">
+                <div className="min-w-0">
+                    <p className="text-[11px] leading-4 font-medium text-gray-500 sm:text-sm sm:leading-5">
                         {label}
                     </p>
-                    <p className="mt-1 text-2xl font-bold text-gray-900 sm:mt-2 sm:text-3xl">
+                    <p className="mt-2 text-2xl font-semibold tracking-tight text-gray-950 tabular-nums sm:text-3xl">
                         {value}
                     </p>
                 </div>
-                <div
-                    className={cn(
-                        'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-12 sm:w-12 sm:rounded-2xl',
-                        tones[tone],
-                    )}
-                >
-                    <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 sm:h-12 sm:w-12 sm:rounded-xl">
+                    <Icon className="h-4 w-4 sm:h-6 sm:w-6" />
                 </div>
             </div>
         </div>
@@ -450,22 +437,6 @@ export default function Index({
                         }
                         className="space-y-4 px-4 pt-4 sm:px-0 sm:pt-0"
                     >
-                        <TabsList className="hidden w-full grid-cols-3 rounded-2xl bg-white p-1 shadow-sm ring-1 ring-gray-100 sm:grid">
-                            {tabItems.map((item) => {
-                                const Icon = item.icon;
-                                return (
-                                    <TabsTrigger
-                                        key={item.id}
-                                        value={item.id}
-                                        className="flex items-center gap-2 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-white"
-                                    >
-                                        <Icon className="h-4 w-4" />
-                                        <span>{item.desktopLabel}</span>
-                                    </TabsTrigger>
-                                );
-                            })}
-                        </TabsList>
-
                         {/* ISSUE STAMP TAB */}
                         <TabsContent value="issue-stamp" className="space-y-6">
                             {!code?.success ? (
@@ -603,19 +574,16 @@ export default function Index({
                                     label="Total Claims"
                                     value={stats?.total || 0}
                                     icon={Award}
-                                    tone="blue"
                                 />
                                 <StaffStatCard
                                     label="Available"
                                     value={stats?.available || 0}
                                     icon={Sparkles}
-                                    tone="green"
                                 />
                                 <StaffStatCard
                                     label="Redeemed"
                                     value={stats?.redeemed || 0}
                                     icon={Check}
-                                    tone="violet"
                                 />
                             </div>
 
@@ -633,7 +601,7 @@ export default function Index({
                                             onChange={(e) =>
                                                 setPerkSearch(e.target.value)
                                             }
-                                            className="h-12 rounded-xl border-gray-200 bg-gray-50 pl-10"
+                                            className="h-12 rounded-xl border-gray-200 bg-gray-50 pl-10 placeholder:text-sm"
                                         />
                                     </div>
 
@@ -909,7 +877,7 @@ export default function Index({
                                             onChange={(e) =>
                                                 setCodeSearch(e.target.value)
                                             }
-                                            className="h-12 rounded-xl border-gray-200 bg-gray-50 pl-10"
+                                            className="h-12 rounded-xl border-gray-200 bg-gray-50 pl-10 placeholder:text-sm"
                                         />
                                     </div>
 

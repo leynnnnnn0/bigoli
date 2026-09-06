@@ -32,7 +32,13 @@ return [
     |
     */
 
-    'lifetime' => (int) env('SESSION_LIFETIME', 120),
+    'lifetime' => (int) env('SESSION_BUSINESS_LIFETIME', 1440),
+
+    'account_lifetimes' => [
+        'business' => (int) env('SESSION_BUSINESS_LIFETIME', 1440),
+        'staff' => (int) env('SESSION_STAFF_LIFETIME', 10080),
+        'customer' => (int) env('SESSION_CUSTOMER_LIFETIME', 20160),
+    ],
 
     'expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', false),
 
