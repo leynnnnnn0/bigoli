@@ -11,6 +11,7 @@ interface StampCode {
     id: number;
     code: string;
     used_at: string | null;
+    is_expired: boolean;
     loyalty_card: {
         name: string;
     };
@@ -147,7 +148,15 @@ export default function Show({ customer }: Props) {
                                                                     .name
                                                             }
                                                         </p>
-                                                        {stampCode.used_at ? (
+                                                        {stampCode.is_expired ? (
+                                                            <Badge
+                                                                variant="destructive"
+                                                                className="gap-1"
+                                                            >
+                                                                <Clock className="h-3 w-3" />
+                                                                Expired
+                                                            </Badge>
+                                                        ) : stampCode.used_at ? (
                                                             <Badge
                                                                 variant="default"
                                                                 className="gap-1"

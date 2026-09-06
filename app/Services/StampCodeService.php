@@ -5,9 +5,8 @@ namespace App\Services;
 use App\Models\Branch;
 use App\Models\Business;
 use App\Models\Customer;
-use App\Models\LoyaltyCard;
-use App\Models\StampCode;
 use App\Models\Staff;
+use App\Models\StampCode;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -15,6 +14,8 @@ use Illuminate\Validation\ValidationException;
 
 class StampCodeService
 {
+    public function __construct(private readonly StampCodeExpirationService $expiration) {}
+
     public function pageData(Business $business, array $filters): array
     {
         return [
@@ -27,6 +28,8 @@ class StampCodeService
 
     public function query(int $businessId, array $filters): Builder
     {
+        $this->expiration->expire($businessId);
+
         return StampCode::query()
             ->with(['customer:id,username,email', 'loyalty_card:id,name', 'branch:id,name', 'user:id,email', 'staff:id,username'])
             ->withTrashed()
@@ -55,6 +58,8 @@ class StampCodeService
 
     public function redeemForCustomer(Customer $customer, string $code, LoyaltyStampService $loyaltyStamps): ?array
     {
+        $this->expiration->expire($customer->business_id);
+
         return DB::transaction(function () use ($customer, $code, $loyaltyStamps) {
             $stampCode = StampCode::where('code', $code)
                 ->where('business_id', $customer->business_id)

@@ -90,15 +90,19 @@ class CardTemplateService
     {
         $keptIds = [];
         foreach ($perks as $perkData) {
-            $attributes = [
-                'stampNumber' => $perkData['stampNumber'], 'reward' => $perkData['reward'],
-                'color' => $perkData['color'] ?? null, 'details' => $perkData['details'] ?? null,
-            ];
+            $perk = null;
             if (isset($perkData['id'])) {
                 $perk = $card->perks()->find($perkData['id']);
                 if (! $perk) {
                     throw ValidationException::withMessages(['perks' => 'A selected perk does not belong to this card.']);
                 }
+            }
+
+            $attributes = [
+                'stampNumber' => $perkData['stampNumber'], 'reward' => $perkData['reward'],
+                'color' => $perkData['color'] ?? $perk?->color ?? '#000000', 'details' => $perkData['details'] ?? null,
+            ];
+            if ($perk) {
                 $perk->update($attributes);
             } else {
                 $perk = $card->perks()->create($attributes);

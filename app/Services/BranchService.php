@@ -38,7 +38,7 @@ class BranchService
         if ($branch->loyaltyCards()->exists()) {
             return 'Cannot delete branch because it has loyalty cards linked to it.';
         }
-        if ($branch->stampCodes()->exists()) {
+        if ($branch->stampCodes()->withTrashed()->exists()) {
             return 'Cannot delete branch because it has stamp codes linked to it.';
         }
 

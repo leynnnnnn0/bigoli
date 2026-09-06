@@ -29,7 +29,7 @@ class StoreCardTemplateRequest extends FormRequest
             'stampEmptyColor' => ['nullable', 'string', 'max:7'], 'stampImage' => ['nullable', 'string'],
             'backgroundImage' => ['nullable', 'string'], 'footer' => ['nullable', 'string', 'max:255'],
             'stampShape' => ['required', 'string', Rule::in(['circle', 'square', 'star', 'hexagon'])],
-            'perks' => ['nullable', 'array'], 'perks.*.stampNumber' => ['required_with:perks', 'integer', 'min:1'],
+            'perks' => ['nullable', 'array'], 'perks.*.stampNumber' => ['required_with:perks', 'integer', 'min:1', 'lte:stampsNeeded', 'distinct'],
             'perks.*.reward' => ['required_with:perks', 'string', 'max:255'], 'perks.*.color' => ['nullable', 'string', 'max:7'],
             'perks.*.details' => ['nullable', 'string', 'max:1000'],
             'branch_ids' => ['nullable', 'array'], 'branch_ids.*' => ['integer', 'exists:branches,id'],

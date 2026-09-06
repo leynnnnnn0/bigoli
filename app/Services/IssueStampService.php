@@ -5,13 +5,16 @@ namespace App\Services;
 use App\Models\Business;
 use App\Models\Staff;
 use App\Models\StampCode;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 class IssueStampService
 {
+    public function __construct(private readonly StampCodeExpirationService $expiration) {}
+
     public function pageData(Business $business, array $input, int $userId): array
     {
+        $this->expiration->expire($business->id);
+
         $branchId = $input['branch_id'] ?? null;
         if ($branchId) {
             abort_unless($business->branches()->whereKey($branchId)->exists(), 403);
@@ -36,6 +39,7 @@ class IssueStampService
     public function staffPageData(Staff $staff, array $input): array
     {
         $business = $staff->business;
+        $this->expiration->expire($business->id);
         $branchId = $staff->branch_id;
         abort_unless(! $branchId || ! isset($input['branch_id']) || (int) $input['branch_id'] === $branchId, 403);
 
@@ -98,12 +102,6 @@ class IssueStampService
 
     private function generate(Business $business, int $cardId, ?int $branchId, ?string $referenceNumber, ?int $userId, ?int $staffId = null): array
     {
-        $business->stampCodes()
-            ->whereNull('used_at')
-            ->where('created_at', '<=', Carbon::now()->subMinutes(15))
-            ->where('is_offline_code', false)
-            ->update(['is_expired' => true]);
-
         $stampCode = StampCode::create([
             'user_id' => $userId,
             'staff_id' => $staffId,
