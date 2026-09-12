@@ -16,3 +16,4 @@ class UpdateBranchRequest extends FormRequest
         return ['name' => ['required', 'string', 'max:255'], 'address' => ['nullable', 'string'], 'remarks' => ['nullable', 'string']];
     }
 }
+

@@ -1,5 +1,6 @@
 import ModuleHeading from "@/components/module-heading";
 import AppLayout from "@/layouts/app-layout";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Head, router } from "@inertiajs/react";
 import { useState, useEffect } from "react";
 import {
@@ -96,6 +97,7 @@ interface Props {
 
 export default function Index({ perkClaims, filters, stats }: Props) {
   const [search, setSearch] = useState(filters.search || "");
+  const isMobile = useIsMobile();
   const [selectedClaim, setSelectedClaim] = useState<PerkClaim | null>(null);
   const [redeemDialogOpen, setRedeemDialogOpen] = useState(false);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
@@ -251,7 +253,7 @@ export default function Index({ perkClaims, filters, stats }: Props) {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
             type="text"
-            placeholder="Search by customer, reward, or card..."
+            placeholder={isMobile ? "Search claims..." : "Search by customer, reward, or card..."}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10"

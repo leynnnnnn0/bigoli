@@ -37,13 +37,14 @@ import {
 } from '@/components/ui/table';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 import type {
     BranchOption,
     LoyaltyCardOption,
     PerkClaim,
     StampCodeRecord,
 } from '@/types/stampbayan';
-import { cn } from '@/lib/utils';
 import { Head, router } from '@inertiajs/react';
 import {
     Award,
@@ -89,9 +90,24 @@ interface Props {
 }
 
 const tabItems = [
-    { id: 'issue-stamp', label: 'Issue', desktopLabel: 'Issue Stamp', icon: Home },
-    { id: 'perk-claims', label: 'Rewards', desktopLabel: 'Perk Claims', icon: Gift },
-    { id: 'stamp-codes', label: 'Codes', desktopLabel: 'Stamp Codes', icon: History },
+    {
+        id: 'issue-stamp',
+        label: 'Issue',
+        desktopLabel: 'Issue Stamp',
+        icon: Home,
+    },
+    {
+        id: 'perk-claims',
+        label: 'Rewards',
+        desktopLabel: 'Perk Claims',
+        icon: Gift,
+    },
+    {
+        id: 'stamp-codes',
+        label: 'Codes',
+        desktopLabel: 'Stamp Codes',
+        icon: History,
+    },
 ] as const;
 
 type StaffTab = (typeof tabItems)[number]['id'];
@@ -215,6 +231,7 @@ export default function Index({
     // Stamp Codes state
     const [codeSearch, setCodeSearch] = useState('');
     const [activeTab, setActiveTab] = useState<StaffTab>('issue-stamp');
+    const isMobile = useIsMobile();
 
     // When branch changes, reload so server returns filtered cards
     const handleBranchChange = (value: string) => {
@@ -481,7 +498,7 @@ export default function Index({
                                             !selectedCardId ||
                                             !referenceNumber
                                         }
-                                        className="h-12 rounded-xl bg-primary text-white hover:bg-primary/80 w-full"
+                                        className="h-12 w-full rounded-xl bg-primary text-white hover:bg-primary/80"
                                     >
                                         <QrCode className="mr-2 h-5 w-5" />
                                         {loading
@@ -490,8 +507,13 @@ export default function Index({
                                     </Button>
                                     <CustomerQrScanner
                                         endpoint="/staff/scan-customer"
-                                        data={{ loyalty_card_id: selectedCardId, reference_number: referenceNumber }}
-                                        disabled={!selectedCardId || !referenceNumber}
+                                        data={{
+                                            loyalty_card_id: selectedCardId,
+                                            reference_number: referenceNumber,
+                                        }}
+                                        disabled={
+                                            !selectedCardId || !referenceNumber
+                                        }
                                     />
                                 </SectionShell>
                             ) : (
@@ -560,8 +582,13 @@ export default function Index({
                                     </Button>
                                     <CustomerQrScanner
                                         endpoint="/staff/scan-customer"
-                                        data={{ loyalty_card_id: selectedCardId, reference_number: referenceNumber }}
-                                        disabled={!selectedCardId || !referenceNumber}
+                                        data={{
+                                            loyalty_card_id: selectedCardId,
+                                            reference_number: referenceNumber,
+                                        }}
+                                        disabled={
+                                            !selectedCardId || !referenceNumber
+                                        }
                                     />
                                 </SectionShell>
                             )}
@@ -592,272 +619,276 @@ export default function Index({
                                 description="Review available rewards and mark redemptions."
                                 icon={Award}
                             >
-                                    <div className="relative">
-                                        <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
-                                        <Input
-                                            type="text"
-                                            placeholder="Search by customer, reward, or card..."
-                                            value={perkSearch}
-                                            onChange={(e) =>
-                                                setPerkSearch(e.target.value)
-                                            }
-                                            className="h-12 rounded-xl border-gray-200 bg-gray-50 pl-10 placeholder:text-sm"
-                                        />
-                                    </div>
+                                <div className="relative">
+                                    <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
+                                    <Input
+                                        type="text"
+                                        placeholder={
+                                            isMobile
+                                                ? 'Search claims...'
+                                                : 'Search by customer, reward, or card...'
+                                        }
+                                        value={perkSearch}
+                                        onChange={(e) =>
+                                            setPerkSearch(e.target.value)
+                                        }
+                                        className="h-12 rounded-xl border-gray-200 bg-gray-50 pl-10 placeholder:text-sm"
+                                    />
+                                </div>
 
-                                    {/* Desktop Table */}
-                                    <div className="hidden overflow-x-auto rounded-2xl border border-gray-100 lg:block">
-                                        <Table>
-                                            <TableHeader>
-                                                <TableRow className="bg-gray-50/80">
-                                                    <TableHead className="font-semibold">
-                                                        Customer
-                                                    </TableHead>
-                                                    <TableHead className="font-semibold">
-                                                        Reward
-                                                    </TableHead>
-                                                    <TableHead className="font-semibold">
-                                                        Card
-                                                    </TableHead>
-                                                    <TableHead className="font-semibold">
-                                                        Status
-                                                    </TableHead>
-                                                    <TableHead className="font-semibold">
-                                                        Actions
-                                                    </TableHead>
-                                                </TableRow>
-                                            </TableHeader>
-                                            <TableBody>
-                                                {filteredPerkClaims.length >
-                                                0 ? (
-                                                    filteredPerkClaims.map(
-                                                        (claim) => (
-                                                            <TableRow
-                                                                key={claim.id}
-                                                                className="hover:bg-gray-50/80"
-                                                            >
-                                                                <TableCell>
-                                                                    <div className="font-medium">
-                                                                        {
-                                                                            claim
-                                                                                .customer
-                                                                                .username
-                                                                        }
-                                                                    </div>
-                                                                    <div className="text-xs text-gray-500">
-                                                                        {
-                                                                            claim
-                                                                                .customer
-                                                                                .email
-                                                                        }
-                                                                    </div>
-                                                                </TableCell>
-                                                                <TableCell className="font-medium">
-                                                                    {
-                                                                        claim
-                                                                            .perk
-                                                                            .reward
-                                                                    }
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    {
-                                                                        claim
-                                                                            .loyalty_card
-                                                                            .name
-                                                                    }
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    {claim.is_redeemed ? (
-                                                                        <Badge className="bg-gray-500">
-                                                                            Redeemed
-                                                                        </Badge>
-                                                                    ) : (
-                                                                        <Badge className="bg-green-500">
-                                                                            Available
-                                                                        </Badge>
-                                                                    )}
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    <div className="flex gap-2">
-                                                                        <Button
-                                                                            size="sm"
-                                                                            variant="outline"
-                                                                            onClick={() =>
-                                                                                handleViewDetails(
-                                                                                    claim,
-                                                                                )
-                                                                            }
-                                                                        >
-                                                                            <Eye className="h-4 w-4" />
-                                                                        </Button>
-                                                                        {!claim.is_redeemed ? (
-                                                                            <Button
-                                                                                size="sm"
-                                                                                onClick={() =>
-                                                                                    handleRedeemClick(
-                                                                                        claim,
-                                                                                    )
-                                                                                }
-                                                                                className="bg-green-600 hover:bg-green-700"
-                                                                            >
-                                                                                <Check className="h-4 w-4" />
-                                                                            </Button>
-                                                                        ) : (
-                                                                            <Button
-                                                                                size="sm"
-                                                                                variant="outline"
-                                                                                onClick={() =>
-                                                                                    handleUndoRedeem(
-                                                                                        claim,
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                <Undo2 className="h-4 w-4" />
-                                                                            </Button>
-                                                                        )}
-                                                                    </div>
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        ),
-                                                    )
-                                                ) : (
-                                                    <TableRow>
-                                                        <TableCell
-                                                            colSpan={5}
-                                                            className="py-12 text-center text-gray-500"
+                                {/* Desktop Table */}
+                                <div className="hidden overflow-x-auto rounded-2xl border border-gray-100 lg:block">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow className="bg-gray-50/80">
+                                                <TableHead className="font-semibold">
+                                                    Customer
+                                                </TableHead>
+                                                <TableHead className="font-semibold">
+                                                    Reward
+                                                </TableHead>
+                                                <TableHead className="font-semibold">
+                                                    Card
+                                                </TableHead>
+                                                <TableHead className="font-semibold">
+                                                    Status
+                                                </TableHead>
+                                                <TableHead className="font-semibold">
+                                                    Actions
+                                                </TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {filteredPerkClaims.length > 0 ? (
+                                                filteredPerkClaims.map(
+                                                    (claim) => (
+                                                        <TableRow
+                                                            key={claim.id}
+                                                            className="hover:bg-gray-50/80"
                                                         >
-                                                            <Award className="mx-auto mb-3 h-12 w-12 text-gray-300" />
-                                                            <p>No perk claims found.</p>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                )}
-                                            </TableBody>
-                                        </Table>
-                                    </div>
-
-                                    {/* Mobile Cards */}
-                                    <div className="space-y-4 lg:hidden">
-                                        {filteredPerkClaims.length > 0 ? (
-                                            filteredPerkClaims.map((claim) => (
-                                                <Card
-                                                    key={claim.id}
-                                                    className="border-0 shadow-sm ring-1 ring-gray-100"
-                                                >
-                                                    <CardContent className="space-y-3 p-4">
-                                                        <div className="flex items-start justify-between">
-                                                            <div>
-                                                                <p className="text-base font-semibold">
+                                                            <TableCell>
+                                                                <div className="font-medium">
                                                                     {
                                                                         claim
                                                                             .customer
                                                                             .username
                                                                     }
-                                                                </p>
-                                                                <p className="text-xs text-gray-500">
+                                                                </div>
+                                                                <div className="text-xs text-gray-500">
                                                                     {
                                                                         claim
                                                                             .customer
                                                                             .email
                                                                     }
-                                                                </p>
-                                                            </div>
-                                                            {claim.is_redeemed ? (
-                                                                <Badge className="bg-gray-500">
-                                                                    Redeemed
-                                                                </Badge>
-                                                            ) : (
-                                                                <Badge className="bg-green-500">
-                                                                    Available
-                                                                </Badge>
-                                                            )}
-                                                        </div>
+                                                                </div>
+                                                            </TableCell>
+                                                            <TableCell className="font-medium">
+                                                                {
+                                                                    claim.perk
+                                                                        .reward
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    claim
+                                                                        .loyalty_card
+                                                                        .name
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {claim.is_redeemed ? (
+                                                                    <Badge className="bg-gray-500">
+                                                                        Redeemed
+                                                                    </Badge>
+                                                                ) : (
+                                                                    <Badge className="bg-green-500">
+                                                                        Available
+                                                                    </Badge>
+                                                                )}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                <div className="flex gap-2">
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="outline"
+                                                                        onClick={() =>
+                                                                            handleViewDetails(
+                                                                                claim,
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <Eye className="h-4 w-4" />
+                                                                    </Button>
+                                                                    {!claim.is_redeemed ? (
+                                                                        <Button
+                                                                            size="sm"
+                                                                            onClick={() =>
+                                                                                handleRedeemClick(
+                                                                                    claim,
+                                                                                )
+                                                                            }
+                                                                            className="bg-green-600 hover:bg-green-700"
+                                                                        >
+                                                                            <Check className="h-4 w-4" />
+                                                                        </Button>
+                                                                    ) : (
+                                                                        <Button
+                                                                            size="sm"
+                                                                            variant="outline"
+                                                                            onClick={() =>
+                                                                                handleUndoRedeem(
+                                                                                    claim,
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            <Undo2 className="h-4 w-4" />
+                                                                        </Button>
+                                                                    )}
+                                                                </div>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    ),
+                                                )
+                                            ) : (
+                                                <TableRow>
+                                                    <TableCell
+                                                        colSpan={5}
+                                                        className="py-12 text-center text-gray-500"
+                                                    >
+                                                        <Award className="mx-auto mb-3 h-12 w-12 text-gray-300" />
+                                                        <p>
+                                                            No perk claims
+                                                            found.
+                                                        </p>
+                                                    </TableCell>
+                                                </TableRow>
+                                            )}
+                                        </TableBody>
+                                    </Table>
+                                </div>
 
-                                                        <div className="space-y-2 text-sm">
-                                                            <div className="flex items-center gap-2">
-                                                                <Award className="h-4 w-4 text-gray-400" />
-                                                                <span className="font-medium">
-                                                                    {
-                                                                        claim
-                                                                            .perk
-                                                                            .reward
-                                                                    }
-                                                                </span>
-                                                            </div>
-                                                            <div className="flex items-center gap-2">
-                                                                <CreditCard className="h-4 w-4 text-gray-400" />
-                                                                <span>
-                                                                    {
-                                                                        claim
-                                                                            .loyalty_card
-                                                                            .name
-                                                                    }
-                                                                </span>
-                                                            </div>
-                                                            <div className="flex items-center gap-2">
-                                                                <Sparkles className="h-4 w-4 text-gray-400" />
-                                                                <span>
-                                                                    {
-                                                                        claim.stamps_at_claim
-                                                                    }{' '}
-                                                                    stamps
-                                                                </span>
-                                                            </div>
+                                {/* Mobile Cards */}
+                                <div className="space-y-4 lg:hidden">
+                                    {filteredPerkClaims.length > 0 ? (
+                                        filteredPerkClaims.map((claim) => (
+                                            <Card
+                                                key={claim.id}
+                                                className="border-0 shadow-sm ring-1 ring-gray-100"
+                                            >
+                                                <CardContent className="space-y-3 p-4">
+                                                    <div className="flex items-start justify-between">
+                                                        <div>
+                                                            <p className="text-base font-semibold">
+                                                                {
+                                                                    claim
+                                                                        .customer
+                                                                        .username
+                                                                }
+                                                            </p>
+                                                            <p className="text-xs text-gray-500">
+                                                                {
+                                                                    claim
+                                                                        .customer
+                                                                        .email
+                                                                }
+                                                            </p>
                                                         </div>
+                                                        {claim.is_redeemed ? (
+                                                            <Badge className="bg-gray-500">
+                                                                Redeemed
+                                                            </Badge>
+                                                        ) : (
+                                                            <Badge className="bg-green-500">
+                                                                Available
+                                                            </Badge>
+                                                        )}
+                                                    </div>
 
-                                                        <div className="flex gap-2 pt-2">
+                                                    <div className="space-y-2 text-sm">
+                                                        <div className="flex items-center gap-2">
+                                                            <Award className="h-4 w-4 text-gray-400" />
+                                                            <span className="font-medium">
+                                                                {
+                                                                    claim.perk
+                                                                        .reward
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <CreditCard className="h-4 w-4 text-gray-400" />
+                                                            <span>
+                                                                {
+                                                                    claim
+                                                                        .loyalty_card
+                                                                        .name
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <Sparkles className="h-4 w-4 text-gray-400" />
+                                                            <span>
+                                                                {
+                                                                    claim.stamps_at_claim
+                                                                }{' '}
+                                                                stamps
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex gap-2 pt-2">
+                                                        <Button
+                                                            size="sm"
+                                                            variant="outline"
+                                                            onClick={() =>
+                                                                handleViewDetails(
+                                                                    claim,
+                                                                )
+                                                            }
+                                                            className="flex-1"
+                                                        >
+                                                            <Eye className="mr-1 h-4 w-4" />
+                                                            Details
+                                                        </Button>
+                                                        {!claim.is_redeemed ? (
+                                                            <Button
+                                                                size="sm"
+                                                                onClick={() =>
+                                                                    handleRedeemClick(
+                                                                        claim,
+                                                                    )
+                                                                }
+                                                                className="flex-1 bg-green-600 hover:bg-green-700"
+                                                            >
+                                                                <Check className="mr-1 h-4 w-4" />
+                                                                Redeem
+                                                            </Button>
+                                                        ) : (
                                                             <Button
                                                                 size="sm"
                                                                 variant="outline"
                                                                 onClick={() =>
-                                                                    handleViewDetails(
+                                                                    handleUndoRedeem(
                                                                         claim,
                                                                     )
                                                                 }
                                                                 className="flex-1"
                                                             >
-                                                                <Eye className="mr-1 h-4 w-4" />
-                                                                Details
+                                                                <Undo2 className="mr-1 h-4 w-4" />
+                                                                Undo
                                                             </Button>
-                                                            {!claim.is_redeemed ? (
-                                                                <Button
-                                                                    size="sm"
-                                                                    onClick={() =>
-                                                                        handleRedeemClick(
-                                                                            claim,
-                                                                        )
-                                                                    }
-                                                                    className="flex-1 bg-green-600 hover:bg-green-700"
-                                                                >
-                                                                    <Check className="mr-1 h-4 w-4" />
-                                                                    Redeem
-                                                                </Button>
-                                                            ) : (
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    onClick={() =>
-                                                                        handleUndoRedeem(
-                                                                            claim,
-                                                                        )
-                                                                    }
-                                                                    className="flex-1"
-                                                                >
-                                                                    <Undo2 className="mr-1 h-4 w-4" />
-                                                                    Undo
-                                                                </Button>
-                                                            )}
-                                                        </div>
-                                                    </CardContent>
-                                                </Card>
-                                            ))
-                                        ) : (
-                                            <EmptyState
-                                                icon={Award}
-                                                title="No perk claims"
-                                                description="Unlocked customer rewards will appear here."
-                                            />
-                                        )}
-                                    </div>
+                                                        )}
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        ))
+                                    ) : (
+                                        <EmptyState
+                                            icon={Award}
+                                            title="No perk claims"
+                                            description="Unlocked customer rewards will appear here."
+                                        />
+                                    )}
+                                </div>
                             </SectionShell>
                         </TabsContent>
 
@@ -868,212 +899,207 @@ export default function Index({
                                 description="Search recent codes and customer usage."
                                 icon={History}
                             >
-                                    <div className="relative">
-                                        <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
-                                        <Input
-                                            type="text"
-                                            placeholder="Search stamp codes or customers..."
-                                            value={codeSearch}
-                                            onChange={(e) =>
-                                                setCodeSearch(e.target.value)
-                                            }
-                                            className="h-12 rounded-xl border-gray-200 bg-gray-50 pl-10 placeholder:text-sm"
-                                        />
-                                    </div>
+                                <div className="relative">
+                                    <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
+                                    <Input
+                                        type="text"
+                                        placeholder={
+                                            isMobile
+                                                ? 'Search codes...'
+                                                : 'Search stamp codes or customers...'
+                                        }
+                                        value={codeSearch}
+                                        onChange={(e) =>
+                                            setCodeSearch(e.target.value)
+                                        }
+                                        className="h-12 rounded-xl border-gray-200 bg-gray-50 pl-10 placeholder:text-sm"
+                                    />
+                                </div>
 
-                                    {/* Desktop Table */}
-                                    <div className="hidden overflow-x-auto rounded-2xl border border-gray-100 lg:block">
-                                        <Table>
-                                            <TableHeader>
-                                                <TableRow className="bg-gray-50/80">
-                                                    <TableHead className="font-semibold">
-                                                        Card
-                                                    </TableHead>
-                                                    <TableHead className="font-semibold">
-                                                        Code
-                                                    </TableHead>
-                                                    <TableHead className="font-semibold">
-                                                        Customer
-                                                    </TableHead>
-                                                    <TableHead className="font-semibold">
-                                                        Status
-                                                    </TableHead>
-                                                    <TableHead className="font-semibold">
-                                                        Created
-                                                    </TableHead>
-                                                </TableRow>
-                                            </TableHeader>
-                                            <TableBody>
-                                                {filteredStampCodes.length >
-                                                0 ? (
-                                                    filteredStampCodes.map(
-                                                        (stampCode) => (
-                                                            <TableRow
-                                                                key={
-                                                                    stampCode.id
-                                                                }
-                                                                className="hover:bg-gray-50/80"
-                                                            >
-                                                                <TableCell className="font-medium">
-                                                                    {
-                                                                        stampCode
-                                                                            .loyalty_card
-                                                                            .name
-                                                                    }
-                                                                </TableCell>
-                                                                <TableCell className="font-mono text-sm">
-                                                                    {
-                                                                        stampCode.code
-                                                                    }
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    {stampCode.customer ? (
-                                                                        <div>
-                                                                            <div className="font-medium">
-                                                                                {
-                                                                                    stampCode
-                                                                                        .customer
-                                                                                        .username
-                                                                                }
-                                                                            </div>
-                                                                            <div className="text-xs text-gray-500">
-                                                                                {
-                                                                                    stampCode
-                                                                                        .customer
-                                                                                        .email
-                                                                                }
-                                                                            </div>
-                                                                        </div>
-                                                                    ) : (
-                                                                        <span className="text-gray-400">
-                                                                            Unassigned
-                                                                        </span>
-                                                                    )}
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    {getStatusBadge(
-                                                                        stampCode,
-                                                                    )}
-                                                                </TableCell>
-                                                                <TableCell className="text-sm">
-                                                                    {formatDate(
-                                                                        stampCode.created_at,
-                                                                    )}
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        ),
-                                                    )
-                                                ) : (
-                                                    <TableRow>
-                                                        <TableCell
-                                                            colSpan={5}
-                                                            className="py-12 text-center text-gray-500"
+                                {/* Desktop Table */}
+                                <div className="hidden overflow-x-auto rounded-2xl border border-gray-100 lg:block">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow className="bg-gray-50/80">
+                                                <TableHead className="font-semibold">
+                                                    Card
+                                                </TableHead>
+                                                <TableHead className="font-semibold">
+                                                    Code
+                                                </TableHead>
+                                                <TableHead className="font-semibold">
+                                                    Customer
+                                                </TableHead>
+                                                <TableHead className="font-semibold">
+                                                    Status
+                                                </TableHead>
+                                                <TableHead className="font-semibold">
+                                                    Created
+                                                </TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {filteredStampCodes.length > 0 ? (
+                                                filteredStampCodes.map(
+                                                    (stampCode) => (
+                                                        <TableRow
+                                                            key={stampCode.id}
+                                                            className="hover:bg-gray-50/80"
                                                         >
-                                                            <History className="mx-auto mb-3 h-12 w-12 text-gray-300" />
-                                                            <p>
-                                                                No stamp codes
-                                                                found.
-                                                            </p>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                )}
-                                            </TableBody>
-                                        </Table>
-                                    </div>
-
-                                    {/* Mobile Cards */}
-                                    <div className="space-y-4 lg:hidden">
-                                        {filteredStampCodes.length > 0 ? (
-                                            filteredStampCodes.map(
-                                                (stampCode) => (
-                                                    <Card
-                                                        key={stampCode.id}
-                                                        className="border-0 shadow-sm ring-1 ring-gray-100"
-                                                    >
-                                                        <CardContent className="space-y-3 p-4">
-                                                            <div className="flex items-start justify-between">
-                                                                <div>
-                                                                    <p className="font-mono text-base font-semibold">
-                                                                        {
-                                                                            stampCode.code
-                                                                        }
-                                                                    </p>
-                                                                    <p className="mt-1 text-xs text-gray-500">
-                                                                        {
-                                                                            stampCode
-                                                                                .loyalty_card
-                                                                                .name
-                                                                        }
-                                                                    </p>
-                                                                </div>
-                                                                {getStatusBadge(
-                                                                    stampCode,
-                                                                )}
-                                                            </div>
-
-                                                            <div className="space-y-2 text-sm">
+                                                            <TableCell className="font-medium">
+                                                                {
+                                                                    stampCode
+                                                                        .loyalty_card
+                                                                        .name
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell className="font-mono text-sm">
+                                                                {stampCode.code}
+                                                            </TableCell>
+                                                            <TableCell>
                                                                 {stampCode.customer ? (
                                                                     <div>
-                                                                        <div className="mb-1 flex items-center gap-2">
-                                                                            <User className="h-4 w-4 text-gray-400" />
-                                                                            <span className="font-medium">
-                                                                                {
-                                                                                    stampCode
-                                                                                        .customer
-                                                                                        .username
-                                                                                }
-                                                                            </span>
+                                                                        <div className="font-medium">
+                                                                            {
+                                                                                stampCode
+                                                                                    .customer
+                                                                                    .username
+                                                                            }
                                                                         </div>
-                                                                        <p className="ml-6 text-xs text-gray-500">
+                                                                        <div className="text-xs text-gray-500">
                                                                             {
                                                                                 stampCode
                                                                                     .customer
                                                                                     .email
                                                                             }
-                                                                        </p>
+                                                                        </div>
                                                                     </div>
                                                                 ) : (
-                                                                    <div className="flex items-center gap-2">
-                                                                        <User className="h-4 w-4 text-gray-400" />
-                                                                        <span className="text-gray-400">
-                                                                            Unassigned
-                                                                        </span>
-                                                                    </div>
+                                                                    <span className="text-gray-400">
+                                                                        Unassigned
+                                                                    </span>
                                                                 )}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {getStatusBadge(
+                                                                    stampCode,
+                                                                )}
+                                                            </TableCell>
+                                                            <TableCell className="text-sm">
+                                                                {formatDate(
+                                                                    stampCode.created_at,
+                                                                )}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    ),
+                                                )
+                                            ) : (
+                                                <TableRow>
+                                                    <TableCell
+                                                        colSpan={5}
+                                                        className="py-12 text-center text-gray-500"
+                                                    >
+                                                        <History className="mx-auto mb-3 h-12 w-12 text-gray-300" />
+                                                        <p>
+                                                            No stamp codes
+                                                            found.
+                                                        </p>
+                                                    </TableCell>
+                                                </TableRow>
+                                            )}
+                                        </TableBody>
+                                    </Table>
+                                </div>
 
-                                                                <div className="flex items-center gap-2">
-                                                                    <Calendar className="h-4 w-4 text-gray-400" />
-                                                                    <span>
-                                                                        {formatDate(
-                                                                            stampCode.created_at,
-                                                                        )}
+                                {/* Mobile Cards */}
+                                <div className="space-y-4 lg:hidden">
+                                    {filteredStampCodes.length > 0 ? (
+                                        filteredStampCodes.map((stampCode) => (
+                                            <Card
+                                                key={stampCode.id}
+                                                className="border-0 shadow-sm ring-1 ring-gray-100"
+                                            >
+                                                <CardContent className="space-y-3 p-4">
+                                                    <div className="flex items-start justify-between">
+                                                        <div>
+                                                            <p className="font-mono text-base font-semibold">
+                                                                {stampCode.code}
+                                                            </p>
+                                                            <p className="mt-1 text-xs text-gray-500">
+                                                                {
+                                                                    stampCode
+                                                                        .loyalty_card
+                                                                        .name
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                        {getStatusBadge(
+                                                            stampCode,
+                                                        )}
+                                                    </div>
+
+                                                    <div className="space-y-2 text-sm">
+                                                        {stampCode.customer ? (
+                                                            <div>
+                                                                <div className="mb-1 flex items-center gap-2">
+                                                                    <User className="h-4 w-4 text-gray-400" />
+                                                                    <span className="font-medium">
+                                                                        {
+                                                                            stampCode
+                                                                                .customer
+                                                                                .username
+                                                                        }
                                                                     </span>
                                                                 </div>
-
-                                                                {stampCode.used_at && (
-                                                                    <div className="flex items-center gap-2">
-                                                                        <Check className="h-4 w-4 text-gray-400" />
-                                                                        <span>
-                                                                            Used:{' '}
-                                                                            {formatDate(
-                                                                                stampCode.used_at,
-                                                                            )}
-                                                                        </span>
-                                                                    </div>
-                                                                )}
+                                                                <p className="ml-6 text-xs text-gray-500">
+                                                                    {
+                                                                        stampCode
+                                                                            .customer
+                                                                            .email
+                                                                    }
+                                                                </p>
                                                             </div>
-                                                        </CardContent>
-                                                    </Card>
-                                                ),
-                                            )
-                                        ) : (
-                                            <EmptyState
-                                                icon={History}
-                                                title="No stamp codes"
-                                                description="Generated stamp codes will appear here."
-                                            />
-                                        )}
-                                    </div>
+                                                        ) : (
+                                                            <div className="flex items-center gap-2">
+                                                                <User className="h-4 w-4 text-gray-400" />
+                                                                <span className="text-gray-400">
+                                                                    Unassigned
+                                                                </span>
+                                                            </div>
+                                                        )}
+
+                                                        <div className="flex items-center gap-2">
+                                                            <Calendar className="h-4 w-4 text-gray-400" />
+                                                            <span>
+                                                                {formatDate(
+                                                                    stampCode.created_at,
+                                                                )}
+                                                            </span>
+                                                        </div>
+
+                                                        {stampCode.used_at && (
+                                                            <div className="flex items-center gap-2">
+                                                                <Check className="h-4 w-4 text-gray-400" />
+                                                                <span>
+                                                                    Used:{' '}
+                                                                    {formatDate(
+                                                                        stampCode.used_at,
+                                                                    )}
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        ))
+                                    ) : (
+                                        <EmptyState
+                                            icon={History}
+                                            title="No stamp codes"
+                                            description="Generated stamp codes will appear here."
+                                        />
+                                    )}
+                                </div>
                             </SectionShell>
                         </TabsContent>
                     </Tabs>

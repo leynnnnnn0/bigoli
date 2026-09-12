@@ -24,6 +24,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { useIsMobile } from '@/hooks/use-mobile';
 import AppLayout from '@/layouts/app-layout';
 import { Head, router } from '@inertiajs/react';
 import {
@@ -125,6 +126,7 @@ export default function Index({
     const [sortDir, setSortDir] = useState(filters.sort_dir || 'desc');
 
     const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const isMobile = useIsMobile();
 
     const buildParams = (overrides: Partial<Filters> = {}): Filters => {
         const params: Filters = {};
@@ -264,7 +266,11 @@ export default function Index({
                         <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
                         <Input
                             type="text"
-                            placeholder="Search codes, reference numbers, customers..."
+                            placeholder={
+                                isMobile
+                                    ? 'Search stamp codes...'
+                                    : 'Search codes, reference numbers, customers...'
+                            }
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="pl-10"
@@ -782,7 +788,6 @@ export default function Index({
                                         </p>
                                     </div>
                                 ))}
-
 
                                 <div>
                                     <p className="mb-1 text-xs font-medium tracking-wide text-gray-500 uppercase">
