@@ -39,8 +39,10 @@ class CustomerAuthService
 
     public function register(array $data): Customer
     {
+        $business = $this->registrationBusiness();
+
         return Customer::create([
-            'business_id' => $data['business_id'], 'branch_id' => $data['branch_id'] ?? null,
+            'business_id' => $business->id, 'branch_id' => $data['branch_id'],
             'username' => $data['username'], 'email' => $data['email'], 'password' => Hash::make($data['password']),
         ]);
     }
@@ -52,12 +54,21 @@ class CustomerAuthService
 
     public function registrationPageData(string $token, ?int $branchId): array
     {
-        $business = Business::where('qr_token', $token)->firstOrFail();
+        $business = $this->registrationBusiness();
+
+        if ($token !== '' && ! hash_equals($business->qr_token, $token)) {
+            abort(404);
+        }
+
         if ($branchId && ! $business->branches()->whereKey($branchId)->exists()) {
             throw ValidationException::withMessages(['branch_id' => 'Please select a valid branch.']);
         }
 
-        return ['selectedBusiness' => $business, 'branch_id' => $branchId];
+        return [
+            'business' => $business->only(['id', 'name']),
+            'branches' => $business->branches()->orderBy('name')->get(['id', 'name']),
+            'branch_id' => $branchId,
+        ];
     }
 
     public function sendResetLink(Request $request, string $email): string
@@ -100,5 +111,10 @@ class CustomerAuthService
     private function loginThrottleKey(Request $request, string $email): string
     {
         return strtolower($email).'|'.$request->ip();
+    }
+
+    private function registrationBusiness(): Business
+    {
+        return Business::query()->oldest('id')->firstOrFail();
     }
 }

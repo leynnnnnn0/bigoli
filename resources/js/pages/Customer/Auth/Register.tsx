@@ -1,3 +1,4 @@
+import TermsAndAgreement from '@/components/TermsAndAgreement';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,6 +11,13 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Head, Link, useForm } from '@inertiajs/react';
 import {
     AlertCircle,
@@ -21,7 +29,6 @@ import {
 import { FormEventHandler } from 'react';
 import { toast } from 'sonner';
 import LOGO from '../../../../images/mainLogo.png';
-import TermsAndAgreement from '@/components/TermsAndAgreement';
 
 interface Business {
     id: number;
@@ -29,20 +36,28 @@ interface Business {
     logo?: string;
 }
 
-interface RegisterProps {
-    businesses: Business[];
-    selectedBusiness?: Business;
-    branch_id: number | null
+interface Branch {
+    id: number;
+    name: string;
 }
 
-export default function Register({ selectedBusiness, branch_id }: RegisterProps) {
+interface RegisterProps {
+    business: Business;
+    branches: Branch[];
+    branch_id: number | null;
+}
+
+export default function Register({
+    business,
+    branches,
+    branch_id,
+}: RegisterProps) {
     const { data, setData, post, processing, errors, reset } = useForm({
-        business_id: selectedBusiness?.id?.toString() || '',
         username: '',
         email: '',
         password: '',
         password_confirmation: '',
-        branch_id: branch_id,
+        branch_id: branch_id?.toString() ?? '',
         terms: false,
     });
 
@@ -67,10 +82,10 @@ export default function Register({ selectedBusiness, branch_id }: RegisterProps)
                 <Card className="w-full max-w-md shadow-xl">
                     <CardHeader className="space-y-3">
                         <div className="mb-2 flex items-center justify-center">
-                            {selectedBusiness?.logo ? (
+                            {business.logo ? (
                                 <img
-                                    src={selectedBusiness.logo}
-                                    alt={selectedBusiness.name}
+                                    src={business.logo}
+                                    alt={business.name}
                                     className="h-16 w-auto"
                                 />
                             ) : (
@@ -85,16 +100,12 @@ export default function Register({ selectedBusiness, branch_id }: RegisterProps)
                             Create an Account
                         </CardTitle>
                         <CardDescription className="text-center text-base">
-                            {selectedBusiness ? (
-                                <span className="flex items-center justify-center gap-2">
-                                    Registering for{' '}
-                                    <span className="font-semibold text-foreground">
-                                        {selectedBusiness.name}
-                                    </span>
+                            <span className="break-words">
+                                Registering for{' '}
+                                <span className="font-semibold text-foreground">
+                                    {business.name}
                                 </span>
-                            ) : (
-                                'Sign up to get started'
-                            )}
+                            </span>
                         </CardDescription>
                     </CardHeader>
 
@@ -108,6 +119,53 @@ export default function Register({ selectedBusiness, branch_id }: RegisterProps)
                                     </AlertDescription>
                                 </Alert>
                             )}
+
+                            <div className="space-y-2">
+                                <Label htmlFor="branch_id">Branch</Label>
+                                <Select
+                                    value={data.branch_id}
+                                    onValueChange={(value) =>
+                                        setData('branch_id', value)
+                                    }
+                                >
+                                    <SelectTrigger
+                                        id="branch_id"
+                                        className="h-11 w-full text-base"
+                                        aria-invalid={!!errors.branch_id}
+                                        aria-describedby={
+                                            errors.branch_id
+                                                ? 'branch-error'
+                                                : undefined
+                                        }
+                                    >
+                                        <SelectValue placeholder="Select your branch" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {branches.map((branch) => (
+                                            <SelectItem
+                                                key={branch.id}
+                                                value={branch.id.toString()}
+                                            >
+                                                {branch.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {errors.branch_id && (
+                                    <p
+                                        id="branch-error"
+                                        className="text-sm text-destructive"
+                                    >
+                                        {errors.branch_id}
+                                    </p>
+                                )}
+                                {branches.length === 0 && (
+                                    <p className="text-sm text-muted-foreground">
+                                        No branches are available for
+                                        registration yet.
+                                    </p>
+                                )}
+                            </div>
 
                             <div className="space-y-2">
                                 <Label
@@ -126,7 +184,6 @@ export default function Register({ selectedBusiness, branch_id }: RegisterProps)
                                     }
                                     placeholder="johndoe"
                                     required
-                                    autoFocus
                                     className="h-11"
                                 />
                                 {errors.username && (
@@ -220,7 +277,9 @@ export default function Register({ selectedBusiness, branch_id }: RegisterProps)
                             <Button
                                 type="submit"
                                 className="h-11 w-full text-base"
-                                disabled={processing || !data.terms}
+                                disabled={
+                                    processing || !data.terms || !data.branch_id
+                                }
                             >
                                 {processing
                                     ? 'Creating account...'

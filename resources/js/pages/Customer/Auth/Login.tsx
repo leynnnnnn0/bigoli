@@ -140,7 +140,10 @@ export default function Login({ business, status, isDemo }: LoginProps) {
                                 {processing ? 'Signing in...' : 'Sign In'}
                             </Button>
 
-                            <span className="text-black text-xs">Don't have an acccount? Scan the QR of your favorite store</span>
+                            <p className="text-center text-sm text-muted-foreground">
+                                Don't have an account?{' '}
+                                <Link href="/customer/register" className="font-semibold text-primary hover:underline">Create an account</Link>
+                            </p>
                                       <Link 
     href="/customer/forgot-password"
     className="text-sm text-primary hover:underline"
