@@ -6,6 +6,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { PwaInstallPrompt } from './components/pwa-install-prompt';
+import { PwaRefreshButton } from './components/pwa-refresh-button';
 import { initializeTheme } from './hooks/use-appearance';
 
 const appName = 'Stamp Bayan';
@@ -25,6 +26,7 @@ createInertiaApp({
                 <Toaster position="top-right" />
                 <App {...props} />
                 <PwaInstallPrompt />
+                <PwaRefreshButton />
             </StrictMode>,
         );
     },
@@ -38,6 +40,8 @@ initializeTheme();
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        void navigator.serviceWorker.register('/sw.js');
+        void navigator.serviceWorker.register('/sw.js').then((registration) => {
+            void registration.update();
+        });
     });
 }
