@@ -1,13 +1,14 @@
 import '../css/app.css';
 
+import { Toaster } from '@/components/ui/sonner';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { PwaInstallPrompt } from './components/pwa-install-prompt';
 import { initializeTheme } from './hooks/use-appearance';
-import { Toaster } from "@/components/ui/sonner"
 
-const appName = "Stamp Bayan";
+const appName = 'Stamp Bayan';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -21,8 +22,9 @@ createInertiaApp({
 
         root.render(
             <StrictMode>
-                  <Toaster position='top-right'/>
+                <Toaster position="top-right" />
                 <App {...props} />
+                <PwaInstallPrompt />
             </StrictMode>,
         );
     },
@@ -33,3 +35,9 @@ createInertiaApp({
 
 // This will set light / dark mode on load...
 initializeTheme();
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        void navigator.serviceWorker.register('/sw.js');
+    });
+}

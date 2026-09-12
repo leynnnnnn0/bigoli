@@ -1,4 +1,4 @@
-import { Head, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { ArrowDown, ArrowUpRight, Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Highlight from '../../images/highlight.jpg';
@@ -70,7 +70,6 @@ export default function Welcome() {
                     href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap"
                     rel="stylesheet"
                 />
-                <link rel="manifest" href="/site.webmanifest" />
             </Head>
 
             <div
@@ -288,7 +287,13 @@ export default function Welcome() {
                                             className="text-6xl leading-none font-normal text-[#164d38] sm:text-7xl"
                                             style={titleFont}
                                         >
-                                            Join Now
+                                            <Link
+                                                href="/customer/register"
+                                                className="group inline-flex items-center gap-3 rounded-sm focus-visible:ring-2 focus-visible:ring-[#e24a32] focus-visible:ring-offset-4 focus-visible:outline-none"
+                                            >
+                                                Join Now
+                                                <ArrowUpRight className="h-8 w-8 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 sm:h-9 sm:w-9" />
+                                            </Link>
                                         </h2>
                                     </div>
 

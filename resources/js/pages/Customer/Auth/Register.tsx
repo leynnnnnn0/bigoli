@@ -81,7 +81,11 @@ export default function Register({
             <div className="flex min-h-screen items-center justify-center p-4">
                 <Card className="w-full max-w-md shadow-xl">
                     <CardHeader className="space-y-3">
-                        <div className="mb-2 flex items-center justify-center">
+                        <Link
+                            href="/"
+                            aria-label="Return to the Bigoli home page"
+                            className="mx-auto mb-2 block w-fit rounded-sm focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:outline-none"
+                        >
                             {business.logo ? (
                                 <img
                                     src={business.logo}
@@ -91,11 +95,11 @@ export default function Register({
                             ) : (
                                 <img
                                     src={LOGO}
-                                    alt="business logo"
+                                    alt="Bigoli"
                                     className="h-12 w-32"
                                 />
                             )}
-                        </div>
+                        </Link>
                         <CardTitle className="text-center text-2xl font-bold">
                             Create an Account
                         </CardTitle>
