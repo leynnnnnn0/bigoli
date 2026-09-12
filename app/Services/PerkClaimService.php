@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\PerkClaim;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
 class PerkClaimService
 {
@@ -54,38 +53,35 @@ class PerkClaimService
     {
         $this->ensureBelongsToBusiness($perkClaim, $businessId);
 
-        if ($perkClaim->is_redeemed) {
-            return false;
-        }
-
-        DB::transaction(fn () => $perkClaim->update([
+        // Check and change state in one statement, including for stale model instances.
+        $updated = PerkClaim::whereKey($perkClaim->id)->where('is_redeemed', false)->update([
             'is_redeemed' => true,
             'redeemed_at' => now(),
             'redeemed_by' => $userId,
             'redeemed_by_staff_id' => $staffId,
             'remarks' => $remarks,
-        ]));
+        ]);
 
-        return true;
+        $perkClaim->refresh();
+
+        return $updated === 1;
     }
 
     public function undoRedemption(PerkClaim $perkClaim, int $businessId): bool
     {
         $this->ensureBelongsToBusiness($perkClaim, $businessId);
 
-        if (! $perkClaim->is_redeemed) {
-            return false;
-        }
-
-        DB::transaction(fn () => $perkClaim->update([
+        $updated = PerkClaim::whereKey($perkClaim->id)->where('is_redeemed', true)->update([
             'is_redeemed' => false,
             'redeemed_at' => null,
             'redeemed_by' => null,
             'redeemed_by_staff_id' => null,
             'remarks' => null,
-        ]));
+        ]);
 
-        return true;
+        $perkClaim->refresh();
+
+        return $updated === 1;
     }
 
     private function forBusiness(int $businessId): Builder

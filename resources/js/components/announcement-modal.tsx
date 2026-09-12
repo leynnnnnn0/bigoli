@@ -30,11 +30,6 @@ const features: Feature[] = [
         description:
             'Built for multi-branch businesses with advanced controls.',
     },
-    {
-        icon: '📶',
-        title: 'Full Offline Support',
-        description: 'The loyalty card app now works even without internet.',
-    },
 ];
 
 export default function AnnouncementModal() {

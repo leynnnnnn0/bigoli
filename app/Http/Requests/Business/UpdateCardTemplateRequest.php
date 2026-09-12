@@ -28,7 +28,7 @@ class UpdateCardTemplateRequest extends FormRequest
             'stampEmptyColor' => ['nullable', 'string', 'max:7'], 'stampImage' => ['nullable', 'string'],
             'backgroundImage' => ['nullable', 'string'], 'footer' => ['nullable', 'string', 'max:255'],
             'stampShape' => ['required', 'string', Rule::in(['circle', 'square', 'star', 'hexagon'])],
-            'perks' => ['nullable', 'array'], 'perks.*.id' => ['nullable', 'integer', 'exists:perks,id'],
+            'perks' => ['nullable', 'array'], 'perks.*.id' => ['nullable', 'integer', 'distinct', 'exists:perks,id'],
             'perks.*.stampNumber' => ['required_with:perks', 'integer', 'min:1', 'lte:stampsNeeded', 'distinct'],
             'perks.*.reward' => ['required_with:perks', 'string', 'max:255'], 'perks.*.color' => ['nullable', 'string', 'max:7'],
             'perks.*.details' => ['nullable', 'string', 'max:1000'],

@@ -17,7 +17,6 @@ class StampCodeIndexRequest extends FormRequest
         return [
             'search' => ['nullable', 'string', 'max:255'],
             'status' => ['nullable', Rule::in(['used', 'active'])],
-            'type' => ['nullable', Rule::in(['online', 'offline'])],
             'loyalty_card_id' => ['nullable', 'integer', 'exists:loyalty_cards,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'assigned' => ['nullable', Rule::in(['assigned', 'unassigned'])],

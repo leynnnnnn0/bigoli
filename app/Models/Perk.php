@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Database\Factories\PerkFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Perk extends Model
 {
-    /** @use HasFactory<\Database\Factories\PerkFactory> */
+    /** @use HasFactory<PerkFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -21,5 +22,10 @@ class Perk extends Model
     public function loyaltyCard()
     {
         return $this->belongsTo(LoyaltyCard::class);
+    }
+
+    public function claims()
+    {
+        return $this->hasMany(PerkClaim::class);
     }
 }

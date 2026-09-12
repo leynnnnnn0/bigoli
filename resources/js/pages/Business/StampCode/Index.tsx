@@ -60,7 +60,6 @@ interface StampCode {
     id: number;
     code: string;
     reference_number: string | null;
-    is_offline_code: boolean;
     customer: { username: string; email: string } | null;
     branch: { name: string } | null;
     staff: { username?: string; email: string } | null;
@@ -82,7 +81,6 @@ interface Branch {
 interface Filters {
     search?: string;
     status?: string;
-    type?: string;
     loyalty_card_id?: string;
     branch_id?: string;
     assigned?: string;
@@ -114,7 +112,6 @@ export default function Index({
     const [selectedCode, setSelectedCode] = useState<StampCode | null>(null);
 
     const [status, setStatus] = useState(filters.status || EMPTY);
-    const [type, setType] = useState(filters.type || EMPTY);
     const [loyaltyCardId, setLoyaltyCardId] = useState(
         filters.loyalty_card_id || EMPTY,
     );
@@ -135,7 +132,6 @@ export default function Index({
 
         if (search) params.search = search;
         if (val(status)) params.status = status;
-        if (val(type)) params.type = type;
         if (val(loyaltyCardId)) params.loyalty_card_id = loyaltyCardId;
         if (val(branchId)) params.branch_id = branchId;
         if (val(assigned)) params.assigned = assigned;
@@ -173,7 +169,6 @@ export default function Index({
     const resetFilters = () => {
         setSearch('');
         setStatus(EMPTY);
-        setType(EMPTY);
         setLoyaltyCardId(EMPTY);
         setBranchId(EMPTY);
         setAssigned(EMPTY);
@@ -205,7 +200,6 @@ export default function Index({
 
     const activeFilterCount = [
         status !== EMPTY,
-        type !== EMPTY,
         loyaltyCardId !== EMPTY,
         branchId !== EMPTY,
         assigned !== EMPTY,
@@ -344,29 +338,6 @@ export default function Index({
                                         </SelectItem>
                                         <SelectItem value="used">
                                             Used
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-
-                            {/* Type */}
-                            <div>
-                                <label className="mb-1 block text-xs font-medium text-gray-600">
-                                    Type
-                                </label>
-                                <Select value={type} onValueChange={setType}>
-                                    <SelectTrigger className="bg-white">
-                                        <SelectValue placeholder="All types" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value={EMPTY}>
-                                            All types
-                                        </SelectItem>
-                                        <SelectItem value="online">
-                                            Online
-                                        </SelectItem>
-                                        <SelectItem value="offline">
-                                            Offline
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -641,16 +612,6 @@ export default function Index({
                                     </div>
                                     <div>
                                         <span className="text-gray-400">
-                                            Type
-                                        </span>
-                                        <p className="font-medium text-gray-800">
-                                            {sc.is_offline_code
-                                                ? 'Offline'
-                                                : 'Online'}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <span className="text-gray-400">
                                             Created
                                         </span>
                                         <p className="font-medium text-gray-800">
@@ -677,7 +638,6 @@ export default function Index({
                                 <TableHead>Customer</TableHead>
                                 <TableHead>Branch</TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead>Type</TableHead>
                                 <SortableHead col="used_at" label="Used At" />
                                 <SortableHead
                                     col="created_at"
@@ -726,13 +686,6 @@ export default function Index({
                                         </TableCell>
                                         <TableCell>
                                             {getStatusBadge(sc)}
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge variant="outline">
-                                                {sc.is_offline_code
-                                                    ? 'Offline'
-                                                    : 'Online'}
-                                            </Badge>
                                         </TableCell>
                                         <TableCell className="text-sm text-gray-600">
                                             {formatDate(sc.used_at)}
@@ -830,16 +783,6 @@ export default function Index({
                                     </div>
                                 ))}
 
-                                <div>
-                                    <p className="mb-1 text-xs font-medium tracking-wide text-gray-500 uppercase">
-                                        Type
-                                    </p>
-                                    <Badge variant="outline">
-                                        {selectedCode.is_offline_code
-                                            ? 'Offline'
-                                            : 'Online'}
-                                    </Badge>
-                                </div>
 
                                 <div>
                                     <p className="mb-1 text-xs font-medium tracking-wide text-gray-500 uppercase">

@@ -23,7 +23,7 @@ class CardTemplateService
     public function formData(Business $business, ?int $cardId = null): array
     {
         return array_filter([
-            'cardTemplate' => $cardId ? $business->loyaltyCards()->with(['perks', 'branches:id,name'])->findOrFail($cardId) : null,
+            'cardTemplate' => $cardId ? $business->loyaltyCards()->with(['perks' => fn ($query) => $query->withExists('claims'), 'branches:id,name'])->findOrFail($cardId) : null,
             'branches' => $business->branches()->orderBy('name')->get(['id', 'name']),
         ], fn ($value, string $key) => $key !== 'cardTemplate' || $value !== null, ARRAY_FILTER_USE_BOTH);
     }
@@ -43,10 +43,11 @@ class CardTemplateService
 
     public function update(Business $business, int $cardId, array $data): LoyaltyCard
     {
-        $card = $business->loyaltyCards()->with('perks')->findOrFail($cardId);
         $this->ensureBranchesBelongToBusiness($business, $data['branch_ids'] ?? []);
 
-        return DB::transaction(function () use ($card, $data) {
+        return DB::transaction(function () use ($business, $cardId, $data) {
+            $card = $business->loyaltyCards()->lockForUpdate()->findOrFail($cardId);
+            $this->ensureEarnedPerksUnchanged($card, $data['perks'] ?? []);
             $oldImages = $this->imagePaths($card);
             $card->update($this->cardAttributes($data, $oldImages));
             $this->syncPerks($card, $data['perks'] ?? []);
@@ -62,10 +63,14 @@ class CardTemplateService
 
     public function delete(Business $business, int $cardId): void
     {
-        $card = $business->loyaltyCards()->findOrFail($cardId);
-        $images = $this->imagePaths($card);
+        $images = DB::transaction(function () use ($business, $cardId) {
+            $card = $business->loyaltyCards()->lockForUpdate()->findOrFail($cardId);
+            $this->ensureEarnedPerksUnchanged($card, []);
+            $images = $this->imagePaths($card);
+            $card->delete();
 
-        DB::transaction(fn () => $card->delete());
+            return $images;
+        });
         foreach (array_filter($images) as $path) {
             $this->deleteImage($path);
         }
@@ -110,6 +115,23 @@ class CardTemplateService
             $keptIds[] = $perk->id;
         }
         $card->perks()->whereNotIn('id', $keptIds)->delete();
+    }
+
+    private function ensureEarnedPerksUnchanged(LoyaltyCard $card, array $perks): void
+    {
+        $submitted = collect($perks)->keyBy('id');
+        foreach ($card->perks()->whereHas('claims')->get() as $perk) {
+            $input = $submitted->get($perk->id);
+            if (! $input
+                || (int) $input['stampNumber'] !== (int) $perk->stampNumber
+                || $input['reward'] !== $perk->reward
+                || ($input['details'] ?? '') !== ($perk->details ?? '')
+                || ($input['color'] ?? $perk->color) !== $perk->color) {
+                throw ValidationException::withMessages([
+                    'perks' => 'This perk has already been earned and cannot be changed or removed. This preserves customers’ rewards and redemption history. Create a new card for different rewards.',
+                ]);
+            }
+        }
     }
 
     private function ensureBranchesBelongToBusiness(Business $business, array $branchIds): void

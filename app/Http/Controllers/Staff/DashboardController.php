@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Staff\GenerateStaffOfflineStampsRequest;
 use App\Http\Requests\Staff\RecordStaffCustomerScanRequest;
 use App\Http\Requests\Staff\RedeemStaffPerkClaimRequest;
 use App\Http\Requests\Staff\StaffDashboardRequest;
@@ -13,7 +12,6 @@ use App\Services\LoyaltyStampService;
 use App\Services\PerkClaimService;
 use App\Services\StaffDashboardService;
 use App\Services\StampCodeService;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -35,16 +33,6 @@ class DashboardController extends Controller
             $request->validated(),
             $loyaltyStamps,
         ));
-    }
-
-    public function generateOfflineStamps(GenerateStaffOfflineStampsRequest $request, IssueStampService $issueStamps)
-    {
-        $staff = Auth::guard('staff')->user();
-        $data = $issueStamps->offlineStamps($staff->business, $request->integer('id'), null, $staff->id, $staff->branch_id);
-        $pdf = Pdf::loadView('pdf.offline-stamps', $data);
-        $pdf->setPaper('a4', 'portrait');
-
-        return $pdf->download('loyalty-stamps-'.now()->format('Y-m-d').'.pdf');
     }
 
     public function markAsRedeemed(RedeemStaffPerkClaimRequest $request, PerkClaim $perkClaim, PerkClaimService $perkClaims)

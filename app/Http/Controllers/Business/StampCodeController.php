@@ -40,7 +40,7 @@ class StampCodeController extends Controller
         );
 
         if (! $result) {
-            return back()->withErrors(['code' => 'Invalid or already used stamp code.']);
+            return back()->withErrors(['code' => 'Invalid or already used stamp code, or the loyalty card has expired.']);
         }
 
         return back()->with($result);

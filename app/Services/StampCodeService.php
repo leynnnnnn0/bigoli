@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Branch;
 use App\Models\Business;
 use App\Models\Customer;
+use App\Models\LoyaltyCard;
 use App\Models\Staff;
 use App\Models\StampCode;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,6 +31,7 @@ class StampCodeService
             ->with(['customer:id,username,email', 'loyalty_card:id,name', 'branch:id,name', 'user:id,email', 'staff:id,username'])
             ->withTrashed()
             ->where('business_id', $businessId)
+            ->where(fn (Builder $query) => $query->where('is_offline_code', false)->orWhereNotNull('used_at'))
             ->when($filters['search'] ?? null, fn (Builder $query, string $term) => $query->where(function (Builder $codes) use ($term) {
                 $codes->where('code', 'like', "%{$term}%")
                     ->orWhere('reference_number', 'like', "%{$term}%")
@@ -38,8 +40,7 @@ class StampCodeService
                         ->orWhere('email', 'like', "%{$term}%"));
             }))
             ->when(($filters['status'] ?? null) === 'used', fn (Builder $query) => $query->whereNotNull('used_at'))
-            ->when(($filters['status'] ?? null) === 'active', fn (Builder $query) => $query->whereNull('used_at'))
-            ->when($filters['type'] ?? null, fn (Builder $query, string $type) => $query->where('is_offline_code', $type === 'offline'))
+            ->when(($filters['status'] ?? null) === 'active', fn (Builder $query) => $query->whereNull('used_at')->where('is_offline_code', false))
             ->when($filters['loyalty_card_id'] ?? null, fn (Builder $query, int $cardId) => $query->where('loyalty_card_id', $cardId))
             ->when($filters['branch_id'] ?? null, fn (Builder $query, int $branchId) => $query->where('branch_id', $branchId))
             ->when(($filters['assigned'] ?? null) === 'assigned', fn (Builder $query) => $query->whereNotNull('customer_id'))
@@ -53,10 +54,26 @@ class StampCodeService
 
     public function redeemForCustomer(Customer $customer, string $code, LoyaltyStampService $loyaltyStamps): ?array
     {
-        return DB::transaction(function () use ($customer, $code, $loyaltyStamps) {
+        $cardId = StampCode::where('code', $code)->where('business_id', $customer->business_id)->value('loyalty_card_id');
+        if (! $cardId) {
+            return null;
+        }
+
+        return DB::transaction(function () use ($customer, $code, $loyaltyStamps, $cardId) {
+            // All stamp writers and template edits lock the card first. This serializes
+            // milestone counting and completion, even when different codes are used.
+            $card = LoyaltyCard::where('business_id', $customer->business_id)
+                ->whereKey($cardId)
+                ->lockForUpdate()->first();
+            if (! $card || $card->is_expired) {
+                return null;
+            }
+
             $stampCode = StampCode::where('code', $code)
                 ->where('business_id', $customer->business_id)
+                ->where('loyalty_card_id', $card->id)
                 ->whereNull('used_at')
+                ->where('is_offline_code', false)
                 ->lockForUpdate()
                 ->first();
 
@@ -67,7 +84,7 @@ class StampCodeService
             $stampCode->update(['customer_id' => $customer->id, 'used_at' => now()]);
 
             return $loyaltyStamps->apply($stampCode, $customer->id);
-        });
+        }, 3);
     }
 
     public function recordCustomerScan(Business $business, int $userId, array $input, LoyaltyStampService $loyaltyStamps): array
@@ -82,19 +99,18 @@ class StampCodeService
             throw ValidationException::withMessages(['branch_id' => 'Please select a valid branch.']);
         }
 
-        $card = $business->loyaltyCards()
-            ->whereDate('valid_until', '>', today())
-            ->whereKey($input['loyalty_card_id'])
-            ->when($branchId, fn (Builder $query) => $query->where(fn (Builder $cards) => $cards
-                ->whereHas('branches', fn (Builder $branches) => $branches->whereKey($branchId))
-                ->orWhereDoesntHave('branches')))
-            ->first();
+        return DB::transaction(function () use ($business, $userId, $input, $loyaltyStamps, $customer, $branchId) {
+            $card = $business->loyaltyCards()
+                ->whereDate('valid_until', '>', today())
+                ->whereKey($input['loyalty_card_id'])
+                ->lockForUpdate()->first();
 
-        if (! $card) {
-            throw ValidationException::withMessages(['loyalty_card_id' => 'Please select a valid loyalty card.']);
-        }
+            // Relationship reads happen after the lock, otherwise MySQL can establish
+            // an old repeatable-read snapshot while waiting for the card lock.
+            if (! $card || ($branchId && $card->branches()->exists() && ! $card->branches()->whereKey($branchId)->exists())) {
+                throw ValidationException::withMessages(['loyalty_card_id' => 'Please select a valid loyalty card.']);
+            }
 
-        return DB::transaction(function () use ($business, $customer, $card, $branchId, $input, $userId, $loyaltyStamps) {
             $stampCode = StampCode::create([
                 'user_id' => $userId,
                 'business_id' => $business->id,
@@ -109,7 +125,7 @@ class StampCodeService
             ]);
 
             return $loyaltyStamps->apply($stampCode, $customer->id);
-        });
+        }, 3);
     }
 
     public function recordStaffCustomerScan(Staff $staff, array $input, LoyaltyStampService $loyaltyStamps): array
@@ -120,17 +136,15 @@ class StampCodeService
             throw ValidationException::withMessages(['customer_qr' => 'This customer QR code is invalid for this business.']);
         }
 
-        $card = $business->loyaltyCards()
-            ->whereDate('valid_until', '>', today())
-            ->whereKey($input['loyalty_card_id'])
-            ->where(fn (Builder $cards) => $cards->whereDoesntHave('branches')
-                ->orWhereHas('branches', fn (Builder $branches) => $branches->whereKey($staff->branch_id)))
-            ->first();
-        if (! $card) {
-            throw ValidationException::withMessages(['loyalty_card_id' => 'Please select a valid loyalty card.']);
-        }
+        return DB::transaction(function () use ($staff, $business, $input, $loyaltyStamps, $customer) {
+            $card = $business->loyaltyCards()
+                ->whereDate('valid_until', '>', today())
+                ->whereKey($input['loyalty_card_id'])
+                ->lockForUpdate()->first();
+            if (! $card || ($card->branches()->exists() && ! $card->branches()->whereKey($staff->branch_id)->exists())) {
+                throw ValidationException::withMessages(['loyalty_card_id' => 'Please select a valid loyalty card.']);
+            }
 
-        return DB::transaction(function () use ($staff, $business, $customer, $card, $input, $loyaltyStamps) {
             $stampCode = StampCode::create([
                 'staff_id' => $staff->id, 'business_id' => $business->id, 'customer_id' => $customer->id,
                 'loyalty_card_id' => $card->id, 'branch_id' => $staff->branch_id, 'reference_number' => $input['reference_number'],
@@ -138,7 +152,7 @@ class StampCodeService
             ]);
 
             return $loyaltyStamps->apply($stampCode, $customer->id);
-        });
+        }, 3);
     }
 
     private function customerFromQrPayload(string $payload): ?Customer

@@ -54,34 +54,6 @@ class IssueStampService
         ];
     }
 
-    public function offlineStamps(Business $business, int $loyaltyCardId, ?int $userId, ?int $staffId = null, ?int $branchId = null): array
-    {
-        $loyaltyCard = $business->loyaltyCards()->findOrFail($loyaltyCardId);
-        $registrationLink = $business->subdomain ?: 'https://stampbayan.com/customer/register?business='.$business->qr_token;
-        $qrImage = file_get_contents('https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='.urlencode($registrationLink));
-        $qrCodeBase64 = 'data:image/png;base64,'.base64_encode($qrImage);
-        $codes = $this->uniqueCodes(8);
-
-        StampCode::insert(collect($codes)->map(fn (string $code) => [
-            'user_id' => $userId,
-            'staff_id' => $staffId,
-            'business_id' => $business->id,
-            'loyalty_card_id' => $loyaltyCard->id,
-            'branch_id' => $branchId,
-            'code' => $code,
-            'is_offline_code' => true,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ])->all());
-
-        return [
-            'tickets' => collect($codes)->map(fn (string $code) => ['code' => $code, 'qr_code_base64' => $qrCodeBase64])->all(),
-            'registrationLink' => $registrationLink,
-            'businessName' => $business->name,
-            'loyaltyCard' => $loyaltyCard,
-        ];
-    }
-
     private function activeCards(Business $business, ?int $branchId)
     {
         return $business->loyaltyCards()

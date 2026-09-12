@@ -49,8 +49,8 @@ export default function Index({ cardTemplates = [] }: Props) {
           toast.success("Deleted Successfully.");
         },
         onError: (e) => {
-          if(e.error){
-            toast.error(e.error);
+          if(e.error || e.perks){
+            toast.error(e.error || e.perks);
           }else {
             toast.error("An error occured.")
           }

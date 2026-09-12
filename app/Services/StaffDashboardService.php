@@ -23,7 +23,9 @@ class StaffDashboardService
                 'redeemed_by:id,username', 'redeemed_by_staff:id,username',
             ])->latest()->limit(50)->get(),
             'stampCodes' => StampCode::with(['loyalty_card:id,name', 'customer:id,username,email'])
-                ->withTrashed()->where('staff_id', $staff->id)->where('business_id', $businessId)->latest()->limit(50)->get(),
+                ->withTrashed()->where('staff_id', $staff->id)->where('business_id', $businessId)
+                ->where(fn (Builder $query) => $query->where('is_offline_code', false)->orWhereNotNull('used_at'))
+                ->latest()->limit(50)->get(),
             'stats' => ['total' => (int) $stats->total, 'available' => (int) $stats->available, 'redeemed' => (int) $stats->redeemed],
         ]);
     }

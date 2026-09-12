@@ -122,8 +122,8 @@ export default function Edit({
                 setShowConfirmDialog(false);
             },
             onError: (e) => {
-                if (e.error) {
-                    toast.error(e.error);
+                if (e.error || e.perks) {
+                    toast.error(e.error || e.perks);
                 } else {
                     toast.error(
                         'An error occurred while trying to update the loyalty card',
@@ -620,121 +620,128 @@ export default function Edit({
                                                     className="border-2"
                                                 >
                                                     <CardContent className="pt-4 md:pt-6">
-                                                        <div className="grid grid-cols-12 items-end gap-2 md:gap-4">
-                                                            <div className="col-span-3">
-                                                                <Label className="text-xs md:text-sm">
-                                                                    Stamp #
-                                                                </Label>
-                                                                <Input
-                                                                    type="number"
-                                                                    min="1"
-                                                                    max={
-                                                                        data.stampsNeeded
-                                                                    }
-                                                                    value={
-                                                                        perk.stampNumber
-                                                                    }
-                                                                    onChange={(
-                                                                        e,
-                                                                    ) =>
-                                                                        updatePerk(
-                                                                            index,
-                                                                            'stampNumber',
-                                                                            parseInt(
+                                                        {perk.claims_exists && (
+                                                            <p className="mb-3 text-sm text-muted-foreground">
+                                                                This perk has already been earned and cannot be edited or removed. This protects customers’ rewards and redemption history.
+                                                            </p>
+                                                        )}
+                                                        <fieldset disabled={perk.claims_exists}>
+                                                            <div className="grid grid-cols-12 items-end gap-2 md:gap-4">
+                                                                <div className="col-span-3">
+                                                                    <Label className="text-xs md:text-sm">
+                                                                        Stamp #
+                                                                    </Label>
+                                                                    <Input
+                                                                        type="number"
+                                                                        min="1"
+                                                                        max={
+                                                                            data.stampsNeeded
+                                                                        }
+                                                                        value={
+                                                                            perk.stampNumber
+                                                                        }
+                                                                        onChange={(
+                                                                            e,
+                                                                        ) =>
+                                                                            updatePerk(
+                                                                                index,
+                                                                                'stampNumber',
+                                                                                parseInt(
+                                                                                    e
+                                                                                        .target
+                                                                                        .value,
+                                                                                ),
+                                                                            )
+                                                                        }
+                                                                        className="text-xs md:text-sm"
+                                                                    />
+                                                                </div>
+                                                                <div className="col-span-5">
+                                                                    <Label className="text-xs md:text-sm">
+                                                                        Reward
+                                                                    </Label>
+                                                                    <Input
+                                                                        type="text"
+                                                                        placeholder="10% OFF"
+                                                                        value={
+                                                                            perk.reward
+                                                                        }
+                                                                        onChange={(
+                                                                            e,
+                                                                        ) =>
+                                                                            updatePerk(
+                                                                                index,
+                                                                                'reward',
                                                                                 e
                                                                                     .target
                                                                                     .value,
-                                                                            ),
-                                                                        )
-                                                                    }
-                                                                    className="text-xs md:text-sm"
-                                                                />
+                                                                            )
+                                                                        }
+                                                                        className="text-xs md:text-sm"
+                                                                    />
+                                                                </div>
+                                                                <div className="col-span-3">
+                                                                    <Label className="text-xs md:text-sm">
+                                                                        Color
+                                                                    </Label>
+                                                                    <Input
+                                                                        type="color"
+                                                                        value={
+                                                                            perk.color
+                                                                        }
+                                                                        onChange={(
+                                                                            e,
+                                                                        ) =>
+                                                                            updatePerk(
+                                                                                index,
+                                                                                'color',
+                                                                                e
+                                                                                    .target
+                                                                                    .value,
+                                                                            )
+                                                                        }
+                                                                        className="h-9 cursor-pointer md:h-10"
+                                                                    />
+                                                                </div>
+                                                                <div className="col-span-1">
+                                                                    <Button
+                                                                        type="button"
+                                                                        variant="destructive"
+                                                                        size="icon"
+                                                                        onClick={() =>
+                                                                            removePerk(
+                                                                                index,
+                                                                            )
+                                                                        }
+                                                                        className="h-9 w-9 md:h-10 md:w-10"
+                                                                    >
+                                                                        <Trash2 className="h-3 w-3 md:h-4 md:w-4" />
+                                                                    </Button>
+                                                                </div>
                                                             </div>
-                                                            <div className="col-span-5">
+                                                            <div className="mt-3 md:mt-4">
                                                                 <Label className="text-xs md:text-sm">
-                                                                    Reward
+                                                                    Perk Details
                                                                 </Label>
-                                                                <Input
-                                                                    type="text"
-                                                                    placeholder="10% OFF"
+                                                                <Textarea
+                                                                    placeholder="e.g., Get 10% discount on your next purchase"
                                                                     value={
-                                                                        perk.reward
+                                                                        perk.details ??
+                                                                        ''
                                                                     }
-                                                                    onChange={(
-                                                                        e,
-                                                                    ) =>
+                                                                    onChange={(e) =>
                                                                         updatePerk(
                                                                             index,
-                                                                            'reward',
-                                                                            e
-                                                                                .target
+                                                                            'details',
+                                                                            e.target
                                                                                 .value,
                                                                         )
                                                                     }
-                                                                    className="text-xs md:text-sm"
+                                                                    rows={2}
+                                                                    className="mt-1 text-xs md:text-sm"
                                                                 />
                                                             </div>
-                                                            <div className="col-span-3">
-                                                                <Label className="text-xs md:text-sm">
-                                                                    Color
-                                                                </Label>
-                                                                <Input
-                                                                    type="color"
-                                                                    value={
-                                                                        perk.color
-                                                                    }
-                                                                    onChange={(
-                                                                        e,
-                                                                    ) =>
-                                                                        updatePerk(
-                                                                            index,
-                                                                            'color',
-                                                                            e
-                                                                                .target
-                                                                                .value,
-                                                                        )
-                                                                    }
-                                                                    className="h-9 cursor-pointer md:h-10"
-                                                                />
-                                                            </div>
-                                                            <div className="col-span-1">
-                                                                <Button
-                                                                    type="button"
-                                                                    variant="destructive"
-                                                                    size="icon"
-                                                                    onClick={() =>
-                                                                        removePerk(
-                                                                            index,
-                                                                        )
-                                                                    }
-                                                                    className="h-9 w-9 md:h-10 md:w-10"
-                                                                >
-                                                                    <Trash2 className="h-3 w-3 md:h-4 md:w-4" />
-                                                                </Button>
-                                                            </div>
-                                                        </div>
-                                                        <div className="mt-3 md:mt-4">
-                                                            <Label className="text-xs md:text-sm">
-                                                                Perk Details
-                                                            </Label>
-                                                            <Textarea
-                                                                placeholder="e.g., Get 10% discount on your next purchase"
-                                                                value={
-                                                                    perk.details ??
-                                                                    ''
-                                                                }
-                                                                onChange={(e) =>
-                                                                    updatePerk(
-                                                                        index,
-                                                                        'details',
-                                                                        e.target
-                                                                            .value,
-                                                                    )
-                                                                }
-                                                                rows={2}
-                                                                className="mt-1 text-xs md:text-sm"
-                                                            />
-                                                        </div>
+                                                        </fieldset>
                                                     </CardContent>
                                                 </Card>
                                             ))}

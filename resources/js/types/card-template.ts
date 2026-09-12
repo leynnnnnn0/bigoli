@@ -4,6 +4,7 @@ export type StampShapeType = 'circle' | 'star' | 'square' | 'hexagon';
 
 export interface CardTemplatePerk {
     id?: number;
+    claims_exists?: boolean;
     stampNumber: number;
     reward: string;
     color: string;

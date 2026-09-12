@@ -1,19 +1,20 @@
 <?php
 
 use App\Http\Controllers\BranchController;
-use App\Http\Controllers\Business\StaffController;
 use App\Http\Controllers\Business\CardTempalateController;
 use App\Http\Controllers\Business\CustomerController;
 use App\Http\Controllers\Business\DashboardController;
-use App\Http\Controllers\Business\QRStudioController;
 use App\Http\Controllers\Business\IssueStampController;
 use App\Http\Controllers\Business\PerkClaimController;
+use App\Http\Controllers\Business\QRStudioController;
+use App\Http\Controllers\Business\StaffController;
 use App\Http\Controllers\Business\StampCodeController;
 use App\Http\Controllers\Business\TicketController;
 use App\Http\Controllers\Customer\CustomerAuthController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
 use App\Http\Controllers\Staff\StaffAuthController;
+use App\Http\Middleware\EnsureStaffIsActive;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,15 +37,12 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::prefix('business')->group(function () {
         Route::get('/stamp-codes/export', [StampCodeController::class, 'export'])
             ->name('business.stamp-codes.export');
-            
+
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::resource('/staffs', StaffController::class)->only(['index', 'store', 'update', 'destroy']);
 
         Route::resource('/branches', BranchController::class)->only(['index', 'store', 'update', 'destroy']);
-
-        Route::get('/issue-stamps/generate-offline', [IssueStampController::class, 'generateOfflineStamps'])
-            ->name('business.issue-stamp.generate-offline');
 
         Route::resource('/card-templates', CardTempalateController::class);
         Route::get('/qr-studio', [QRStudioController::class, 'index']);
@@ -54,8 +52,6 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
         Route::get('/issue-stamp', [IssueStampController::class, 'index']);
         Route::post('/issue-stamp/scan-customer', [StampCodeController::class, 'recordCustomerScan']);
         Route::get('/stamp-codes', [StampCodeController::class, 'index']);
-
-
 
         Route::get('/perk-claims', [PerkClaimController::class, 'index'])->name('perk-claims.index');
         Route::post('/perk-claims/{perkClaim}/redeem', [PerkClaimController::class, 'markAsRedeemed'])->name('perk-claims.redeem');
@@ -112,12 +108,14 @@ Route::prefix('customer')->name('customer.')->group(function () {
     // Email Verification Handler
     Route::get('/customer/verify-email/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
+
         return redirect()->route('customer.dashboard');
     })->middleware(['auth:customer', 'signed'])->name('customer.verification.verify');
 
     // Resend Verification Email
     Route::post('/customer/email/verification-notification', function (Request $request) {
         $request->user('customer')->sendEmailVerificationNotification();
+
         return back()->with('status', 'verification-link-sent');
     })->middleware(['auth:customer', 'throttle:6,1'])->name('customer.verification.send');
 
@@ -135,10 +133,9 @@ Route::prefix('customer')->name('customer.')->group(function () {
 });
 
 Route::name('staff.')->prefix('staff')->group(function () {
-    Route::middleware('auth:staff')->group(function () {
+    Route::middleware(['auth:staff', EnsureStaffIsActive::class])->group(function () {
         Route::get('/dashboard', [StaffDashboardController::class, 'index'])->name('dashboard');
 
-        Route::get('/generate-offline', [StaffDashboardController::class, 'generateOfflineStamps'])->name('generate-offline');
         Route::post('/scan-customer', [StaffDashboardController::class, 'recordCustomerScan'])->name('scan-customer');
         Route::post('/perk-claims/{perkClaim}/redeem', [StaffDashboardController::class, 'markAsRedeemed'])->name('perk-claims.redeem');
         Route::post('/perk-claims/{perkClaim}/undo', [StaffDashboardController::class, 'undoRedeem'])->name('perk-claims.undo');
@@ -155,7 +152,4 @@ Route::name('staff.')->prefix('staff')->group(function () {
     });
 });
 
-
-
-
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';
