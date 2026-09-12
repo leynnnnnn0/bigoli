@@ -1178,8 +1178,8 @@ export default function Edit({
                     </div>
                 </div>
 
-                {/* Fixed Update Button - Mobile */}
-                <div className="fixed right-0 bottom-0 left-0 z-50 border-t bg-white p-4 shadow-lg md:hidden">
+                {/* Mobile submit action stays in the document flow so it never covers fields. */}
+                <div className="mt-6 md:hidden">
                     <Button
                         type="submit"
                         className="w-full"
@@ -1191,8 +1191,6 @@ export default function Edit({
                     </Button>
                 </div>
 
-                {/* Spacer for mobile fixed button */}
-                <div className="h-20 md:hidden"></div>
             </form>
 
             <AlertDialog

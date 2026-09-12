@@ -121,3 +121,13 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* Keep the third-party support launcher from covering mobile form dialogs. */
+@media (max-width: 639px) {
+    body:has([data-slot='dialog-content'][data-state='open'])
+        #chatbase-bubble-button,
+    body:has([data-slot='dialog-content'][data-state='open'])
+        #chatbase-message-bubbles {
+        display: none !important;
+    }
+}
