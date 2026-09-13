@@ -1,16 +1,14 @@
 @import 'tailwindcss';
 
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
-
 @theme {
     --font-sans:
-        'Poppins', ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
+        'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -59,7 +57,6 @@
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
 
-
     --color-secondary: var(--secondary);
     --color-accent: var(--accent);
     --color-surface: var(--surface);
@@ -102,15 +99,14 @@
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.87 0 0);
 
-  /* StampBayan Semantic Color */
-    --primary: #008C45;      /* Blue */
-    --secondary: #f23940;    /* Red */
-    --accent: #f23940;       /* Yellow */
-    --surface: #FFF8F0;      /* Cream */
-    --neutral: #F5F5F5;      /* Gray */
-    --text: #333333;         /* Charcoal */
+    /* StampBayan Semantic Color */
+    --primary: #008c45; /* Blue */
+    --secondary: #f23940; /* Red */
+    --accent: #f23940; /* Yellow */
+    --surface: #fff8f0; /* Cream */
+    --neutral: #f5f5f5; /* Gray */
+    --text: #333333; /* Charcoal */
 }
-
 
 @layer base {
     * {
@@ -119,6 +115,15 @@
 
     body {
         @apply bg-background text-foreground;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
     }
 }
 

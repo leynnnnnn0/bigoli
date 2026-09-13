@@ -1,160 +1,170 @@
-import { FormEventHandler } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import CustomerAuthShell from '@/components/customer-auth-shell';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Mail, Lock, AlertCircle } from 'lucide-react';
-import LOGO from '../../../../images/mainLogo.png';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { AlertCircle, Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { FormEventHandler, useState } from 'react';
+
 interface LoginProps {
-    business?: {
-        id: number;
-        name: string;
-        logo?: string;
-    };
+    business?: { id: number; name: string; logo?: string };
     status?: string;
-    isDemo: boolean
+    isDemo: boolean;
 }
 
 export default function Login({ business, status, isDemo }: LoginProps) {
+    const [showPassword, setShowPassword] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm({
         email: isDemo ? 'customer@gmail.com' : '',
         password: isDemo ? 'password' : '',
         remember: false,
     });
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-        post('/customer/login', {
-            onFinish: () => reset('password'),
-        });
+    const submit: FormEventHandler = (event) => {
+        event.preventDefault();
+        post('/customer/login', { onFinish: () => reset('password') });
     };
 
     return (
         <>
             <Head title="Customer Login" />
-            
-            <div className="min-h-screen flex items-center justify-center p-4">
-                <Card className="w-full max-w-md shadow-xl">
-                    <CardHeader className="space-y-3">
-                        <div className="flex items-center justify-center mb-2">
-                            {business?.logo ? (
-                                <img 
-                                    src={business.logo} 
-                                    alt={business.name}
-                                    className="h-16 w-auto"
-                                />
-                            ) : (
-                               <a href="/">
-                                 <img src={LOGO} alt="business logo" className='w-32 h-12'/>
-                               </a>
-                            )}
+            <CustomerAuthShell
+                mode="login"
+                title="Welcome back"
+                description={
+                    business ? (
+                        <>
+                            Sign in to continue earning rewards at{' '}
+                            <strong className="font-semibold text-[#173e31]">
+                                {business.name}
+                            </strong>
+                            .
+                        </>
+                    ) : (
+                        'Sign in to view your stamps and rewards.'
+                    )
+                }
+                businessLogo={business?.logo}
+                businessName={business?.name}
+            >
+                <form onSubmit={submit} className="space-y-5">
+                    {status && (
+                        <Alert className="border-[#008c45]/20 bg-[#008c45]/5 text-[#075238]">
+                            <AlertDescription>{status}</AlertDescription>
+                        </Alert>
+                    )}
+                    {errors.email && (
+                        <Alert variant="destructive">
+                            <AlertCircle className="size-4" />
+                            <AlertDescription>{errors.email}</AlertDescription>
+                        </Alert>
+                    )}
+
+                    <div className="space-y-2">
+                        <Label htmlFor="email" className="text-sm font-medium">
+                            Email address
+                        </Label>
+                        <div className="relative">
+                            <Mail className="pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-[#82908b]" />
+                            <Input
+                                id="email"
+                                type="email"
+                                value={data.email}
+                                onChange={(event) =>
+                                    setData('email', event.target.value)
+                                }
+                                placeholder="customer@example.com"
+                                autoComplete="email"
+                                required
+                                autoFocus
+                                aria-invalid={!!errors.email}
+                                className="h-12 rounded-xl border-[#dce3df] bg-[#fbfcfb] pr-4 pl-11 shadow-none focus-visible:border-[#008c45] focus-visible:ring-[#008c45]/15"
+                            />
                         </div>
-                        <CardTitle className="text-2xl font-bold text-center">
-                            Welcome Back
-                        </CardTitle>
-                        <CardDescription className="text-center text-base">
-                            {business ? (
-                                <span className="flex items-center justify-center gap-2">
-                                    Logging in to <span className="font-semibold text-foreground">{business.name}</span>
-                                </span>
-                            ) : (
-                                'Sign in to your customer account'
-                            )}
-                        </CardDescription>
-                    </CardHeader>
+                    </div>
 
-                    <form onSubmit={submit}>
-                        <CardContent className="space-y-4">
-                            {status && (
-                                <Alert>
-                                    <AlertDescription>{status}</AlertDescription>
-                                </Alert>
-                            )}
-
-                            {errors.email && (
-                                <Alert variant="destructive">
-                                    <AlertCircle className="h-4 w-4" />
-                                    <AlertDescription>{errors.email}</AlertDescription>
-                                </Alert>
-                            )}
-
-                            <div className="space-y-2">
-                                <Label htmlFor="email" className="flex items-center gap-2">
-                                    <Mail className="h-4 w-4" />
-                                    Email Address
-                                </Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    value={data.email}
-                                    onChange={(e) => setData('email', e.target.value)}
-                                    placeholder="customer@example.com"
-                                    required
-                                    autoFocus
-                                    className="h-11"
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="password" className="flex items-center gap-2">
-                                    <Lock className="h-4 w-4" />
-                                    Password
-                                </Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    value={data.password}
-                                    onChange={(e) => setData('password', e.target.value)}
-                                    placeholder="••••••••"
-                                    required
-                                    className="h-11"
-                                />
-                      
-                            </div>
-
-                            <div className="flex items-center space-x-2">
-                                <input
-                                    id="remember"
-                                    type="checkbox"
-                                    checked={data.remember}
-                                    onChange={(e) => setData('remember', e.target.checked)}
-                                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 bg-white"
-                                />
-                                <Label 
-                                    htmlFor="remember" 
-                                    className="text-sm font-normal cursor-pointer"
-                                >
-                                    Remember me
-                                </Label>
-                            </div>
-                        </CardContent>
-
-                        <CardFooter className="flex flex-col space-y-4 mt-5">
-                            <Button 
-                                type="submit" 
-                                className="w-full h-11 text-base bg-accent hover:bg-accent/70"
-                                disabled={processing}
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between gap-4">
+                            <Label
+                                htmlFor="password"
+                                className="text-sm font-medium"
                             >
-                                {processing ? 'Signing in...' : 'Sign In'}
-                            </Button>
+                                Password
+                            </Label>
+                            <Link
+                                href="/customer/forgot-password"
+                                className="text-xs font-semibold text-[#008c45] hover:underline"
+                            >
+                                Forgot password?
+                            </Link>
+                        </div>
+                        <div className="relative">
+                            <Lock className="pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-[#82908b]" />
+                            <Input
+                                id="password"
+                                type={showPassword ? 'text' : 'password'}
+                                value={data.password}
+                                onChange={(event) =>
+                                    setData('password', event.target.value)
+                                }
+                                placeholder="Enter your password"
+                                autoComplete="current-password"
+                                required
+                                className="h-12 rounded-xl border-[#dce3df] bg-[#fbfcfb] pr-12 pl-11 shadow-none focus-visible:border-[#008c45] focus-visible:ring-[#008c45]/15"
+                            />
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setShowPassword((value) => !value)
+                                }
+                                className="absolute top-1/2 right-3 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-[#71807a] transition-colors hover:bg-[#eef3f0] hover:text-[#173e31]"
+                                aria-label={
+                                    showPassword
+                                        ? 'Hide password'
+                                        : 'Show password'
+                                }
+                            >
+                                {showPassword ? (
+                                    <EyeOff className="size-[18px]" />
+                                ) : (
+                                    <Eye className="size-[18px]" />
+                                )}
+                            </button>
+                        </div>
+                    </div>
 
-                            <p className="text-center text-sm text-muted-foreground">
-                                Don't have an account?{' '}
-                                <Link href="/customer/register" className="font-semibold text-primary hover:underline">Create an account</Link>
-                            </p>
-                                      <Link 
-    href="/customer/forgot-password"
-    className="text-sm text-primary hover:underline"
->
-    Forgot your password?
-</Link>
+                    <label className="flex w-fit cursor-pointer items-center gap-2.5 text-sm text-[#52615b]">
+                        <input
+                            type="checkbox"
+                            checked={data.remember}
+                            onChange={(event) =>
+                                setData('remember', event.target.checked)
+                            }
+                            className="size-4 rounded border-[#bcc8c3] accent-[#008c45]"
+                        />
+                        Remember me
+                    </label>
 
-                        </CardFooter>
-                    </form>
-                </Card>
-            </div>
+                    <Button
+                        type="submit"
+                        disabled={processing}
+                        className="h-12 w-full rounded-xl bg-[#008c45] text-base font-semibold text-white shadow-[0_8px_20px_rgba(0,140,69,0.18)] hover:bg-[#08783f]"
+                    >
+                        {processing ? 'Signing in…' : 'Sign in'}
+                    </Button>
+
+                    <p className="text-center text-sm text-[#64736d]">
+                        New to Bigoli Rewards?{' '}
+                        <Link
+                            href="/customer/register"
+                            className="font-semibold text-[#008c45] hover:underline"
+                        >
+                            Create an account
+                        </Link>
+                    </p>
+                </form>
+            </CustomerAuthShell>
         </>
     );
 }

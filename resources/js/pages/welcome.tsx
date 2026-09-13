@@ -1,3 +1,4 @@
+import ProgressiveImage from '@/components/progressive-image';
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowDown, ArrowUpRight, Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -6,8 +7,8 @@ import Highlight1 from '../../images/highlight1.jpg';
 import Highlight2 from '../../images/highlight2.jpg';
 import Logo from '../../images/logo.png';
 import LoyaltyMobile from '../../images/loyaltymobile.png';
-import Meats from '../../images/meats.jpg';
-import Pasta from '../../images/pasta.jpg';
+import Meats from '../../images/meats-optimized.jpg';
+import Pasta from '../../images/pasta-optimized.jpg';
 
 const scriptFont = {
     fontFamily:
@@ -177,24 +178,33 @@ export default function Welcome() {
 
                                 <div className="relative z-10 mt-10 h-[295px] w-[230px] sm:h-[345px] sm:w-[265px] lg:absolute lg:top-4 lg:left-1/2 lg:mt-0 lg:-translate-x-1/2">
                                     <div className="absolute top-4 -left-6 h-[285px] w-[205px] rotate-[-8deg] sm:h-[330px] sm:w-[235px]">
-                                        <img
+                                        <ProgressiveImage
                                             src={Highlight1}
                                             alt="A freshly prepared Bigoli dish"
                                             className="h-full w-full rounded-[18px] border-[7px] border-[#fff7e8] shadow-md"
+                                            imageClassName="object-cover"
+                                            loading="eager"
+                                            decoding="async"
                                         />
                                     </div>
                                     <div className="absolute top-0 right-[-18px] h-[285px] w-[205px] rotate-[8deg] sm:h-[330px] sm:w-[235px]">
-                                        <img
+                                        <ProgressiveImage
                                             src={Highlight2}
                                             alt="A selection of Bigoli favorites"
                                             className="h-full w-full rounded-[18px] border-[7px] border-[#fff7e8] shadow-md"
+                                            imageClassName="object-cover"
+                                            loading="eager"
+                                            decoding="async"
                                         />
                                     </div>
                                     <div className="absolute top-6 left-1/2 h-[285px] w-[205px] -translate-x-1/2 sm:h-[330px] sm:w-[235px]">
-                                        <img
+                                        <ProgressiveImage
                                             src={Highlight}
                                             alt="A signature Bigoli meal"
                                             className="h-full w-full rounded-[18px] border-[7px] border-[#fff7e8] shadow-lg"
+                                            imageClassName="object-cover"
+                                            loading="eager"
+                                            decoding="async"
                                         />
                                     </div>
                                 </div>
@@ -228,10 +238,13 @@ export default function Welcome() {
                             <div className="mx-auto grid max-w-[930px] items-center gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
                                 <div className="relative mx-auto h-[590px] w-full max-w-[350px] sm:h-[670px]">
                                     <div className="absolute -top-5 -left-5 h-full w-full rounded-[24px] border border-[#fff7e8]/30" />
-                                    <img
+                                    <ProgressiveImage
                                         src={LoyaltyMobile}
                                         alt="Bigoli loyalty rewards on a mobile phone"
                                         className="relative h-full w-full rounded-[24px] bg-[#b9b2a2] shadow-[0_22px_45px_rgba(0,0,0,0.22)]"
+                                        imageClassName="object-cover"
+                                        loading="lazy"
+                                        decoding="async"
                                     />
                                     <span className="absolute -right-7 -bottom-7 grid h-20 w-20 rotate-6 place-items-center rounded-full bg-[#f2aa24] text-xs font-black tracking-widest text-[#064b32] uppercase shadow-lg">
                                         +1 Stamp
@@ -332,15 +345,21 @@ export default function Welcome() {
                                 </div>
 
                                 <div className="mt-12 grid grid-cols-1 gap-4 sm:mt-16 sm:grid-cols-[0.8fr_1.2fr] lg:ml-[32%]">
-                                    <img
+                                    <ProgressiveImage
                                         src={Meats}
                                         alt="Bigoli meat dishes served family-style"
                                         className="aspect-[4/3] w-full rounded-[14px] object-cover sm:aspect-auto sm:h-64 lg:h-56"
+                                        imageClassName="object-cover"
+                                        loading="lazy"
+                                        decoding="async"
                                     />
-                                    <img
+                                    <ProgressiveImage
                                         src={Pasta}
                                         alt="A freshly prepared Bigoli pasta dish"
                                         className="aspect-[4/3] w-full rounded-[14px] object-cover sm:aspect-auto sm:h-64 lg:h-56"
+                                        imageClassName="object-cover"
+                                        loading="lazy"
+                                        decoding="async"
                                     />
                                 </div>
                             </div>
