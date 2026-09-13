@@ -1,116 +1,132 @@
-import { FormEventHandler } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import BrandedAuthShell from '@/components/branded-auth-shell';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Mail, Lock, AlertCircle } from 'lucide-react';
-import LOGO from '../../../../images/mainLogo.png';
+import { Head, useForm } from '@inertiajs/react';
+import { AlertCircle, Eye, EyeOff, Lock, UserRound } from 'lucide-react';
+import { FormEventHandler, useState } from 'react';
+
 interface LoginProps {
     status?: string;
 }
 
 export default function Login({ status }: LoginProps) {
+    const [showPassword, setShowPassword] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm({
         username: '',
         password: '',
         remember: false,
     });
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-        post('/staff/login', {
-            onFinish: () => reset('password'),
-        });
+    const submit: FormEventHandler = (event) => {
+        event.preventDefault();
+        post('/staff/login', { onFinish: () => reset('password') });
     };
 
     return (
         <>
             <Head title="Staff Login" />
-            
-            <div className="min-h-screen flex items-center justify-center p-4">
-                <Card className="w-full max-w-md shadow-xl">
-                    <CardHeader className="space-y-3">
-                        <div className="flex items-center justify-center mb-2">
-                             <a href="/">
-                                 <img src={LOGO} alt="business logo" className='w-32 h-12'/>
-                               </a>
+            <BrandedAuthShell
+                variant="staff-login"
+                title="Welcome back"
+                description="Sign in to access your branch workspace."
+            >
+                <form onSubmit={submit} className="space-y-5">
+                    {status && (
+                        <Alert className="border-[#008c45]/20 bg-[#008c45]/5 text-[#075238]">
+                            <AlertDescription>{status}</AlertDescription>
+                        </Alert>
+                    )}
+                    {errors.username && (
+                        <Alert variant="destructive">
+                            <AlertCircle className="size-4" />
+                            <AlertDescription>
+                                {errors.username}
+                            </AlertDescription>
+                        </Alert>
+                    )}
+
+                    <div className="space-y-2">
+                        <Label
+                            htmlFor="username"
+                            className="text-sm font-medium"
+                        >
+                            Username
+                        </Label>
+                        <div className="relative">
+                            <UserRound className="pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-[#82908b]" />
+                            <Input
+                                id="username"
+                                value={data.username}
+                                onChange={(event) =>
+                                    setData('username', event.target.value)
+                                }
+                                placeholder="Enter your username"
+                                autoComplete="username"
+                                required
+                                autoFocus
+                                aria-invalid={!!errors.username}
+                                className="h-12 rounded-xl border-[#dce3df] bg-[#fbfcfb] pr-4 pl-11 shadow-none focus-visible:border-[#008c45] focus-visible:ring-[#008c45]/15"
+                            />
                         </div>
-                        <CardTitle className="text-2xl font-bold text-center">
-                            Welcome Back
-                        </CardTitle>
-                        <CardDescription className="text-center text-base">
-                       
-                                Sign in to your staff account
-                         
-                        </CardDescription>
-                    </CardHeader>
+                    </div>
 
-                    <form onSubmit={submit}>
-                        <CardContent className="space-y-4">
-                            {status && (
-                                <Alert>
-                                    <AlertDescription>{status}</AlertDescription>
-                                </Alert>
-                            )}
-
-                            {errors.username && (
-                                <Alert variant="destructive">
-                                    <AlertCircle className="h-4 w-4" />
-                                    <AlertDescription>{errors.username}</AlertDescription>
-                                </Alert>
-                            )}
-
-                            <div className="space-y-2">
-                                <Label htmlFor="username" className="flex items-center gap-2">
-                                    <Mail className="h-4 w-4" />
-                                    Username
-                                </Label>
-                                <Input
-                                    id="username"
-                                    type="username"
-                                    value={data.username}
-                                    onChange={(e) => setData('username', e.target.value)}
-                                    placeholder="john"
-                                    required
-                                    autoFocus
-                                    className="h-11"
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="password" className="flex items-center gap-2">
-                                    <Lock className="h-4 w-4" />
-                                    Password
-                                </Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    value={data.password}
-                                    onChange={(e) => setData('password', e.target.value)}
-                                    placeholder="••••••••"
-                                    required
-                                    className="h-11"
-                                />
-                            </div>
-
-                          
-                        </CardContent>
-
-                        <CardFooter className="flex flex-col space-y-4 mt-5">
-                            <Button 
-                                type="submit" 
-                                className="w-full h-11 text-base bg-accent hover:bg-accent/70"
-                                disabled={processing}
+                    <div className="space-y-2">
+                        <Label
+                            htmlFor="password"
+                            className="text-sm font-medium"
+                        >
+                            Password
+                        </Label>
+                        <div className="relative">
+                            <Lock className="pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-[#82908b]" />
+                            <Input
+                                id="password"
+                                type={showPassword ? 'text' : 'password'}
+                                value={data.password}
+                                onChange={(event) =>
+                                    setData('password', event.target.value)
+                                }
+                                placeholder="Enter your password"
+                                autoComplete="current-password"
+                                required
+                                className="h-12 rounded-xl border-[#dce3df] bg-[#fbfcfb] pr-12 pl-11 shadow-none focus-visible:border-[#008c45] focus-visible:ring-[#008c45]/15"
+                            />
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setShowPassword((value) => !value)
+                                }
+                                className="absolute top-1/2 right-3 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-[#71807a] transition-colors hover:bg-[#eef3f0] hover:text-[#173e31]"
+                                aria-label={
+                                    showPassword
+                                        ? 'Hide password'
+                                        : 'Show password'
+                                }
                             >
-                                {processing ? 'Signing in...' : 'Sign In'}
-                            </Button>
+                                {showPassword ? (
+                                    <EyeOff className="size-[18px]" />
+                                ) : (
+                                    <Eye className="size-[18px]" />
+                                )}
+                            </button>
+                        </div>
+                    </div>
 
-                        </CardFooter>
-                    </form>
-                </Card>
-            </div>
+                    <Button
+                        type="submit"
+                        disabled={processing}
+                        className="h-12 w-full rounded-xl bg-[#008c45] text-base font-semibold text-white shadow-[0_8px_20px_rgba(0,140,69,0.18)] hover:bg-[#08783f]"
+                    >
+                        {processing ? 'Signing in…' : 'Sign in'}
+                    </Button>
+
+                    <p className="text-center text-xs leading-5 text-[#71807a]">
+                        Staff access is managed by your business administrator.
+                    </p>
+                </form>
+            </BrandedAuthShell>
         </>
     );
 }

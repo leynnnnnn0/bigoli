@@ -3,35 +3,86 @@ import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { ReactNode } from 'react';
 import Logo from '../../images/mainLogo.png';
 
-interface CustomerAuthShellProps {
+export type AuthVariant =
+    | 'customer-login'
+    | 'customer-register'
+    | 'staff-login'
+    | 'business-login';
+
+interface BrandedAuthShellProps {
     children: ReactNode;
     title: string;
     description: ReactNode;
+    variant: AuthVariant;
     businessLogo?: string;
     businessName?: string;
-    mode: 'login' | 'register';
 }
 
-export default function CustomerAuthShell({
+const variantContent: Record<
+    AuthVariant,
+    {
+        eyebrow: string;
+        label: string;
+        title: string;
+        benefits: string[];
+        footer: string;
+    }
+> = {
+    'customer-login': {
+        eyebrow: 'Customer loyalty',
+        label: 'Bigoli Rewards',
+        title: 'Good food tastes even better with rewards.',
+        benefits: [
+            'Your stamps stay in one place',
+            'See your progress anytime',
+            'Unlock delicious rewards',
+        ],
+        footer: 'Everyday Italian. Everyday rewards.',
+    },
+    'customer-register': {
+        eyebrow: 'Customer loyalty',
+        label: 'Bigoli Rewards',
+        title: 'Good food tastes even better with rewards.',
+        benefits: [
+            'Collect stamps digitally',
+            'Track rewards in one place',
+            'Never lose a loyalty card',
+        ],
+        footer: 'Everyday Italian. Everyday rewards.',
+    },
+    'staff-login': {
+        eyebrow: 'Team access',
+        label: 'Bigoli Staff',
+        title: 'Serve customers faster, one stamp at a time.',
+        benefits: [
+            'Issue secure stamp codes',
+            'Redeem customer rewards',
+            'Review recent activity',
+        ],
+        footer: 'Built for smooth service, every shift.',
+    },
+    'business-login': {
+        eyebrow: 'Business portal',
+        label: 'Bigoli Business',
+        title: 'Keep every branch and reward in sync.',
+        benefits: [
+            'Manage loyalty programs',
+            'Monitor customer activity',
+            'Support every branch',
+        ],
+        footer: 'A clearer view of your loyalty business.',
+    },
+};
+
+export default function BrandedAuthShell({
     children,
     title,
     description,
+    variant,
     businessLogo,
     businessName,
-    mode,
-}: CustomerAuthShellProps) {
-    const benefits =
-        mode === 'register'
-            ? [
-                  'Collect stamps digitally',
-                  'Track rewards in one place',
-                  'Never lose a loyalty card',
-              ]
-            : [
-                  'Your stamps stay in one place',
-                  'See your progress anytime',
-                  'Unlock delicious rewards',
-              ];
+}: BrandedAuthShellProps) {
+    const content = variantContent[variant];
 
     return (
         <main className="grid min-h-screen place-items-center bg-[#f7f3ea] px-4 py-6 text-[#173e31] sm:px-6 sm:py-10 lg:px-10">
@@ -50,13 +101,13 @@ export default function CustomerAuthShell({
 
                     <div className="relative">
                         <p className="mb-5 text-xs font-semibold tracking-[0.22em] text-[#f2b642] uppercase">
-                            Bigoli Rewards
+                            {content.label}
                         </p>
                         <h2 className="max-w-xs text-4xl leading-[1.12] font-semibold tracking-[-0.035em]">
-                            Good food tastes even better with rewards.
+                            {content.title}
                         </h2>
                         <div className="mt-8 space-y-4">
-                            {benefits.map((benefit) => (
+                            {content.benefits.map((benefit) => (
                                 <div
                                     key={benefit}
                                     className="flex items-center gap-3 text-sm text-white/80"
@@ -69,7 +120,7 @@ export default function CustomerAuthShell({
                     </div>
 
                     <p className="relative text-xs text-white/50">
-                        Everyday Italian. Everyday rewards.
+                        {content.footer}
                     </p>
                 </aside>
 
@@ -88,7 +139,7 @@ export default function CustomerAuthShell({
 
                     <div className="mb-8">
                         <p className="mb-2 text-xs font-semibold tracking-[0.18em] text-[#008c45] uppercase">
-                            Customer loyalty
+                            {content.eyebrow}
                         </p>
                         <h1 className="text-3xl font-semibold tracking-[-0.035em] text-[#173e31] sm:text-4xl">
                             {title}

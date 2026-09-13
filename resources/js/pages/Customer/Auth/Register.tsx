@@ -1,4 +1,4 @@
-import CustomerAuthShell from '@/components/customer-auth-shell';
+import BrandedAuthShell from '@/components/branded-auth-shell';
 import TermsAndAgreement from '@/components/TermsAndAgreement';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -65,8 +65,8 @@ export default function Register({
     return (
         <>
             <Head title="Customer Registration" />
-            <CustomerAuthShell
-                mode="register"
+            <BrandedAuthShell
+                variant="customer-register"
                 title="Create your account"
                 description={
                     <>
@@ -238,7 +238,7 @@ export default function Register({
                         </Link>
                     </p>
                 </form>
-            </CustomerAuthShell>
+            </BrandedAuthShell>
         </>
     );
 }

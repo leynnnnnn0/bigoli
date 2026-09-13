@@ -1,4 +1,4 @@
-import CustomerAuthShell from '@/components/customer-auth-shell';
+import BrandedAuthShell from '@/components/branded-auth-shell';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,8 +29,8 @@ export default function Login({ business, status, isDemo }: LoginProps) {
     return (
         <>
             <Head title="Customer Login" />
-            <CustomerAuthShell
-                mode="login"
+            <BrandedAuthShell
+                variant="customer-login"
                 title="Welcome back"
                 description={
                     business ? (
@@ -164,7 +164,7 @@ export default function Login({ business, status, isDemo }: LoginProps) {
                         </Link>
                     </p>
                 </form>
-            </CustomerAuthShell>
+            </BrandedAuthShell>
         </>
     );
 }
