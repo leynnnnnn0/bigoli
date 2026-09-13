@@ -21,12 +21,13 @@ class StaffDashboardService
             'perkClaims' => (clone $claims)->with([
                 'customer:id,username,email', 'perk:id,reward,details,stampNumber', 'loyalty_card:id,name,logo',
                 'redeemed_by:id,username', 'redeemed_by_staff:id,username',
-            ])->latest()->limit(50)->get(),
+            ])->latest()->paginate(10, ['*'], 'rewards_page')->withQueryString(),
             'stampCodes' => StampCode::with(['loyalty_card:id,name', 'customer:id,username,email'])
                 ->withTrashed()->where('staff_id', $staff->id)->where('business_id', $businessId)
                 ->where(fn (Builder $query) => $query->where('is_offline_code', false)->orWhereNotNull('used_at'))
-                ->latest()->limit(50)->get(),
+                ->latest()->paginate(10, ['*'], 'codes_page')->withQueryString(),
             'stats' => ['total' => (int) $stats->total, 'available' => (int) $stats->available, 'redeemed' => (int) $stats->redeemed],
+            'active_tab' => $input['tab'] ?? 'issue-stamp',
         ]);
     }
 }

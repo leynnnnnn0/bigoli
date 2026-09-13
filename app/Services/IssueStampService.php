@@ -40,18 +40,38 @@ class IssueStampService
 
         $cards = $this->activeCards($business, $branchId)->get(['id', 'name', 'logo']);
         $cardId = $input['loyalty_card_id'] ?? null;
-        $code = $cardId && $cards->contains('id', $cardId)
-            ? $this->generate($business, $cardId, $branchId, $input['reference_number'] ?? null, null, $staff->id)
-            : $this->emptyCode();
 
         return [
-            'code' => $code,
+            'code' => $this->emptyCode(),
             'cards' => $cards,
             'branches' => $business->branches()->when($branchId, fn ($query) => $query->whereKey($branchId))->get(['id', 'name']),
             'loyalty_card_id' => $cardId,
             'branch_id' => $branchId ? (string) $branchId : null,
             'reference_number' => $input['reference_number'] ?? null,
         ];
+    }
+
+    public function generateForStaff(Staff $staff, array $input): array
+    {
+        $business = $staff->business;
+        $branchId = $staff->branch_id;
+
+        abort_unless(
+            ! $branchId || ! isset($input['branch_id']) || (int) $input['branch_id'] === $branchId,
+            403,
+        );
+
+        $cardId = (int) $input['loyalty_card_id'];
+        abort_unless($this->activeCards($business, $branchId)->whereKey($cardId)->exists(), 403);
+
+        return array_merge(
+            $this->generate($business, $cardId, $branchId, $input['reference_number'], null, $staff->id),
+            [
+                'loyalty_card_id' => (string) $cardId,
+                'branch_id' => $branchId ? (string) $branchId : null,
+                'reference_number' => $input['reference_number'],
+            ],
+        );
     }
 
     private function activeCards(Business $business, ?int $branchId)

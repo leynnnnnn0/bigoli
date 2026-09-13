@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Staff\GenerateStaffStampCodeRequest;
 use App\Http\Requests\Staff\RecordStaffCustomerScanRequest;
 use App\Http\Requests\Staff\RedeemStaffPerkClaimRequest;
 use App\Http\Requests\Staff\StaffDashboardRequest;
@@ -19,11 +20,37 @@ class DashboardController extends Controller
 {
     public function index(StaffDashboardRequest $request, StaffDashboardService $dashboard, IssueStampService $issueStamps)
     {
-        return Inertia::render('Staff/Dashboard/Index', $dashboard->data(
+        $input = $request->validated();
+        $generatedCode = $request->session()->get('generated_code');
+
+        if (is_array($generatedCode)) {
+            $input['loyalty_card_id'] = $generatedCode['loyalty_card_id'];
+            $input['branch_id'] = $generatedCode['branch_id'];
+            $input['reference_number'] = $generatedCode['reference_number'];
+        }
+
+        $data = $dashboard->data(
+            Auth::guard('staff')->user(),
+            $input,
+            $issueStamps,
+        );
+
+        if (is_array($generatedCode)) {
+            $data['code'] = $generatedCode;
+        }
+
+        return Inertia::render('Staff/Dashboard/Index', $data);
+    }
+
+    public function generateCode(GenerateStaffStampCodeRequest $request, IssueStampService $issueStamps)
+    {
+        $code = $issueStamps->generateForStaff(
             Auth::guard('staff')->user(),
             $request->validated(),
-            $issueStamps,
-        ));
+        );
+
+        return to_route('staff.dashboard', ['tab' => 'issue-stamp'])
+            ->with('generated_code', $code);
     }
 
     public function recordCustomerScan(RecordStaffCustomerScanRequest $request, StampCodeService $stampCodes, LoyaltyStampService $loyaltyStamps)

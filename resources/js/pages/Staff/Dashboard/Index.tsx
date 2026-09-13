@@ -50,6 +50,8 @@ import {
     Award,
     Calendar,
     Check,
+    ChevronLeft,
+    ChevronRight,
     CreditCard,
     Eye,
     Gift,
@@ -79,14 +81,24 @@ interface Props {
     branches?: BranchOption[];
     loyalty_card_id?: string;
     branch_id?: string;
-    perkClaims?: PerkClaim[];
-    stampCodes?: StampCodeRecord[];
+    perkClaims?: PaginatedCollection<PerkClaim>;
+    stampCodes?: PaginatedCollection<StampCodeRecord>;
     stats?: {
         total: number;
         available: number;
         redeemed: number;
     };
     reference_number?: string;
+    active_tab?: StaffTab;
+}
+
+interface PaginatedCollection<T> {
+    data: T[];
+    current_page: number;
+    last_page: number;
+    from: number | null;
+    to: number | null;
+    total: number;
 }
 
 const tabItems = [
@@ -112,29 +124,74 @@ const tabItems = [
 
 type StaffTab = (typeof tabItems)[number]['id'];
 
-function StaffStatCard({
-    label,
-    value,
-    icon: Icon,
-}: {
-    label: string;
-    value: number;
-    icon: typeof Award;
-}) {
+function StaffStatCard({ label, value }: { label: string; value: number }) {
     return (
         <div className="min-w-0 rounded-xl border border-gray-200 bg-white p-3 sm:p-5">
-            <div className="flex min-w-0 flex-col-reverse items-start justify-between gap-3 sm:flex-row sm:gap-2">
-                <div className="min-w-0">
-                    <p className="text-[11px] leading-4 font-medium text-gray-500 sm:text-sm sm:leading-5">
-                        {label}
-                    </p>
-                    <p className="mt-2 text-2xl font-semibold tracking-tight text-gray-950 tabular-nums sm:text-3xl">
-                        {value}
-                    </p>
-                </div>
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 sm:h-12 sm:w-12 sm:rounded-xl">
-                    <Icon className="h-4 w-4 sm:h-6 sm:w-6" />
-                </div>
+            <p className="text-[11px] leading-4 font-medium text-gray-500 sm:text-sm sm:leading-5">
+                {label}
+            </p>
+            <p className="mt-2 text-2xl font-semibold tracking-tight text-gray-950 tabular-nums sm:text-3xl">
+                {value}
+            </p>
+        </div>
+    );
+}
+
+function StaffPagination<T>({
+    pagination,
+    pageParam,
+    tab,
+}: {
+    pagination?: PaginatedCollection<T>;
+    pageParam: 'rewards_page' | 'codes_page';
+    tab: StaffTab;
+}) {
+    if (!pagination || pagination.last_page <= 1) return null;
+
+    const navigate = (page: number) => {
+        if (page < 1 || page > pagination.last_page) return;
+        const url = new URL(window.location.href);
+        url.searchParams.set('tab', tab);
+        url.searchParams.set(pageParam, page.toString());
+        router.get(
+            url.pathname + url.search,
+            {},
+            {
+                preserveScroll: true,
+                preserveState: true,
+                replace: true,
+            },
+        );
+    };
+
+    return (
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-gray-100 pt-5 sm:flex-row">
+            <p className="text-xs text-gray-500">
+                Showing {pagination.from ?? 0}–{pagination.to ?? 0} of{' '}
+                {pagination.total}
+            </p>
+            <div className="flex items-center gap-2">
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate(pagination.current_page - 1)}
+                    disabled={pagination.current_page === 1}
+                >
+                    <ChevronLeft className="size-4" /> Previous
+                </Button>
+                <span className="min-w-16 text-center text-xs font-medium text-gray-600">
+                    {pagination.current_page} / {pagination.last_page}
+                </span>
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate(pagination.current_page + 1)}
+                    disabled={pagination.current_page === pagination.last_page}
+                >
+                    Next <ChevronRight className="size-4" />
+                </Button>
             </div>
         </div>
     );
@@ -202,9 +259,10 @@ export default function Index({
     loyalty_card_id,
     branch_id,
     reference_number,
-    perkClaims = [],
-    stampCodes = [],
+    perkClaims,
+    stampCodes,
     stats,
+    active_tab = 'issue-stamp',
 }: Props) {
     const [referenceNumber, setReferenceNumber] = useState<string>(
         reference_number ?? '',
@@ -230,8 +288,15 @@ export default function Index({
 
     // Stamp Codes state
     const [codeSearch, setCodeSearch] = useState('');
-    const [activeTab, setActiveTab] = useState<StaffTab>('issue-stamp');
+    const [activeTab, setActiveTab] = useState<StaffTab>(active_tab);
     const isMobile = useIsMobile();
+
+    const changeTab = (tab: StaffTab) => {
+        setActiveTab(tab);
+        const url = new URL(window.location.href);
+        url.searchParams.set('tab', tab);
+        window.history.replaceState({}, '', url.pathname + url.search);
+    };
 
     // When branch changes, reload so server returns filtered cards
     const handleBranchChange = (value: string) => {
@@ -255,12 +320,19 @@ export default function Index({
         }
         setLoading(true);
         setError(null);
-        router.get('/staff/dashboard', {
-            loyalty_card_id: selectedCardId,
-            branch_id: selectedBranchId || undefined,
-            reference_number: referenceNumber, // ← add
-        });
-        setLoading(false);
+        router.post(
+            '/staff/dashboard/generate-code',
+            {
+                loyalty_card_id: selectedCardId,
+                branch_id: selectedBranchId || undefined,
+                reference_number: referenceNumber,
+            },
+            {
+                preserveScroll: true,
+                onError: () => setError('Unable to generate a stamp code.'),
+                onFinish: () => setLoading(false),
+            },
+        );
     };
 
     const generateNewCode = generateCode;
@@ -337,7 +409,7 @@ export default function Index({
         return <Badge variant="default">Active</Badge>;
     };
 
-    const filteredPerkClaims = perkClaims.filter(
+    const filteredPerkClaims = (perkClaims?.data ?? []).filter(
         (claim) =>
             claim.customer.username
                 .toLowerCase()
@@ -350,7 +422,7 @@ export default function Index({
                 .includes(perkSearch.toLowerCase()),
     );
 
-    const filteredStampCodes = stampCodes.filter(
+    const filteredStampCodes = (stampCodes?.data ?? []).filter(
         (code) =>
             code.code.toLowerCase().includes(codeSearch.toLowerCase()) ||
             code.customer?.username
@@ -393,7 +465,7 @@ export default function Index({
                                 {tabItems.map((item) => (
                                     <button
                                         key={item.id}
-                                        onClick={() => setActiveTab(item.id)}
+                                        onClick={() => changeTab(item.id)}
                                         className={cn(
                                             'border-b-2 pb-1 text-sm font-semibold transition-colors',
                                             activeTab === item.id
@@ -449,9 +521,7 @@ export default function Index({
                     {/* Tabs Section */}
                     <Tabs
                         value={activeTab}
-                        onValueChange={(value) =>
-                            setActiveTab(value as StaffTab)
-                        }
+                        onValueChange={(value) => changeTab(value as StaffTab)}
                         className="space-y-4 px-4 pt-4 sm:px-0 sm:pt-0"
                     >
                         {/* ISSUE STAMP TAB */}
@@ -575,7 +645,7 @@ export default function Index({
                                         disabled={
                                             !selectedCardId || !referenceNumber
                                         }
-                                        className="h-12 rounded-xl bg-primary text-white hover:bg-primary/80"
+                                        className="h-12 w-full rounded-xl bg-primary text-white hover:bg-primary/80"
                                     >
                                         <QrCode className="mr-2 h-5 w-5" />
                                         Generate New
@@ -600,17 +670,14 @@ export default function Index({
                                 <StaffStatCard
                                     label="Total Claims"
                                     value={stats?.total || 0}
-                                    icon={Award}
                                 />
                                 <StaffStatCard
                                     label="Available"
                                     value={stats?.available || 0}
-                                    icon={Sparkles}
                                 />
                                 <StaffStatCard
                                     label="Redeemed"
                                     value={stats?.redeemed || 0}
-                                    icon={Check}
                                 />
                             </div>
 
@@ -889,6 +956,11 @@ export default function Index({
                                         />
                                     )}
                                 </div>
+                                <StaffPagination
+                                    pagination={perkClaims}
+                                    pageParam="rewards_page"
+                                    tab="perk-claims"
+                                />
                             </SectionShell>
                         </TabsContent>
 
@@ -1100,6 +1172,11 @@ export default function Index({
                                         />
                                     )}
                                 </div>
+                                <StaffPagination
+                                    pagination={stampCodes}
+                                    pageParam="codes_page"
+                                    tab="stamp-codes"
+                                />
                             </SectionShell>
                         </TabsContent>
                     </Tabs>
@@ -1113,7 +1190,7 @@ export default function Index({
                             return (
                                 <button
                                     key={item.id}
-                                    onClick={() => setActiveTab(item.id)}
+                                    onClick={() => changeTab(item.id)}
                                     className={cn(
                                         'flex flex-1 flex-col items-center gap-0.5 px-3 py-3 transition-colors',
                                         isActive
@@ -1318,8 +1395,11 @@ export default function Index({
                                                 Redeemed By
                                             </p>
                                             <p className="text-sm font-semibold">
-                                                {selectedClaim.redeemed_by
-                                                    ?.username || 'N/A'}
+                                                {selectedClaim.redeemed_by_staff
+                                                    ?.username ||
+                                                    selectedClaim.redeemed_by
+                                                        ?.username ||
+                                                    'N/A'}
                                             </p>
                                         </div>
                                     </div>

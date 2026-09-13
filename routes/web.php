@@ -135,6 +135,7 @@ Route::prefix('customer')->name('customer.')->group(function () {
 Route::name('staff.')->prefix('staff')->group(function () {
     Route::middleware(['auth:staff', EnsureStaffIsActive::class])->group(function () {
         Route::get('/dashboard', [StaffDashboardController::class, 'index'])->name('dashboard');
+        Route::post('/dashboard/generate-code', [StaffDashboardController::class, 'generateCode'])->name('dashboard.generate-code');
 
         Route::post('/scan-customer', [StaffDashboardController::class, 'recordCustomerScan'])->name('scan-customer');
         Route::post('/perk-claims/{perkClaim}/redeem', [StaffDashboardController::class, 'markAsRedeemed'])->name('perk-claims.redeem');
