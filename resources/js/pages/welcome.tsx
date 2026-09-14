@@ -74,17 +74,17 @@ export default function Welcome() {
             </Head>
 
             <div
-                className="min-h-screen bg-[#fff7e8] text-[#164d38] selection:bg-[#e24a32] selection:text-[#fff8e9]"
+                className="min-h-screen bg-white text-[#2b2b2b] selection:bg-[#b3262d] selection:text-white"
                 style={copyFont}
             >
-                <div className="w-full overflow-hidden bg-[#fff7e8]">
+                <div className="w-full overflow-hidden bg-white">
                     <header className="relative z-30 flex h-24 items-center justify-between px-6 md:h-28 md:px-12 lg:px-16">
                         <nav className="hidden flex-1 items-center gap-10 lg:flex">
                             {navItems.slice(0, 2).map((item) => (
                                 <a
                                     key={item.href}
                                     href={item.href}
-                                    className="text-sm italic decoration-[#e24a32] decoration-1 underline-offset-4 transition-colors hover:text-[#e24a32] hover:underline"
+                                    className="text-sm text-[#2b2b2b] italic decoration-[#b3262d] decoration-1 underline-offset-4 transition-colors hover:text-[#8f1d24] hover:underline"
                                 >
                                     {item.label}
                                 </a>
@@ -94,7 +94,7 @@ export default function Welcome() {
                         <a
                             href="#intro"
                             aria-label="Back to the top"
-                            className="text-center text-4xl leading-none font-black tracking-[-0.08em] text-[#e24a32] lowercase sm:text-5xl"
+                            className="text-center text-4xl leading-none font-black tracking-[-0.08em] text-[#b3262d] lowercase sm:text-5xl"
                             style={scriptFont}
                         >
                             <img
@@ -107,14 +107,14 @@ export default function Welcome() {
                         <nav className="hidden flex-1 items-center justify-end gap-10 lg:flex">
                             <a
                                 href={navItems[2].href}
-                                className="text-sm italic decoration-[#e24a32] decoration-1 underline-offset-4 transition-colors hover:text-[#e24a32] hover:underline"
+                                className="text-sm text-[#2b2b2b] italic decoration-[#b3262d] decoration-1 underline-offset-4 transition-colors hover:text-[#8f1d24] hover:underline"
                             >
                                 {navItems[2].label}
                             </a>
                             <button
                                 type="button"
                                 onClick={() => router.get('/customer/login')}
-                                className="cursor-pointer text-sm italic decoration-[#e24a32] decoration-1 underline-offset-4 transition-colors hover:text-[#e24a32] hover:underline"
+                                className="cursor-pointer text-sm text-[#2b2b2b] italic decoration-[#b3262d] decoration-1 underline-offset-4 transition-colors hover:text-[#8f1d24] hover:underline"
                             >
                                 Sign in
                             </button>
@@ -123,7 +123,7 @@ export default function Welcome() {
                         <button
                             type="button"
                             onClick={() => setMobileMenuOpen((open) => !open)}
-                            className="absolute right-6 grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-[#164d38]/25 lg:hidden"
+                            className="absolute right-6 grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-[#2b2b2b]/25 text-[#2b2b2b] lg:hidden"
                             aria-label={
                                 mobileMenuOpen ? 'Close menu' : 'Open menu'
                             }
@@ -137,13 +137,13 @@ export default function Welcome() {
                         </button>
 
                         {mobileMenuOpen && (
-                            <div className="absolute top-[78px] right-5 left-5 flex flex-col rounded-2xl border border-[#164d38]/15 bg-[#fff7e8] p-4 shadow-xl lg:hidden">
+                            <div className="absolute top-[78px] right-5 left-5 flex flex-col rounded-2xl border border-[#2b2b2b]/15 bg-white p-4 shadow-xl lg:hidden">
                                 {navItems.map((item) => (
                                     <a
                                         key={item.href}
                                         href={item.href}
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="rounded-lg px-4 py-3 text-sm italic hover:bg-[#164d38]/5"
+                                        className="rounded-lg px-4 py-3 text-sm text-[#2b2b2b] italic hover:bg-[#2b2b2b]/5 hover:text-[#8f1d24]"
                                     >
                                         {item.label}
                                     </a>
@@ -153,7 +153,7 @@ export default function Welcome() {
                                     onClick={() =>
                                         router.get('/customer/login')
                                     }
-                                    className="cursor-pointer rounded-lg px-4 py-3 text-left text-sm italic hover:bg-[#164d38]/5"
+                                    className="cursor-pointer rounded-lg px-4 py-3 text-left text-sm text-[#2b2b2b] italic hover:bg-[#2b2b2b]/5 hover:text-[#8f1d24]"
                                 >
                                     Sign in
                                 </button>
@@ -168,7 +168,7 @@ export default function Welcome() {
                         >
                             <div className="relative flex w-full max-w-[760px] flex-col items-center lg:block lg:h-[445px]">
                                 <h1
-                                    className="relative z-20 max-w-[320px] text-center text-[clamp(3.35rem,8vw,6.6rem)] leading-[0.78] font-normal tracking-[-0.055em] text-[#e24a32] lg:absolute lg:top-12 lg:left-0 lg:max-w-[250px] lg:text-right"
+                                    className="relative z-20 max-w-[320px] text-center text-[clamp(3.35rem,8vw,6.6rem)] leading-[0.78] font-normal tracking-[-0.055em] text-[#8f1d24] lg:absolute lg:top-12 lg:left-0 lg:max-w-[250px] lg:text-right"
                                     style={titleFont}
                                 >
                                     <span className="block">Taste</span>
@@ -181,7 +181,7 @@ export default function Welcome() {
                                         <ProgressiveImage
                                             src={Highlight1}
                                             alt="A freshly prepared Bigoli dish"
-                                            className="h-full w-full rounded-[18px] border-[7px] border-[#fff7e8] shadow-md"
+                                            className="h-full w-full rounded-[18px] border-[7px] border-white shadow-md"
                                             imageClassName="object-cover"
                                             loading="eager"
                                             decoding="async"
@@ -191,7 +191,7 @@ export default function Welcome() {
                                         <ProgressiveImage
                                             src={Highlight2}
                                             alt="A selection of Bigoli favorites"
-                                            className="h-full w-full rounded-[18px] border-[7px] border-[#fff7e8] shadow-md"
+                                            className="h-full w-full rounded-[18px] border-[7px] border-white shadow-md"
                                             imageClassName="object-cover"
                                             loading="eager"
                                             decoding="async"
@@ -201,7 +201,7 @@ export default function Welcome() {
                                         <ProgressiveImage
                                             src={Highlight}
                                             alt="A signature Bigoli meal"
-                                            className="h-full w-full rounded-[18px] border-[7px] border-[#fff7e8] shadow-lg"
+                                            className="h-full w-full rounded-[18px] border-[7px] border-white shadow-lg"
                                             imageClassName="object-cover"
                                             loading="eager"
                                             decoding="async"
@@ -210,7 +210,7 @@ export default function Welcome() {
                                 </div>
 
                                 <p
-                                    className="relative z-20 mt-8 max-w-[260px] text-center text-5xl leading-[0.84] text-[#e24a32] lg:absolute lg:top-44 lg:right-0 lg:mt-0 lg:max-w-[230px] lg:text-left lg:text-6xl"
+                                    className="relative z-20 mt-8 max-w-[260px] text-center text-5xl leading-[0.84] text-[#8f1d24] lg:absolute lg:top-44 lg:right-0 lg:mt-0 lg:max-w-[230px] lg:text-left lg:text-6xl"
                                     style={scriptFont}
                                 >
                                     Absolutely Good
@@ -219,7 +219,7 @@ export default function Welcome() {
 
                             <a
                                 href="#story"
-                                className="group mt-12 inline-flex items-center gap-3 rounded-full border border-[#82a99f] px-6 py-3 text-[10px] font-bold tracking-[0.18em] text-[#4f7d72] uppercase transition-colors hover:bg-[#164d38] hover:text-[#fff7e8] lg:mt-0"
+                                className="group mt-12 inline-flex items-center gap-3 rounded-full border border-[#006b3c] px-6 py-3 text-[10px] font-bold tracking-[0.18em] text-[#2b2b2b] uppercase transition-colors hover:bg-[#006b3c] hover:text-white lg:mt-0"
                             >
                                 Join Bigoli Rewards
                                 <ArrowDown className="h-3.5 w-3.5 transition-transform group-hover:translate-y-1" />
@@ -227,32 +227,32 @@ export default function Welcome() {
 
                             <div
                                 aria-hidden="true"
-                                className="absolute right-0 bottom-0 left-0 h-7 bg-[#064b32] bg-[radial-gradient(ellipse_50%_62%_at_50%_0,#fff7e8_98%,transparent_100%)] bg-[length:96px_28px] bg-repeat-x sm:bg-[length:112px_28px] lg:bg-[length:128px_28px]"
+                                className="absolute right-0 bottom-0 left-0 h-7 bg-[#006b3c] bg-[radial-gradient(ellipse_50%_62%_at_50%_0,#fff_98%,transparent_100%)] bg-[length:96px_28px] bg-repeat-x sm:bg-[length:112px_28px] lg:bg-[length:128px_28px]"
                             />
                         </section>
 
                         <section
                             id="story"
-                            className="relative z-10 h-fit rounded-b-[32px] bg-[#064b32] px-6 py-24 text-[#fff7e8] md:rounded-b-[42px] md:px-12 md:py-28 lg:px-20 lg:py-32"
+                            className="relative z-10 h-fit rounded-b-[32px] bg-[#006b3c] px-6 py-24 text-white md:rounded-b-[42px] md:px-12 md:py-28 lg:px-20 lg:py-32"
                         >
                             <div className="mx-auto grid max-w-[930px] items-center gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
                                 <div className="relative mx-auto h-[590px] w-full max-w-[350px] sm:h-[670px]">
-                                    <div className="absolute -top-5 -left-5 h-full w-full rounded-[24px] border border-[#fff7e8]/30" />
+                                    <div className="absolute -top-5 -left-5 h-full w-full rounded-[24px] border border-white/30" />
                                     <ProgressiveImage
                                         src={LoyaltyMobile}
                                         alt="Bigoli loyalty rewards on a mobile phone"
-                                        className="relative h-full w-full rounded-[24px] bg-[#b9b2a2] shadow-[0_22px_45px_rgba(0,0,0,0.22)]"
+                                        className="relative h-full w-full rounded-[24px] bg-[#d9d9d9] shadow-[0_22px_45px_rgba(0,0,0,0.22)]"
                                         imageClassName="object-cover"
                                         loading="lazy"
                                         decoding="async"
                                     />
-                                    <span className="absolute -right-7 -bottom-7 grid h-20 w-20 rotate-6 place-items-center rounded-full bg-[#f2aa24] text-xs font-black tracking-widest text-[#064b32] uppercase shadow-lg">
+                                    <span className="absolute -right-7 -bottom-7 grid h-20 w-20 rotate-6 place-items-center rounded-full bg-[#b3262d] text-xs font-black tracking-widest text-white uppercase shadow-lg">
                                         +1 Stamp
                                     </span>
                                 </div>
 
                                 <div className="text-center lg:text-left">
-                                    <p className="mb-3 text-[10px] font-semibold tracking-[0.28em] text-[#f2aa24] uppercase">
+                                    <p className="mb-3 text-[10px] font-semibold tracking-[0.28em] text-white uppercase">
                                         Good food. Great rewards.
                                     </p>
                                     <h2
@@ -261,7 +261,7 @@ export default function Welcome() {
                                     >
                                         Loyalty Program
                                     </h2>
-                                    <div className="mx-auto mt-8 max-w-[510px] space-y-5 text-sm leading-7 text-[#fff7e8]/82 lg:mx-0">
+                                    <div className="mx-auto mt-8 max-w-[510px] space-y-5 text-sm leading-7 text-white/85 lg:mx-0">
                                         <p>
                                             Every meal at Bigoli can bring you
                                             closer to something delicious. Join
@@ -278,7 +278,7 @@ export default function Welcome() {
                                     </div>
                                     <a
                                         href="#details"
-                                        className="mt-9 inline-flex items-center gap-2 border-b border-[#f2aa24] pb-1 text-[11px] font-bold tracking-[0.16em] text-[#f2aa24] uppercase"
+                                        className="mt-9 inline-flex items-center gap-2 border-b border-white pb-1 text-[11px] font-bold tracking-[0.16em] text-white uppercase"
                                     >
                                         How it works <ArrowUpRight size={14} />
                                     </a>
@@ -293,16 +293,16 @@ export default function Welcome() {
                             <div className="mx-auto max-w-[930px]">
                                 <div className="grid gap-10 sm:gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-24">
                                     <div>
-                                        <p className="mb-3 text-[10px] font-bold tracking-[0.25em] text-[#e24a32] uppercase">
+                                        <p className="mb-3 text-[10px] font-bold tracking-[0.25em] text-[#8f1d24] uppercase">
                                             Loyalty Program
                                         </p>
                                         <h2
-                                            className="text-6xl leading-none font-normal text-[#164d38] sm:text-7xl"
+                                            className="text-6xl leading-none font-normal text-[#2b2b2b] sm:text-7xl"
                                             style={titleFont}
                                         >
                                             <Link
                                                 href="/customer/register"
-                                                className="group inline-flex items-center gap-3 rounded-sm focus-visible:ring-2 focus-visible:ring-[#e24a32] focus-visible:ring-offset-4 focus-visible:outline-none"
+                                                className="group inline-flex items-center gap-3 rounded-sm focus-visible:ring-2 focus-visible:ring-[#b3262d] focus-visible:ring-offset-4 focus-visible:outline-none"
                                             >
                                                 Join Now
                                                 <ArrowUpRight className="h-8 w-8 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 sm:h-9 sm:w-9" />
@@ -310,7 +310,7 @@ export default function Welcome() {
                                         </h2>
                                     </div>
 
-                                    <dl className="divide-y divide-[#164d38]/25 border-y border-[#164d38]/25 text-xs uppercase">
+                                    <dl className="divide-y divide-[#2b2b2b]/25 border-y border-[#2b2b2b]/25 text-xs text-[#2b2b2b] uppercase">
                                         {[
                                             [
                                                 'First Step',
@@ -333,7 +333,7 @@ export default function Welcome() {
                                                 key={term}
                                                 className="grid gap-1.5 py-4 sm:grid-cols-[8rem_minmax(0,1fr)] sm:items-center sm:gap-8"
                                             >
-                                                <dt className="text-[11px] font-medium tracking-[0.08em] text-[#164d38]/65">
+                                                <dt className="text-[11px] font-medium tracking-[0.08em] text-[#2b2b2b]/65">
                                                     {term}
                                                 </dt>
                                                 <dd className="text-left leading-5 font-semibold normal-case sm:text-right">
@@ -366,18 +366,18 @@ export default function Welcome() {
 
                             <div
                                 aria-hidden="true"
-                                className="absolute bottom-12 left-10 hidden h-24 w-24 -rotate-12 rounded-[60%_15%_60%_15%] border-[5px] border-[#f2aa24] opacity-90 lg:block"
+                                className="absolute bottom-12 left-10 hidden h-24 w-24 -rotate-12 rounded-[60%_15%_60%_15%] border-[5px] border-[#b3262d] opacity-90 lg:block"
                             >
-                                <div className="absolute inset-[13px] rounded-[60%_15%_60%_15%] border-[3px] border-[#f2aa24]" />
-                                <div className="absolute top-1/2 left-1/2 h-[3px] w-[62px] -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[#f2aa24]" />
-                                <div className="absolute top-1/2 left-1/2 h-[3px] w-[62px] -translate-x-1/2 -translate-y-1/2 -rotate-45 bg-[#f2aa24]" />
+                                <div className="absolute inset-[13px] rounded-[60%_15%_60%_15%] border-[3px] border-[#b3262d]" />
+                                <div className="absolute top-1/2 left-1/2 h-[3px] w-[62px] -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[#b3262d]" />
+                                <div className="absolute top-1/2 left-1/2 h-[3px] w-[62px] -translate-x-1/2 -translate-y-1/2 -rotate-45 bg-[#b3262d]" />
                             </div>
                         </section>
                     </main>
 
-                    <footer className="flex flex-col items-center justify-between gap-4 border-t border-[#164d38]/15 px-6 py-7 text-[10px] font-semibold tracking-[0.16em] text-[#164d38]/60 uppercase sm:flex-row md:px-12 lg:px-20">
+                    <footer className="flex flex-col items-center justify-between gap-4 border-t border-[#2b2b2b]/15 px-6 py-7 text-[10px] font-semibold tracking-[0.16em] text-[#2b2b2b]/65 uppercase sm:flex-row md:px-12 lg:px-20">
                         <p>© 2026 Bigoli. All rights reserved.</p>
-                        <a href="#intro" className="hover:text-[#e24a32]">
+                        <a href="#intro" className="hover:text-[#8f1d24]">
                             Back to top ↑
                         </a>
                     </footer>
