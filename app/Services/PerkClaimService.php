@@ -13,7 +13,16 @@ class PerkClaimService
         $status = $filters['status'] ?? null;
         $claims = $this->forBusiness($businessId);
 
-        $perkClaims = (clone $claims)
+        $filteredClaims = (clone $claims)
+            ->when($search, fn (Builder $query, string $term) => $query->where(function (Builder $claims) use ($term) {
+                $claims->whereHas('customer', fn (Builder $customers) => $customers
+                    ->where('username', 'like', "%{$term}%")
+                    ->orWhere('email', 'like', "%{$term}%"))
+                    ->orWhereHas('perk', fn (Builder $perks) => $perks->where('reward', 'like', "%{$term}%"))
+                    ->orWhereHas('loyalty_card', fn (Builder $cards) => $cards->where('name', 'like', "%{$term}%"));
+            }));
+
+        $perkClaims = (clone $filteredClaims)
             ->with([
                 'customer:id,username,email',
                 'perk:id,reward,details,stampNumber',
@@ -21,20 +30,13 @@ class PerkClaimService
                 'redeemed_by:id,username',
                 'redeemed_by_staff:id,username',
             ])
-            ->when($search, fn (Builder $query, string $term) => $query->where(function (Builder $claims) use ($term) {
-                $claims->whereHas('customer', fn (Builder $customers) => $customers
-                    ->where('username', 'like', "%{$term}%")
-                    ->orWhere('email', 'like', "%{$term}%"))
-                    ->orWhereHas('perk', fn (Builder $perks) => $perks->where('reward', 'like', "%{$term}%"))
-                    ->orWhereHas('loyalty_card', fn (Builder $cards) => $cards->where('name', 'like', "%{$term}%"));
-            }))
             ->when($status === 'available', fn (Builder $query) => $query->where('is_redeemed', false))
             ->when($status === 'redeemed', fn (Builder $query) => $query->where('is_redeemed', true))
             ->latest()
             ->paginate(10)
             ->withQueryString();
 
-        $stats = (clone $claims)
+        $stats = (clone $filteredClaims)
             ->selectRaw('COUNT(*) as total, COALESCE(SUM(CASE WHEN is_redeemed = 0 THEN 1 ELSE 0 END), 0) as available, COALESCE(SUM(CASE WHEN is_redeemed = 1 THEN 1 ELSE 0 END), 0) as redeemed')
             ->first();
 

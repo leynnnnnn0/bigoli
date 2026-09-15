@@ -5,6 +5,7 @@ use App\Models\Business;
 use App\Models\Customer;
 use App\Models\LoyaltyCard;
 use App\Models\Perk;
+use App\Models\PerkClaim;
 use App\Models\StampCode;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -188,6 +189,42 @@ test('customer details show date of birth and phone number', function () {
             ->component('Business/Customer/Show')
             ->where('customer.date_of_birth', '1995-06-15')
             ->where('customer.phone_number', '+63 912 345 6789'));
+});
+
+test('perk claim summary reflects the searched customer', function () {
+    [$business, $owner] = requirementOwner();
+    $card = LoyaltyCard::factory()->for($business)->create();
+    $perk = Perk::factory()->for($card, 'loyaltyCard')->create();
+    $jashreil = Customer::factory()->for($business)->create(['username' => 'Jashreil']);
+    $otherCustomer = Customer::factory()->for($business)->create(['username' => 'SomeoneElse']);
+
+    PerkClaim::factory()->create([
+        'customer_id' => $jashreil->id,
+        'loyalty_card_id' => $card->id,
+        'perk_id' => $perk->id,
+        'is_redeemed' => false,
+    ]);
+    PerkClaim::factory()->create([
+        'customer_id' => $jashreil->id,
+        'loyalty_card_id' => $card->id,
+        'perk_id' => $perk->id,
+        'is_redeemed' => true,
+    ]);
+    PerkClaim::factory()->create([
+        'customer_id' => $otherCustomer->id,
+        'loyalty_card_id' => $card->id,
+        'perk_id' => $perk->id,
+        'is_redeemed' => true,
+    ]);
+
+    $this->actingAs($owner)
+        ->get('/business/perk-claims?search=Jashreil&status=available')
+        ->assertInertia(fn (Assert $page) => $page
+            ->has('perkClaims.data', 1)
+            ->where('perkClaims.data.0.customer.username', 'Jashreil')
+            ->where('stats.total', 2)
+            ->where('stats.available', 1)
+            ->where('stats.redeemed', 1));
 });
 
 test('B-07 blocks branch deletion when soft-deleted stamp history remains linked', function () {
