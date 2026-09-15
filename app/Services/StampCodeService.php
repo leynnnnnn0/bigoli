@@ -34,7 +34,7 @@ class StampCodeService
             ->where(fn (Builder $query) => $query->where('is_offline_code', false)->orWhereNotNull('used_at'))
             ->when($filters['search'] ?? null, fn (Builder $query, string $term) => $query->where(function (Builder $codes) use ($term) {
                 $codes->where('code', 'like', "%{$term}%")
-                    ->orWhere('reference_number', 'like', "%{$term}%")
+                    ->orWhere('transaction_number', 'like', "%{$term}%")
                     ->orWhereHas('customer', fn (Builder $customers) => $customers
                         ->where('username', 'like', "%{$term}%")
                         ->orWhere('email', 'like', "%{$term}%"));
@@ -110,6 +110,7 @@ class StampCodeService
             if (! $card || ($branchId && $card->branches()->exists() && ! $card->branches()->whereKey($branchId)->exists())) {
                 throw ValidationException::withMessages(['loyalty_card_id' => 'Please select a valid loyalty card.']);
             }
+            $this->ensureMinimumAmountSpent($card, $input['amount_spent']);
 
             $stampCode = StampCode::create([
                 'user_id' => $userId,
@@ -117,7 +118,8 @@ class StampCodeService
                 'customer_id' => $customer->id,
                 'loyalty_card_id' => $card->id,
                 'branch_id' => $branchId,
-                'reference_number' => $input['reference_number'],
+                'transaction_number' => $input['transaction_number'],
+                'amount_spent' => $input['amount_spent'],
                 'code' => $this->scanCode(),
                 'used_at' => now(),
                 'is_expired' => false,
@@ -144,15 +146,26 @@ class StampCodeService
             if (! $card || ($card->branches()->exists() && ! $card->branches()->whereKey($staff->branch_id)->exists())) {
                 throw ValidationException::withMessages(['loyalty_card_id' => 'Please select a valid loyalty card.']);
             }
+            $this->ensureMinimumAmountSpent($card, $input['amount_spent']);
 
             $stampCode = StampCode::create([
                 'staff_id' => $staff->id, 'business_id' => $business->id, 'customer_id' => $customer->id,
-                'loyalty_card_id' => $card->id, 'branch_id' => $staff->branch_id, 'reference_number' => $input['reference_number'],
-                'code' => $this->scanCode(), 'used_at' => now(), 'is_expired' => false, 'is_offline_code' => false,
+                'loyalty_card_id' => $card->id, 'branch_id' => $staff->branch_id, 'transaction_number' => $input['transaction_number'],
+                'amount_spent' => $input['amount_spent'], 'code' => $this->scanCode(), 'used_at' => now(),
+                'is_expired' => false, 'is_offline_code' => false,
             ]);
 
             return $loyaltyStamps->apply($stampCode, $customer->id);
         }, 3);
+    }
+
+    private function ensureMinimumAmountSpent(LoyaltyCard $card, float|int|string $amountSpent): void
+    {
+        if ((float) $amountSpent < (float) $card->minimum_amount_spent) {
+            throw ValidationException::withMessages([
+                'amount_spent' => 'Minimum amount spent should be '.number_format((float) $card->minimum_amount_spent, 2).' to generate a stamp.',
+            ]);
+        }
     }
 
     private function customerFromQrPayload(string $payload): ?Customer

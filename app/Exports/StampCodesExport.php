@@ -23,7 +23,9 @@ class StampCodesExport implements FromQuery, ShouldAutoSize, WithHeadings, WithM
     {
         return [
             'Code',
-            'Reference Number',
+            'Transaction Number',
+            'Amount Spent',
+            'Customer Rating',
             'Loyalty Card',
             'Branch',
             'Customer Username',
@@ -42,7 +44,13 @@ class StampCodesExport implements FromQuery, ShouldAutoSize, WithHeadings, WithM
 
         return [
             $row->code,
-            $row->reference_number ?? 'N/A',
+            $row->transaction_number ?? 'N/A',
+            $row->amount_spent,
+            match ($row->customer_rating) {
+                true => 'Thumbs up',
+                false => 'Thumbs down',
+                default => 'Not rated',
+            },
             $row->loyalty_card?->name ?? 'N/A',
             $row->branch?->name ?? 'N/A',
             $row->customer?->username ?? 'Unassigned',

@@ -18,6 +18,7 @@ export interface CardTemplateFormData {
     valid_until: string;
     subheading: string;
     stampsNeeded: number;
+    minimum_amount_spent: number;
     mechanics: string;
     backgroundColor: string;
     textColor: string;
@@ -41,10 +42,7 @@ export interface CardTemplateRecord
     branches?: BranchOption[];
 }
 
-export type CardTemplateImageField =
-    | 'logo'
-    | 'stampImage'
-    | 'backgroundImage';
+export type CardTemplateImageField = 'logo' | 'stampImage' | 'backgroundImage';
 
 export type CardTemplatePerkField = keyof Pick<
     CardTemplatePerk,
@@ -58,6 +56,7 @@ export const DEFAULT_CARD_TEMPLATE_FORM: CardTemplateFormData = {
     valid_until: '',
     subheading: 'Collect stamps and earn rewards!',
     stampsNeeded: 10,
+    minimum_amount_spent: 0,
     mechanics: 'Get 1 stamp per purchase. Collect stamps to unlock rewards!',
     backgroundColor: '#4DB6AC',
     textColor: '#FFFFFF',
@@ -104,17 +103,18 @@ export function buildCardTemplateForm(
         heading: cardTemplate.heading || DEFAULT_CARD_TEMPLATE_FORM.heading,
         valid_until: cardTemplate.valid_until || '',
         subheading:
-            cardTemplate.subheading ||
-            DEFAULT_CARD_TEMPLATE_FORM.subheading,
+            cardTemplate.subheading || DEFAULT_CARD_TEMPLATE_FORM.subheading,
         stampsNeeded:
             cardTemplate.stampsNeeded ||
             DEFAULT_CARD_TEMPLATE_FORM.stampsNeeded,
+        minimum_amount_spent: Number(cardTemplate.minimum_amount_spent ?? 0),
         mechanics:
             cardTemplate.mechanics || DEFAULT_CARD_TEMPLATE_FORM.mechanics,
         backgroundColor:
             cardTemplate.backgroundColor ||
             DEFAULT_CARD_TEMPLATE_FORM.backgroundColor,
-        textColor: cardTemplate.textColor || DEFAULT_CARD_TEMPLATE_FORM.textColor,
+        textColor:
+            cardTemplate.textColor || DEFAULT_CARD_TEMPLATE_FORM.textColor,
         stampColor:
             cardTemplate.stampColor || DEFAULT_CARD_TEMPLATE_FORM.stampColor,
         stampFilledColor:

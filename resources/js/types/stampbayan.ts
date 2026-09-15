@@ -7,6 +7,7 @@ export interface LoyaltyCardOption {
     id: number;
     name: string;
     logo?: string | null;
+    minimum_amount_spent: number | string;
 }
 
 export interface Perk {
@@ -62,7 +63,8 @@ export interface StampCodeRecord {
         email: string;
     } | null;
     branch?: BranchOption | null;
-    reference_number?: string | null;
+    transaction_number?: string | null;
+    amount_spent: number | string;
     used_at: string | null;
     created_at: string;
     loyalty_card: {

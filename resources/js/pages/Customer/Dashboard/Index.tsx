@@ -34,6 +34,8 @@ import {
     ShoppingCart,
     Sparkles,
     Trophy,
+    ThumbsDown,
+    ThumbsUp,
     Type,
     User,
 } from 'lucide-react';
@@ -144,6 +146,10 @@ interface Props {
         username: string;
     };
     customerQrSvg: string;
+    pendingStampRating: {
+        id: number;
+        loyalty_card_name: string;
+    } | null;
 }
 
 export default function Index({
@@ -154,6 +160,7 @@ export default function Index({
     perkClaims,
     customer,
     customerQrSvg,
+    pendingStampRating,
 }: Props) {
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
     const [activeTab, setActiveTab] = useState('home');
@@ -172,6 +179,30 @@ export default function Index({
 
     const [profileDialogOpen, setProfileDialogOpen] = useState(false);
     const [profileTab, setProfileTab] = useState('info');
+    const [ratingPrompt, setRatingPrompt] = useState(pendingStampRating);
+    const [ratingSubmitting, setRatingSubmitting] = useState(false);
+
+    useEffect(() => {
+        setRatingPrompt(pendingStampRating);
+    }, [pendingStampRating?.id]);
+
+    const submitStampRating = (rating: 'up' | 'down' | null) => {
+        if (!ratingPrompt || ratingSubmitting) return;
+
+        setRatingSubmitting(true);
+        router.post(
+            `/customer/stamps/${ratingPrompt.id}/rating`,
+            { rating },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    if (rating) toast.success('Thanks for your feedback!');
+                },
+                onError: () => toast.error('Unable to save your feedback.'),
+                onFinish: () => setRatingSubmitting(false),
+            },
+        );
+    };
 
     const {
         data: profileData,
@@ -911,10 +942,65 @@ export default function Index({
         </Dialog>
     );
 
+    const stampRatingDialog = (
+        <Dialog
+            open={!!ratingPrompt}
+            onOpenChange={(open) => {
+                if (!open) submitStampRating(null);
+            }}
+        >
+            <DialogContent className="max-w-sm text-center">
+                <DialogHeader>
+                    <DialogTitle className="text-center">
+                        How was your stamp experience?
+                    </DialogTitle>
+                    <DialogDescription className="text-center">
+                        You received a stamp for{' '}
+                        <span className="font-medium text-foreground">
+                            {ratingPrompt?.loyalty_card_name}
+                        </span>
+                        . Your feedback is optional.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid grid-cols-2 gap-4 py-3">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        disabled={ratingSubmitting}
+                        onClick={() => submitStampRating('down')}
+                        className="h-20 flex-col gap-2 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                    >
+                        <ThumbsDown className="h-7 w-7" />
+                        Thumbs down
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        disabled={ratingSubmitting}
+                        onClick={() => submitStampRating('up')}
+                        className="h-20 flex-col gap-2 border-green-200 text-green-600 hover:bg-green-50 hover:text-green-700"
+                    >
+                        <ThumbsUp className="h-7 w-7" />
+                        Thumbs up
+                    </Button>
+                </div>
+                <button
+                    type="button"
+                    disabled={ratingSubmitting}
+                    onClick={() => submitStampRating(null)}
+                    className="text-sm text-muted-foreground hover:text-foreground hover:underline disabled:opacity-50"
+                >
+                    Skip for now
+                </button>
+            </DialogContent>
+        </Dialog>
+    );
+
     if (!cardTemplates || cardTemplates.length === 0) {
         return (
             <div className="min-h-screen bg-gray-50">
                 {profileDialog}
+                {stampRatingDialog}
                 <header className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
                     <img src={LOGO} alt="business logo" className="h-10" />
                     <DropdownMenu>
@@ -959,6 +1045,7 @@ export default function Index({
     return (
         <div className="flex min-h-screen flex-col bg-gray-50">
             {profileDialog}
+            {stampRatingDialog}
 
             {/* ── DESKTOP HEADER (hidden on mobile) ── */}
             <header className="hidden items-center justify-between border-b border-gray-200 bg-white px-6 py-4 shadow-sm sm:flex">

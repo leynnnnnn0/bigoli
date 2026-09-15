@@ -23,6 +23,7 @@ function validCardRequest(array $overrides = []): array
         'subheading' => 'Earn rewards',
         'valid_until' => now()->addYear()->toDateString(),
         'stampsNeeded' => 5,
+        'minimum_amount_spent' => 0,
         'mechanics' => 'Collect five stamps.',
         'stampShape' => 'circle',
         'perks' => [],
@@ -30,15 +31,36 @@ function validCardRequest(array $overrides = []): array
     ], $overrides);
 }
 
-test('IS-03 requires a reference number whenever an online stamp code is requested', function () {
+test('IS-03 requires a transaction number whenever an online stamp code is requested', function () {
     [$business, $owner] = requirementOwner();
     $card = LoyaltyCard::factory()->for($business)->create();
 
     $this->actingAs($owner)
         ->get("/business/issue-stamp?loyalty_card_id={$card->id}")
-        ->assertSessionHasErrors('reference_number');
+        ->assertSessionHasErrors('transaction_number');
 
     expect($business->stampCodes()->count())->toBe(0);
+});
+
+test('admin stamp generation enforces and records the loyalty card minimum spend', function () {
+    [$business, $owner] = requirementOwner();
+    $card = LoyaltyCard::factory()->for($business)->create(['minimum_amount_spent' => 500]);
+
+    $this->actingAs($owner)
+        ->get("/business/issue-stamp?loyalty_card_id={$card->id}&transaction_number=TX-LOW&amount_spent=499")
+        ->assertSessionHasErrors([
+            'amount_spent' => 'Minimum amount spent should be 500.00 to generate a stamp.',
+        ]);
+
+    $this->actingAs($owner)
+        ->get("/business/issue-stamp?loyalty_card_id={$card->id}&transaction_number=TX-OK&amount_spent=500")
+        ->assertOk();
+
+    $this->assertDatabaseHas('stamp_codes', [
+        'loyalty_card_id' => $card->id,
+        'transaction_number' => 'TX-OK',
+        'amount_spent' => 500,
+    ]);
 });
 
 test('online stamp codes do not expire and remain redeemable until used', function () {
@@ -87,6 +109,24 @@ test('LC-03 creates a card when optional perk color is omitted', function () {
     $card = $business->loyaltyCards()->where('name', 'Regression Card')->firstOrFail();
     expect($card->perks)->toHaveCount(1)
         ->and($card->perks->first()->color)->toBe('#000000');
+});
+
+test('loyalty card create and edit persist the minimum amount spent', function () {
+    [$business, $owner] = requirementOwner();
+
+    $this->actingAs($owner)->post('/business/card-templates', validCardRequest([
+        'minimum_amount_spent' => 500,
+    ]))->assertRedirect();
+
+    $card = $business->loyaltyCards()->where('name', 'Regression Card')->firstOrFail();
+    expect($card->minimum_amount_spent)->toBe('500.00');
+
+    $this->actingAs($owner)->put("/business/card-templates/{$card->id}", validCardRequest([
+        'name' => $card->name,
+        'minimum_amount_spent' => 750,
+    ]))->assertRedirect();
+
+    expect($card->fresh()->minimum_amount_spent)->toBe('750.00');
 });
 
 test('LC-09 preserves an existing perk color when an edit omits the optional color', function () {

@@ -1,20 +1,8 @@
-import { useState } from 'react';
-import { CardTemplateStampShape } from '@/components/card-template-stamp-shape';
 import type { CardTemplateStampShapeProps } from '@/components/card-template-stamp-shape';
+import { CardTemplateStampShape } from '@/components/card-template-stamp-shape';
 import ModuleHeading from '@/components/module-heading';
-import AppLayout from '@/layouts/app-layout';
-import {
-    buildCardTemplateForm,
-    CardTemplateImageField,
-    CardTemplatePerkField,
-    StampShapeType,
-} from '@/types/card-template';
-import type {
-    CardTemplateFormData,
-    CardTemplateRecord,
-} from '@/types/card-template';
-import type { BranchOption } from '@/types/stampbayan';
-import { Head, useForm } from '@inertiajs/react';
+import { MultiSelect } from '@/components/multi-select';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -26,9 +14,6 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
     Card,
     CardContent,
@@ -36,6 +21,8 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
@@ -44,18 +31,31 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { toast } from 'sonner';
+import { Textarea } from '@/components/ui/textarea';
+import AppLayout from '@/layouts/app-layout';
+import type {
+    CardTemplateFormData,
+    CardTemplateRecord,
+} from '@/types/card-template';
 import {
+    buildCardTemplateForm,
+    CardTemplateImageField,
+    CardTemplatePerkField,
+    StampShapeType,
+} from '@/types/card-template';
+import type { BranchOption } from '@/types/stampbayan';
+import { Head, useForm } from '@inertiajs/react';
+import {
+    AlertTriangle,
     ImageIcon,
+    LucideMessageCircleWarning,
+    MapPin,
     Plus,
     Sparkles,
     Trash2,
-    LucideMessageCircleWarning,
-    AlertTriangle,
-    MapPin,
 } from 'lucide-react';
-import { MultiSelect } from '@/components/multi-select';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function Edit({
     cardTemplate,
@@ -572,30 +572,61 @@ export default function Edit({
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent className="space-y-4">
-                                        <div className="space-y-2">
-                                            <Label className="text-sm md:text-base">
-                                                Total Stamps Needed
-                                            </Label>
-                                            <Input
-                                                type="number"
-                                                min="2"
-                                                max="20"
-                                                value={data.stampsNeeded}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        'stampsNeeded',
-                                                        parseInt(
-                                                            e.target.value,
-                                                        ),
-                                                    )
-                                                }
-                                                className="text-xs md:text-sm"
-                                            />
-                                            {errors.stampsNeeded && (
-                                                <p className="text-xs text-red-500 md:text-sm">
-                                                    {errors.stampsNeeded}
-                                                </p>
-                                            )}
+                                        <div className="grid gap-4 sm:grid-cols-2">
+                                            <div className="space-y-2">
+                                                <Label className="text-sm md:text-base">
+                                                    Total Stamps Needed
+                                                </Label>
+                                                <Input
+                                                    type="number"
+                                                    min="2"
+                                                    max="20"
+                                                    value={data.stampsNeeded}
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            'stampsNeeded',
+                                                            parseInt(
+                                                                e.target.value,
+                                                            ),
+                                                        )
+                                                    }
+                                                    className="text-xs md:text-sm"
+                                                />
+                                                {errors.stampsNeeded && (
+                                                    <p className="text-xs text-red-500 md:text-sm">
+                                                        {errors.stampsNeeded}
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label className="text-sm md:text-base">
+                                                    Minimum Amount Spent
+                                                </Label>
+                                                <Input
+                                                    type="number"
+                                                    min="0"
+                                                    step="0.01"
+                                                    value={
+                                                        data.minimum_amount_spent
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            'minimum_amount_spent',
+                                                            Number(
+                                                                e.target.value,
+                                                            ),
+                                                        )
+                                                    }
+                                                    className="text-xs md:text-sm"
+                                                />
+                                                {errors.minimum_amount_spent && (
+                                                    <p className="text-xs text-red-500 md:text-sm">
+                                                        {
+                                                            errors.minimum_amount_spent
+                                                        }
+                                                    </p>
+                                                )}
+                                            </div>
                                         </div>
 
                                         <div className="space-y-4">
@@ -622,10 +653,23 @@ export default function Edit({
                                                     <CardContent className="pt-4 md:pt-6">
                                                         {perk.claims_exists && (
                                                             <p className="mb-3 text-sm text-muted-foreground">
-                                                                This perk has already been earned and cannot be edited or removed. This protects customers’ rewards and redemption history.
+                                                                This perk has
+                                                                already been
+                                                                earned and
+                                                                cannot be edited
+                                                                or removed. This
+                                                                protects
+                                                                customers’
+                                                                rewards and
+                                                                redemption
+                                                                history.
                                                             </p>
                                                         )}
-                                                        <fieldset disabled={perk.claims_exists}>
+                                                        <fieldset
+                                                            disabled={
+                                                                perk.claims_exists
+                                                            }
+                                                        >
                                                             <div className="grid grid-cols-12 items-end gap-2 md:gap-4">
                                                                 <div className="col-span-3">
                                                                     <Label className="text-xs md:text-sm">
@@ -729,11 +773,14 @@ export default function Edit({
                                                                         perk.details ??
                                                                         ''
                                                                     }
-                                                                    onChange={(e) =>
+                                                                    onChange={(
+                                                                        e,
+                                                                    ) =>
                                                                         updatePerk(
                                                                             index,
                                                                             'details',
-                                                                            e.target
+                                                                            e
+                                                                                .target
                                                                                 .value,
                                                                         )
                                                                     }
@@ -1197,7 +1244,6 @@ export default function Edit({
                         {processing ? 'Updating...' : 'Update Template'}
                     </Button>
                 </div>
-
             </form>
 
             <AlertDialog

@@ -31,7 +31,23 @@ class CustomerDashboardService
             'perkClaims' => PerkClaim::where('customer_id', $customer->id)->with('perk', 'loyalty_card')->latest()->get(),
             'customer' => $customer,
             'customerQrSvg' => $this->customerQrSvg($customer->id, $customer->business_id),
+            'pendingStampRating' => $this->pendingStampRating($customer),
         ];
+    }
+
+    public function rateStamp(Customer $customer, int $stampCodeId, ?string $rating): void
+    {
+        $stamp = StampCode::withTrashed()
+            ->where('customer_id', $customer->id)
+            ->whereNotNull('used_at')
+            ->whereNull('customer_rating')
+            ->whereNull('rating_dismissed_at')
+            ->findOrFail($stampCodeId);
+
+        $stamp->forceFill($rating === null
+            ? ['rating_dismissed_at' => now()]
+            : ['customer_rating' => $rating === 'up'])
+            ->save();
     }
 
     public function updateProfile(Customer $customer, array $data): void
@@ -52,9 +68,26 @@ class CustomerDashboardService
     private function customerQrSvg(int $customerId, int $businessId): string
     {
         $signature = substr(hash_hmac('sha256', "{$customerId}|{$businessId}", config('app.key')), 0, 24);
-        $renderer = new ImageRenderer(new RendererStyle(260), new SvgImageBackEnd());
+        $renderer = new ImageRenderer(new RendererStyle(260), new SvgImageBackEnd);
 
         return (new Writer($renderer))->writeString("stampbayan:customer:{$customerId}:{$businessId}:{$signature}");
+    }
+
+    private function pendingStampRating(Customer $customer): ?array
+    {
+        $stamp = StampCode::withTrashed()
+            ->where('customer_id', $customer->id)
+            ->whereNotNull('used_at')
+            ->whereNull('customer_rating')
+            ->whereNull('rating_dismissed_at')
+            ->with('loyalty_card:id,name')
+            ->latest('used_at')
+            ->first();
+
+        return $stamp ? [
+            'id' => $stamp->id,
+            'loyalty_card_name' => $stamp->loyalty_card->name,
+        ] : null;
     }
 
     private function greeting(): string

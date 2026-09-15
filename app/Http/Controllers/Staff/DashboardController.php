@@ -26,7 +26,8 @@ class DashboardController extends Controller
         if (is_array($generatedCode)) {
             $input['loyalty_card_id'] = $generatedCode['loyalty_card_id'];
             $input['branch_id'] = $generatedCode['branch_id'];
-            $input['reference_number'] = $generatedCode['reference_number'];
+            $input['transaction_number'] = $generatedCode['transaction_number'];
+            $input['amount_spent'] = $generatedCode['amount_spent'];
         }
 
         $data = $dashboard->data(

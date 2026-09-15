@@ -500,28 +500,53 @@ export default function Create({ branches = [] }: { branches?: BranchOption[] })
                                       </CardDescription>
                                   </CardHeader>
                                   <CardContent className="space-y-4">
-                                      <div className="space-y-2">
-                                          <Label className="text-sm md:text-base">
-                                              Total Stamps Needed
-                                          </Label>
-                                          <Input
-                                              type="number"
-                                              min="2"
-                                              max="20"
-                                              value={data.stampsNeeded}
-                                              onChange={(e) =>
-                                                  setData(
-                                                      'stampsNeeded',
-                                                      parseInt(e.target.value),
-                                                  )
-                                              }
-                                              className="text-xs md:text-sm"
-                                          />
-                                          {errors.stampsNeeded && (
-                                              <p className="text-xs text-red-500 md:text-sm">
-                                                  {errors.stampsNeeded}
-                                              </p>
-                                          )}
+                                      <div className="grid gap-4 sm:grid-cols-2">
+                                          <div className="space-y-2">
+                                              <Label className="text-sm md:text-base">
+                                                  Total Stamps Needed
+                                              </Label>
+                                              <Input
+                                                  type="number"
+                                                  min="2"
+                                                  max="20"
+                                                  value={data.stampsNeeded}
+                                                  onChange={(e) =>
+                                                      setData(
+                                                          'stampsNeeded',
+                                                          parseInt(e.target.value),
+                                                      )
+                                                  }
+                                                  className="text-xs md:text-sm"
+                                              />
+                                              {errors.stampsNeeded && (
+                                                  <p className="text-xs text-red-500 md:text-sm">
+                                                      {errors.stampsNeeded}
+                                                  </p>
+                                              )}
+                                          </div>
+                                          <div className="space-y-2">
+                                              <Label className="text-sm md:text-base">
+                                                  Minimum Amount Spent
+                                              </Label>
+                                              <Input
+                                                  type="number"
+                                                  min="0"
+                                                  step="0.01"
+                                                  value={data.minimum_amount_spent}
+                                                  onChange={(e) =>
+                                                      setData(
+                                                          'minimum_amount_spent',
+                                                          Number(e.target.value),
+                                                      )
+                                                  }
+                                                  className="text-xs md:text-sm"
+                                              />
+                                              {errors.minimum_amount_spent && (
+                                                  <p className="text-xs text-red-500 md:text-sm">
+                                                      {errors.minimum_amount_spent}
+                                                  </p>
+                                              )}
+                                          </div>
                                       </div>
 
                                       <div className="space-y-4">

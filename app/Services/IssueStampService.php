@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\Staff;
 use App\Models\StampCode;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class IssueStampService
 {
@@ -16,10 +17,10 @@ class IssueStampService
             abort_unless($business->branches()->whereKey($branchId)->exists(), 403);
         }
 
-        $cards = $this->activeCards($business, $branchId)->get(['id', 'name']);
+        $cards = $this->activeCards($business, $branchId)->get(['id', 'name', 'minimum_amount_spent']);
         $cardId = $input['loyalty_card_id'] ?? null;
         $code = $cardId && $cards->contains('id', $cardId)
-            ? $this->generate($business, $cardId, $branchId, $input['reference_number'] ?? null, $userId)
+            ? $this->generate($business, $cardId, $branchId, $input['transaction_number'] ?? null, $input['amount_spent'] ?? 0, $userId)
             : $this->emptyCode();
 
         return [
@@ -28,7 +29,8 @@ class IssueStampService
             'branches' => $business->branches()->orderBy('name')->get(['id', 'name']),
             'loyalty_card_id' => $cardId,
             'branch_id' => $branchId,
-            'reference_number' => $input['reference_number'] ?? null,
+            'transaction_number' => $input['transaction_number'] ?? null,
+            'amount_spent' => $input['amount_spent'] ?? 0,
         ];
     }
 
@@ -38,7 +40,7 @@ class IssueStampService
         $branchId = $staff->branch_id;
         abort_unless(! $branchId || ! isset($input['branch_id']) || (int) $input['branch_id'] === $branchId, 403);
 
-        $cards = $this->activeCards($business, $branchId)->get(['id', 'name', 'logo']);
+        $cards = $this->activeCards($business, $branchId)->get(['id', 'name', 'logo', 'minimum_amount_spent']);
         $cardId = $input['loyalty_card_id'] ?? null;
 
         return [
@@ -47,7 +49,8 @@ class IssueStampService
             'branches' => $business->branches()->when($branchId, fn ($query) => $query->whereKey($branchId))->get(['id', 'name']),
             'loyalty_card_id' => $cardId,
             'branch_id' => $branchId ? (string) $branchId : null,
-            'reference_number' => $input['reference_number'] ?? null,
+            'transaction_number' => $input['transaction_number'] ?? null,
+            'amount_spent' => $input['amount_spent'] ?? 0,
         ];
     }
 
@@ -65,11 +68,12 @@ class IssueStampService
         abort_unless($this->activeCards($business, $branchId)->whereKey($cardId)->exists(), 403);
 
         return array_merge(
-            $this->generate($business, $cardId, $branchId, $input['reference_number'], null, $staff->id),
+            $this->generate($business, $cardId, $branchId, $input['transaction_number'], $input['amount_spent'], null, $staff->id),
             [
                 'loyalty_card_id' => (string) $cardId,
                 'branch_id' => $branchId ? (string) $branchId : null,
-                'reference_number' => $input['reference_number'],
+                'transaction_number' => $input['transaction_number'],
+                'amount_spent' => $input['amount_spent'],
             ],
         );
     }
@@ -87,8 +91,11 @@ class IssueStampService
             );
     }
 
-    private function generate(Business $business, int $cardId, ?int $branchId, ?string $referenceNumber, ?int $userId, ?int $staffId = null): array
+    private function generate(Business $business, int $cardId, ?int $branchId, ?string $transactionNumber, float|int|string $amountSpent, ?int $userId, ?int $staffId = null): array
     {
+        $card = $business->loyaltyCards()->findOrFail($cardId);
+        $this->ensureMinimumAmountSpent($card->minimum_amount_spent, $amountSpent);
+
         $stampCode = StampCode::create([
             'user_id' => $userId,
             'staff_id' => $staffId,
@@ -97,7 +104,8 @@ class IssueStampService
             'branch_id' => $branchId,
             'code' => $this->uniqueCodes(1)[0],
             'is_expired' => false,
-            'reference_number' => $referenceNumber,
+            'transaction_number' => $transactionNumber,
+            'amount_spent' => $amountSpent,
         ]);
 
         return [
@@ -106,6 +114,15 @@ class IssueStampService
             'qr_url' => 'https://api.qrserver.com/v1/create-qr-code/?size=500x500&data='.$stampCode->code,
             'created_at' => $stampCode->created_at->format('M d, Y h:i A'),
         ];
+    }
+
+    private function ensureMinimumAmountSpent(float|int|string $minimum, float|int|string $amountSpent): void
+    {
+        if ((float) $amountSpent < (float) $minimum) {
+            throw ValidationException::withMessages([
+                'amount_spent' => 'Minimum amount spent should be '.number_format((float) $minimum, 2).' to generate a stamp.',
+            ]);
+        }
     }
 
     private function uniqueCodes(int $count): array

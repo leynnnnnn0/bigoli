@@ -27,7 +27,8 @@ function loyaltySecurityFixture(): array
     return [$business, $customer, $staff, $card, [
         'customer_qr' => "stampbayan:customer:{$customer->id}:{$business->id}:{$signature}",
         'loyalty_card_id' => $card->id,
-        'reference_number' => 'SECURITY-TEST',
+        'transaction_number' => 'SECURITY-TEST',
+        'amount_spent' => 0,
     ]];
 }
 
@@ -95,6 +96,19 @@ test('expired loyalty cards cannot receive stamps through either path', function
     $this->actingAs($staff, 'staff')->post('/staff/scan-customer', $input)->assertSessionHasErrors('loyalty_card_id');
     expect($code->fresh()->used_at)->toBeNull()
         ->and(PerkClaim::count())->toBe(0);
+});
+
+test('customer QR issuance enforces the loyalty card minimum spend for admin and staff', function () {
+    [$business, , $staff, $card, $input] = loyaltySecurityFixture();
+    $card->update(['minimum_amount_spent' => 500]);
+    $input['amount_spent'] = 499;
+    $codes = app(StampCodeService::class);
+    $loyalty = app(LoyaltyStampService::class);
+
+    expect(fn () => $codes->recordCustomerScan($business, $business->user_id, $input, $loyalty))
+        ->toThrow(ValidationException::class, 'Minimum amount spent should be 500.00 to generate a stamp.')
+        ->and(fn () => $codes->recordStaffCustomerScan($staff, $input, $loyalty))
+        ->toThrow(ValidationException::class, 'Minimum amount spent should be 500.00 to generate a stamp.');
 });
 
 test('earned perks cannot be modified removed or bypassed by deleting their card', function () {

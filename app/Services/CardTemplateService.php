@@ -82,6 +82,7 @@ class CardTemplateService
             'logo' => $this->imagePath($data, 'logo', 'card-logos', $currentImages['logo'] ?? null),
             'name' => $data['name'], 'heading' => $data['heading'], 'subheading' => $data['subheading'] ?? null,
             'stampsNeeded' => $data['stampsNeeded'], 'valid_until' => $data['valid_until'], 'mechanics' => $data['mechanics'],
+            'minimum_amount_spent' => $data['minimum_amount_spent'],
             'backgroundColor' => $data['backgroundColor'] ?? '#FFFFFF', 'textColor' => $data['textColor'] ?? '#000000',
             'stampColor' => $data['stampColor'] ?? '#FF0000', 'stampFilledColor' => $data['stampFilledColor'] ?? '#FF0000',
             'stampEmptyColor' => $data['stampEmptyColor'] ?? '#CCCCCC',

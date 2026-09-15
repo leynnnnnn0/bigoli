@@ -24,7 +24,7 @@ function staffDashboardFixtures(): array
 test('viewing or refreshing the staff dashboard does not generate a stamp code', function () {
     [, $staff, $card] = staffDashboardFixtures();
 
-    $url = "/staff/dashboard?loyalty_card_id={$card->id}&reference_number=ORDER-100";
+    $url = "/staff/dashboard?loyalty_card_id={$card->id}&transaction_number=ORDER-100";
 
     $this->actingAs($staff, 'staff')->get($url)->assertOk();
     $this->get($url)->assertOk();
@@ -37,14 +37,34 @@ test('staff code generation creates exactly one code and refresh is safe', funct
 
     $response = $this->actingAs($staff, 'staff')->post('/staff/dashboard/generate-code', [
         'loyalty_card_id' => $card->id,
-        'reference_number' => 'ORDER-101',
+        'transaction_number' => 'ORDER-101',
+        'amount_spent' => 0,
     ]);
 
     $response->assertRedirect('/staff/dashboard?tab=issue-stamp');
     $this->assertDatabaseCount('stamp_codes', 1);
+    $this->assertDatabaseHas('stamp_codes', [
+        'transaction_number' => 'ORDER-101',
+        'amount_spent' => 0,
+    ]);
 
     $this->get('/staff/dashboard?tab=issue-stamp')->assertOk();
     $this->assertDatabaseCount('stamp_codes', 1);
+});
+
+test('staff cannot generate a stamp below the loyalty card minimum spend', function () {
+    [, $staff, $card] = staffDashboardFixtures();
+    $card->update(['minimum_amount_spent' => 500]);
+
+    $this->actingAs($staff, 'staff')->post('/staff/dashboard/generate-code', [
+        'loyalty_card_id' => $card->id,
+        'transaction_number' => 'ORDER-LOW',
+        'amount_spent' => 499,
+    ])->assertSessionHasErrors([
+        'amount_spent' => 'Minimum amount spent should be 500.00 to generate a stamp.',
+    ]);
+
+    $this->assertDatabaseCount('stamp_codes', 0);
 });
 
 test('staff reward and code tabs are paginated by ten', function () {

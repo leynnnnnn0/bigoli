@@ -88,7 +88,8 @@ interface Props {
         available: number;
         redeemed: number;
     };
-    reference_number?: string;
+    transaction_number?: string;
+    amount_spent?: number | string;
     active_tab?: StaffTab;
 }
 
@@ -258,14 +259,18 @@ export default function Index({
     branches = [],
     loyalty_card_id,
     branch_id,
-    reference_number,
+    transaction_number,
+    amount_spent,
     perkClaims,
     stampCodes,
     stats,
     active_tab = 'issue-stamp',
 }: Props) {
-    const [referenceNumber, setReferenceNumber] = useState<string>(
-        reference_number ?? '',
+    const [transactionNumber, setTransactionNumber] = useState<string>(
+        transaction_number ?? '',
+    );
+    const [amountSpent, setAmountSpent] = useState<string>(
+        amount_spent?.toString() ?? '0',
     );
 
     const [loading, setLoading] = useState(false);
@@ -277,6 +282,14 @@ export default function Index({
             (cards.length > 0 ? cards[0].id.toString() : ''),
     );
     const [error, setError] = useState<string | null>(null);
+    const selectedCard = cards.find(
+        (card) => card.id.toString() === selectedCardId,
+    );
+    const minimumAmount = Number(selectedCard?.minimum_amount_spent ?? 0);
+    const amountError =
+        amountSpent !== '' && Number(amountSpent) < minimumAmount
+            ? `Minimum amount spent should be ${minimumAmount.toFixed(2)} to generate a stamp.`
+            : null;
 
     // Perk Claims state
     const [selectedClaim, setSelectedClaim] = useState<PerkClaim | null>(null);
@@ -314,8 +327,16 @@ export default function Index({
             setError('Please select a loyalty card');
             return;
         }
-        if (!referenceNumber) {
-            setError('Please enter a reference number');
+        if (!transactionNumber) {
+            setError('Please enter a transaction number');
+            return;
+        }
+        if (amountSpent === '') {
+            setError('Please enter the amount spent');
+            return;
+        }
+        if (amountError) {
+            setError(amountError);
             return;
         }
         setLoading(true);
@@ -325,11 +346,16 @@ export default function Index({
             {
                 loyalty_card_id: selectedCardId,
                 branch_id: selectedBranchId || undefined,
-                reference_number: referenceNumber,
+                transaction_number: transactionNumber,
+                amount_spent: amountSpent,
             },
             {
                 preserveScroll: true,
-                onError: () => setError('Unable to generate a stamp code.'),
+                onError: (errors) =>
+                    setError(
+                        errors.amount_spent ??
+                            'Unable to generate a stamp code.',
+                    ),
                 onFinish: () => setLoading(false),
             },
         );
@@ -534,21 +560,46 @@ export default function Index({
                                 >
                                     {branchAndCardSelectors}
 
-                                    <div>
-                                        <Label className="mb-2 block text-sm font-semibold text-gray-700">
-                                            Reference Number
-                                        </Label>
-                                        <Input
-                                            type="text"
-                                            value={referenceNumber}
-                                            onChange={(e) =>
-                                                setReferenceNumber(
-                                                    e.target.value,
-                                                )
-                                            }
-                                            placeholder="Enter receipt or order reference"
-                                            className="h-12 rounded-xl border-gray-200 bg-gray-50"
-                                        />
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <Label className="mb-2 block text-sm font-semibold text-gray-700">
+                                                Transaction Number
+                                            </Label>
+                                            <Input
+                                                type="text"
+                                                value={transactionNumber}
+                                                onChange={(e) =>
+                                                    setTransactionNumber(
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                placeholder="Receipt or order number"
+                                                className="h-12 rounded-xl border-gray-200 bg-gray-50"
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label className="mb-2 block text-sm font-semibold text-gray-700">
+                                                Amount Spent
+                                            </Label>
+                                            <Input
+                                                type="number"
+                                                min="0"
+                                                step="0.01"
+                                                value={amountSpent}
+                                                onChange={(e) =>
+                                                    setAmountSpent(
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="h-12 rounded-xl border-gray-200 bg-gray-50"
+                                                aria-invalid={!!amountError}
+                                            />
+                                            {amountError && (
+                                                <p className="mt-1 text-xs text-red-600">
+                                                    {amountError}
+                                                </p>
+                                            )}
+                                        </div>
                                     </div>
 
                                     {error && (
@@ -566,7 +617,9 @@ export default function Index({
                                             loading ||
                                             cards.length === 0 ||
                                             !selectedCardId ||
-                                            !referenceNumber
+                                            !transactionNumber ||
+                                            amountSpent === '' ||
+                                            !!amountError
                                         }
                                         className="h-12 w-full rounded-xl bg-primary text-white hover:bg-primary/80"
                                     >
@@ -579,10 +632,15 @@ export default function Index({
                                         endpoint="/staff/scan-customer"
                                         data={{
                                             loyalty_card_id: selectedCardId,
-                                            reference_number: referenceNumber,
+                                            transaction_number:
+                                                transactionNumber,
+                                            amount_spent: amountSpent,
                                         }}
                                         disabled={
-                                            !selectedCardId || !referenceNumber
+                                            !selectedCardId ||
+                                            !transactionNumber ||
+                                            amountSpent === '' ||
+                                            !!amountError
                                         }
                                     />
                                 </SectionShell>
@@ -614,21 +672,46 @@ export default function Index({
 
                                     {branchAndCardSelectors}
 
-                                    <div>
-                                        <Label className="mb-2 block text-sm font-semibold text-gray-700">
-                                            Reference Number
-                                        </Label>
-                                        <Input
-                                            type="text"
-                                            value={referenceNumber}
-                                            onChange={(e) =>
-                                                setReferenceNumber(
-                                                    e.target.value,
-                                                )
-                                            }
-                                            placeholder="Enter receipt or order reference"
-                                            className="h-12 rounded-xl border-gray-200 bg-gray-50"
-                                        />
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <Label className="mb-2 block text-sm font-semibold text-gray-700">
+                                                Transaction Number
+                                            </Label>
+                                            <Input
+                                                type="text"
+                                                value={transactionNumber}
+                                                onChange={(e) =>
+                                                    setTransactionNumber(
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                placeholder="Receipt or order number"
+                                                className="h-12 rounded-xl border-gray-200 bg-gray-50"
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label className="mb-2 block text-sm font-semibold text-gray-700">
+                                                Amount Spent
+                                            </Label>
+                                            <Input
+                                                type="number"
+                                                min="0"
+                                                step="0.01"
+                                                value={amountSpent}
+                                                onChange={(e) =>
+                                                    setAmountSpent(
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="h-12 rounded-xl border-gray-200 bg-gray-50"
+                                                aria-invalid={!!amountError}
+                                            />
+                                            {amountError && (
+                                                <p className="mt-1 text-xs text-red-600">
+                                                    {amountError}
+                                                </p>
+                                            )}
+                                        </div>
                                     </div>
 
                                     {error && (
@@ -643,7 +726,10 @@ export default function Index({
                                     <Button
                                         onClick={generateNewCode}
                                         disabled={
-                                            !selectedCardId || !referenceNumber
+                                            !selectedCardId ||
+                                            !transactionNumber ||
+                                            amountSpent === '' ||
+                                            !!amountError
                                         }
                                         className="h-12 w-full rounded-xl bg-primary text-white hover:bg-primary/80"
                                     >
@@ -654,10 +740,15 @@ export default function Index({
                                         endpoint="/staff/scan-customer"
                                         data={{
                                             loyalty_card_id: selectedCardId,
-                                            reference_number: referenceNumber,
+                                            transaction_number:
+                                                transactionNumber,
+                                            amount_spent: amountSpent,
                                         }}
                                         disabled={
-                                            !selectedCardId || !referenceNumber
+                                            !selectedCardId ||
+                                            !transactionNumber ||
+                                            amountSpent === '' ||
+                                            !!amountError
                                         }
                                     />
                                 </SectionShell>

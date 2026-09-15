@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Database\Factories\LoyaltyCardFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class LoyaltyCard extends Model
 {
-    /** @use HasFactory<\Database\Factories\LoyaltyCardFactory> */
+    /** @use HasFactory<LoyaltyCardFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -18,6 +19,7 @@ class LoyaltyCard extends Model
         'heading',
         'subheading',
         'stampsNeeded',
+        'minimum_amount_spent',
         'mechanics',
         'backgroundColor',
         'textColor',
@@ -32,12 +34,15 @@ class LoyaltyCard extends Model
 
     ];
 
+    protected $casts = [
+        'minimum_amount_spent' => 'decimal:2',
+    ];
+
     protected $appends = [
         'is_near_expiry_date',
         'is_expired',
-        'valid_until_formatted'
+        'valid_until_formatted',
     ];
-
 
     public function getValidUntilFormattedAttribute()
     {
@@ -46,7 +51,7 @@ class LoyaltyCard extends Model
 
     public function getIsNearExpiryDateAttribute()
     {
-        if (!$this->valid_until) {
+        if (! $this->valid_until) {
             return false;
         }
 
@@ -58,7 +63,7 @@ class LoyaltyCard extends Model
 
     public function getIsExpiredAttribute()
     {
-        if (!$this->valid_until) {
+        if (! $this->valid_until) {
             return false;
         }
 

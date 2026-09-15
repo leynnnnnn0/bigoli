@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class StampCode extends Model
 {
     use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'user_id',
         'staff_id',
@@ -22,15 +21,20 @@ class StampCode extends Model
         'used_at',
         'is_expired',
         'is_offline_code',
-        'reference_number',
+        'transaction_number',
+        'amount_spent',
+        'customer_rating',
+        'rating_dismissed_at',
     ];
 
     protected $casts = [
         'used_at' => 'datetime',
         'is_expired' => 'boolean',
         'is_offline_code' => 'boolean',
+        'amount_spent' => 'decimal:2',
+        'customer_rating' => 'boolean',
+        'rating_dismissed_at' => 'datetime',
     ];
-
 
     public function staff()
     {

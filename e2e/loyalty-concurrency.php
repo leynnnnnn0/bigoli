@@ -41,7 +41,7 @@ if ($worker) {
     $card = LoyaltyCard::firstOrFail();
     $job = (int) $argv[3];
     $signature = substr(hash_hmac('sha256', "{$customer->id}|{$business->id}", config('app.key')), 0, 24);
-    $input = ['customer_qr' => "stampbayan:customer:{$customer->id}:{$business->id}:{$signature}", 'loyalty_card_id' => $card->id, 'branch_id' => $staff->branch_id, 'reference_number' => "CONCURRENT-{$job}"];
+    $input = ['customer_qr' => "stampbayan:customer:{$customer->id}:{$business->id}:{$signature}", 'loyalty_card_id' => $card->id, 'branch_id' => $staff->branch_id, 'transaction_number' => "CONCURRENT-{$job}", 'amount_spent' => 0];
     $claim = ($argv[4] ?? '') === 'reward' ? PerkClaim::firstOrFail() : null;
     echo "READY\n";
     fflush(STDOUT);

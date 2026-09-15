@@ -16,7 +16,8 @@ class IssueStampRequest extends FormRequest
         return [
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'loyalty_card_id' => ['nullable', 'integer', 'exists:loyalty_cards,id'],
-            'reference_number' => ['required_with:loyalty_card_id', 'nullable', 'string', 'max:255'],
+            'transaction_number' => ['required_with:loyalty_card_id', 'nullable', 'string', 'max:255'],
+            'amount_spent' => ['required_with:loyalty_card_id', 'nullable', 'numeric', 'decimal:0,2', 'min:0'],
         ];
     }
 }

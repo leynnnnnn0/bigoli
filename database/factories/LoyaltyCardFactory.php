@@ -3,10 +3,11 @@
 namespace Database\Factories;
 
 use App\Models\Business;
+use App\Models\LoyaltyCard;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LoyaltyCard>
+ * @extends Factory<LoyaltyCard>
  */
 class LoyaltyCardFactory extends Factory
 {
@@ -23,6 +24,7 @@ class LoyaltyCardFactory extends Factory
             'heading' => 'Collect stamps',
             'subheading' => 'Earn rewards every visit',
             'stampsNeeded' => 8,
+            'minimum_amount_spent' => 0,
             'valid_until' => now()->addMonths(6)->toDateString(),
             'mechanics' => 'Collect stamps and redeem rewards.',
             'backgroundColor' => '#FFFFFF',

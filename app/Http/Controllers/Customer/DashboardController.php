@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Customer\RateStampRequest;
 use App\Http\Requests\Customer\UpdateCustomerPasswordRequest;
 use App\Http\Requests\Customer\UpdateCustomerProfileRequest;
 use App\Services\CustomerDashboardService;
@@ -38,5 +39,16 @@ class DashboardController extends Controller
         $dashboard->updatePassword($customer, $request->validated());
 
         return back()->with('flash', ['message' => 'Password updated successfully', 'type' => 'success']);
+    }
+
+    public function rateStamp(RateStampRequest $request, int $stampCode, CustomerDashboardService $dashboard)
+    {
+        $dashboard->rateStamp(
+            Auth::guard('customer')->user(),
+            $stampCode,
+            $request->validated('rating'),
+        );
+
+        return back();
     }
 }

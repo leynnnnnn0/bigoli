@@ -16,7 +16,8 @@ class GenerateStaffStampCodeRequest extends FormRequest
         return [
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'loyalty_card_id' => ['required', 'integer', 'exists:loyalty_cards,id'],
-            'reference_number' => ['required', 'string', 'max:255'],
+            'transaction_number' => ['required', 'string', 'max:255'],
+            'amount_spent' => ['required', 'numeric', 'decimal:0,2', 'min:0'],
         ];
     }
 }

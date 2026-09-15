@@ -127,6 +127,7 @@ Route::prefix('customer')->name('customer.')->group(function () {
 
         // Dashboard
         Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
+        Route::post('/stamps/{stampCode}/rating', [CustomerDashboardController::class, 'rateStamp'])->name('stamps.rating');
 
         // Add more customer routes here...
     });

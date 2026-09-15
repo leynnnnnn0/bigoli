@@ -62,7 +62,7 @@ export function CustomerQrScanner({ endpoint, data, disabled = false }: Props) {
                         preserveScroll: true,
                         onSuccess: () => toast.success('Stamp issued successfully.'),
                         onError: (errors) => {
-                            toast.error(errors.customer_qr || errors.loyalty_card_id || errors.reference_number || 'Unable to issue a stamp.');
+                            toast.error(errors.customer_qr || errors.loyalty_card_id || errors.transaction_number || errors.amount_spent || 'Unable to issue a stamp.');
                             submittedRef.current = false;
                         },
                         onFinish: stop,

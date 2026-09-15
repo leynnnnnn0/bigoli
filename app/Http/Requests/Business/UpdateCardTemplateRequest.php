@@ -22,6 +22,7 @@ class UpdateCardTemplateRequest extends FormRequest
             'logo' => ['nullable', 'string'], 'name' => ['required', 'string', 'max:255', $nameRule],
             'heading' => ['required', 'string', 'max:255'], 'subheading' => ['nullable', 'string', 'max:255'],
             'valid_until' => ['required', 'date'], 'stampsNeeded' => ['required', 'integer', 'min:1'],
+            'minimum_amount_spent' => ['required', 'numeric', 'decimal:0,2', 'min:0'],
             'mechanics' => ['required', 'string', 'max:500'],
             'backgroundColor' => ['nullable', 'string', 'max:7'], 'textColor' => ['nullable', 'string', 'max:7'],
             'stampColor' => ['nullable', 'string', 'max:7'], 'stampFilledColor' => ['nullable', 'string', 'max:7'],

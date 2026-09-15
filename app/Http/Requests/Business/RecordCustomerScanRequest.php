@@ -17,7 +17,8 @@ class RecordCustomerScanRequest extends FormRequest
             'customer_qr' => ['required', 'string'],
             'loyalty_card_id' => ['required', 'integer', 'exists:loyalty_cards,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
-            'reference_number' => ['required', 'string', 'max:255'],
+            'transaction_number' => ['required', 'string', 'max:255'],
+            'amount_spent' => ['required', 'numeric', 'decimal:0,2', 'min:0'],
         ];
     }
 }
