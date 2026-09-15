@@ -43,7 +43,9 @@ class CustomerAuthService
 
         return Customer::create([
             'business_id' => $business->id, 'branch_id' => $data['branch_id'],
-            'username' => $data['username'], 'email' => $data['email'], 'password' => Hash::make($data['password']),
+            'username' => $data['username'], 'email' => $data['email'],
+            'date_of_birth' => $data['date_of_birth'], 'phone_number' => $data['phone_number'],
+            'password' => Hash::make($data['password']),
         ]);
     }
 

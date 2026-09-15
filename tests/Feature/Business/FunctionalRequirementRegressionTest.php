@@ -135,6 +135,21 @@ test('customer stamp history ignores the legacy expiration flag', function () {
             ->where('customer.stamp_codes.0.used_at', null));
 });
 
+test('customer details show date of birth and phone number', function () {
+    [$business, $owner] = requirementOwner();
+    $customer = Customer::factory()->for($business)->create([
+        'date_of_birth' => '1995-06-15',
+        'phone_number' => '+63 912 345 6789',
+    ]);
+
+    $this->actingAs($owner)
+        ->get("/business/customers/{$customer->id}")
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Business/Customer/Show')
+            ->where('customer.date_of_birth', '1995-06-15')
+            ->where('customer.phone_number', '+63 912 345 6789'));
+});
+
 test('B-07 blocks branch deletion when soft-deleted stamp history remains linked', function () {
     [$business, $owner] = requirementOwner();
     $branch = Branch::factory()->for($business)->create();

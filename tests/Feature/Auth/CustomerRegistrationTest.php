@@ -21,6 +21,8 @@ test('customers can open registration without a QR and choose a Bigoli branch', 
         'branch_id' => $branches->first()->id,
         'username' => 'newcustomer',
         'email' => 'newcustomer@example.com',
+        'date_of_birth' => '1995-06-15',
+        'phone_number' => '+63 912 345 6789',
         'password' => 'password123',
         'password_confirmation' => 'password123',
     ])->assertSessionHasNoErrors()->assertRedirect('/customer/dashboard');
@@ -30,7 +32,25 @@ test('customers can open registration without a QR and choose a Bigoli branch', 
         'username' => 'newcustomer',
         'business_id' => $business->id,
         'branch_id' => $branches->first()->id,
+        'date_of_birth' => '1995-06-15',
+        'phone_number' => '+63 912 345 6789',
     ]);
+});
+
+test('registration requires a valid date of birth and phone number', function () {
+    $business = Business::factory()->create(['name' => 'Bigoli']);
+    $branch = Branch::factory()->for($business)->create();
+
+    $this->post('/customer/register', [
+        'branch_id' => $branch->id,
+        'username' => 'invaliddetails',
+        'email' => 'invaliddetails@example.com',
+        'date_of_birth' => now()->addDay()->toDateString(),
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ])->assertSessionHasErrors(['date_of_birth', 'phone_number']);
+
+    $this->assertGuest('customer');
 });
 
 test('QR registration preserves its business and branch selection', function () {
@@ -39,8 +59,8 @@ test('QR registration preserves its business and branch selection', function () 
 
     $this->get("/customer/register?business={$business->qr_token}&branch_id={$branch->id}")
         ->assertOk()->assertInertia(fn (Assert $page) => $page
-            ->where('business.id', $business->id)
-            ->where('branch_id', $branch->id));
+        ->where('business.id', $business->id)
+        ->where('branch_id', $branch->id));
 });
 
 test('registration rejects a branch from a different business', function () {

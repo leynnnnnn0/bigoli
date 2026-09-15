@@ -4,8 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\Access\Authorizable;
@@ -23,6 +23,8 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
         'branch_id',
         'username',
         'email',
+        'date_of_birth',
+        'phone_number',
         'password',
         'email_verified_at',
     ];
@@ -34,6 +36,7 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'date_of_birth' => 'date:Y-m-d',
         'password' => 'hashed',
     ];
 

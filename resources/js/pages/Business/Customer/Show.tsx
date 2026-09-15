@@ -16,6 +16,7 @@ import {
     Clock,
     CreditCard,
     Mail,
+    Phone,
     Store,
     User,
 } from 'lucide-react';
@@ -36,6 +37,8 @@ interface Customer {
     id: number;
     username: string;
     email: string;
+    date_of_birth: string | null;
+    phone_number: string | null;
     created_at: string;
     branch?: {
         name: string;
@@ -78,6 +81,42 @@ export default function Show({ customer }: Props) {
                                     </p>
                                     <p className="text-base font-semibold">
                                         {customer.username}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                                    <Calendar className="h-5 w-5 text-primary" />
+                                </div>
+                                <div>
+                                    <p className="text-sm font-medium text-muted-foreground">
+                                        Date of Birth
+                                    </p>
+                                    <p className="text-base font-semibold">
+                                        {customer.date_of_birth
+                                            ? new Date(
+                                                  `${customer.date_of_birth}T00:00:00`,
+                                              ).toLocaleDateString('en-US', {
+                                                  year: 'numeric',
+                                                  month: 'long',
+                                                  day: 'numeric',
+                                              })
+                                            : 'N/A'}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                                    <Phone className="h-5 w-5 text-primary" />
+                                </div>
+                                <div>
+                                    <p className="text-sm font-medium text-muted-foreground">
+                                        Phone Number
+                                    </p>
+                                    <p className="text-base font-semibold">
+                                        {customer.phone_number ?? 'N/A'}
                                     </p>
                                 </div>
                             </div>

@@ -21,6 +21,8 @@ class RegisterCustomerRequest extends FormRequest
             'branch_id' => ['required', 'integer', Rule::exists('branches', 'id')->where('business_id', $businessId)],
             'username' => ['required', 'string', 'max:255', 'unique:customers,username'],
             'email' => ['required', 'email', 'unique:customers,email'],
+            'date_of_birth' => ['required', 'date', 'before_or_equal:today'],
+            'phone_number' => ['required', 'string', 'max:30'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }

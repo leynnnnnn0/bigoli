@@ -12,7 +12,17 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { AlertCircle, Eye, EyeOff, Info, Lock, Mail, User } from 'lucide-react';
+import {
+    AlertCircle,
+    CalendarDays,
+    Eye,
+    EyeOff,
+    Info,
+    Lock,
+    Mail,
+    Phone,
+    User,
+} from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -43,6 +53,8 @@ export default function Register({
     const { data, setData, post, processing, errors, reset } = useForm({
         username: '',
         email: '',
+        date_of_birth: '',
+        phone_number: '',
         password: '',
         password_confirmation: '',
         branch_id: branch_id?.toString() ?? '',
@@ -131,8 +143,8 @@ export default function Register({
                         )}
                     </div>
 
-                    <div className="grid gap-5 sm:grid-cols-2">
-                        <div className="space-y-2">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-5">
+                        <div className="min-w-0 space-y-2">
                             <Label
                                 htmlFor="username"
                                 className="text-sm font-medium"
@@ -159,7 +171,7 @@ export default function Register({
                             )}
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="min-w-0 space-y-2">
                             <Label
                                 htmlFor="email"
                                 className="text-sm font-medium"
@@ -188,6 +200,67 @@ export default function Register({
                                     <Info className="size-3.5" /> Used for
                                     password recovery
                                 </p>
+                            )}
+                        </div>
+
+                        <div className="min-w-0 space-y-2">
+                            <Label
+                                htmlFor="date_of_birth"
+                                className="text-sm font-medium"
+                            >
+                                Date of birth
+                            </Label>
+                            <div className="relative">
+                                <CalendarDays className="pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-[#82908b]" />
+                                <Input
+                                    id="date_of_birth"
+                                    type="date"
+                                    value={data.date_of_birth}
+                                    onChange={(event) =>
+                                        setData(
+                                            'date_of_birth',
+                                            event.target.value,
+                                        )
+                                    }
+                                    autoComplete="bday"
+                                    required
+                                    aria-invalid={!!errors.date_of_birth}
+                                    className={inputClassName}
+                                />
+                            </div>
+                            {errors.date_of_birth && (
+                                <FieldError>{errors.date_of_birth}</FieldError>
+                            )}
+                        </div>
+
+                        <div className="min-w-0 space-y-2">
+                            <Label
+                                htmlFor="phone_number"
+                                className="text-sm font-medium"
+                            >
+                                Phone number
+                            </Label>
+                            <div className="relative">
+                                <Phone className="pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-[#82908b]" />
+                                <Input
+                                    id="phone_number"
+                                    type="tel"
+                                    value={data.phone_number}
+                                    onChange={(event) =>
+                                        setData(
+                                            'phone_number',
+                                            event.target.value,
+                                        )
+                                    }
+                                    placeholder="e.g. +63 912 345 6789"
+                                    autoComplete="tel"
+                                    required
+                                    aria-invalid={!!errors.phone_number}
+                                    className={inputClassName}
+                                />
+                            </div>
+                            {errors.phone_number && (
+                                <FieldError>{errors.phone_number}</FieldError>
                             )}
                         </div>
 
@@ -265,7 +338,7 @@ function PasswordField({
     onToggle: () => void;
 }) {
     return (
-        <div className="space-y-2">
+        <div className="min-w-0 space-y-2">
             <Label htmlFor={id} className="text-sm font-medium">
                 {label}
             </Label>
