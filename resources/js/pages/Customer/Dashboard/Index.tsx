@@ -34,8 +34,6 @@ import {
     ShoppingCart,
     Sparkles,
     Trophy,
-    ThumbsDown,
-    ThumbsUp,
     Type,
     User,
 } from 'lucide-react';
@@ -967,21 +965,21 @@ export default function Index({
                         type="button"
                         variant="outline"
                         disabled={ratingSubmitting}
-                        onClick={() => submitStampRating('down')}
-                        className="h-20 flex-col gap-2 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                        onClick={() => submitStampRating('up')}
+                        className="h-20 flex-col gap-1.5 border-green-200 text-green-700 hover:bg-green-50 hover:text-green-800"
                     >
-                        <ThumbsDown className="h-7 w-7" />
-                        Thumbs down
+                        <span aria-hidden="true" className="text-3xl leading-none">👍</span>
+                        Thumbs up
                     </Button>
                     <Button
                         type="button"
                         variant="outline"
                         disabled={ratingSubmitting}
-                        onClick={() => submitStampRating('up')}
-                        className="h-20 flex-col gap-2 border-green-200 text-green-600 hover:bg-green-50 hover:text-green-700"
+                        onClick={() => submitStampRating('down')}
+                        className="h-20 flex-col gap-1.5 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
                     >
-                        <ThumbsUp className="h-7 w-7" />
-                        Thumbs up
+                        <span aria-hidden="true" className="text-3xl leading-none">👎</span>
+                        Thumbs down
                     </Button>
                 </div>
                 <button

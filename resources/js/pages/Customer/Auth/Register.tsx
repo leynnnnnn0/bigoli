@@ -17,7 +17,6 @@ import {
     CalendarDays,
     Eye,
     EyeOff,
-    Info,
     Lock,
     Mail,
     Phone,
@@ -42,7 +41,10 @@ interface RegisterProps {
 }
 
 const inputClassName =
-    'h-12 rounded-xl border-[#dce3df] bg-[#fbfcfb] pr-4 pl-11 shadow-none focus-visible:border-[#008c45] focus-visible:ring-[#008c45]/15';
+    'h-12 rounded-xl border-[#dce3df] bg-[#fbfcfb] px-3 shadow-none min-[420px]:pr-4 min-[420px]:pl-10 focus-visible:border-[#008c45] focus-visible:ring-[#008c45]/15';
+
+const inputIconClassName =
+    'pointer-events-none absolute top-1/2 left-3 hidden size-4 -translate-y-1/2 text-[#82908b] min-[420px]:block';
 
 export default function Register({
     business,
@@ -143,7 +145,7 @@ export default function Register({
                         )}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 sm:gap-5">
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-4 sm:gap-5">
                         <div className="min-w-0 space-y-2">
                             <Label
                                 htmlFor="username"
@@ -152,14 +154,14 @@ export default function Register({
                                 Username
                             </Label>
                             <div className="relative">
-                                <User className="pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-[#82908b]" />
+                                <User className={inputIconClassName} />
                                 <Input
                                     id="username"
                                     value={data.username}
                                     onChange={(event) =>
                                         setData('username', event.target.value)
                                     }
-                                    placeholder="e.g. johndoe"
+                                    placeholder="e.g. juan"
                                     autoComplete="username"
                                     required
                                     aria-invalid={!!errors.username}
@@ -179,7 +181,7 @@ export default function Register({
                                 Email address
                             </Label>
                             <div className="relative">
-                                <Mail className="pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-[#82908b]" />
+                                <Mail className={inputIconClassName} />
                                 <Input
                                     id="email"
                                     type="email"
@@ -187,19 +189,14 @@ export default function Register({
                                     onChange={(event) =>
                                         setData('email', event.target.value)
                                     }
-                                    placeholder="you@example.com"
+                                    placeholder="you@email.ph"
                                     autoComplete="email"
                                     aria-invalid={!!errors.email}
                                     className={inputClassName}
                                 />
                             </div>
-                            {errors.email ? (
+                            {errors.email && (
                                 <FieldError>{errors.email}</FieldError>
-                            ) : (
-                                <p className="flex items-center gap-1.5 text-xs text-[#71807a]">
-                                    <Info className="size-3.5" /> Used for
-                                    password recovery
-                                </p>
                             )}
                         </div>
 
@@ -211,7 +208,7 @@ export default function Register({
                                 Date of birth
                             </Label>
                             <div className="relative">
-                                <CalendarDays className="pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-[#82908b]" />
+                                <CalendarDays className={inputIconClassName} />
                                 <Input
                                     id="date_of_birth"
                                     type="date"
@@ -241,7 +238,7 @@ export default function Register({
                                 Phone number
                             </Label>
                             <div className="relative">
-                                <Phone className="pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-[#82908b]" />
+                                <Phone className={inputIconClassName} />
                                 <Input
                                     id="phone_number"
                                     type="tel"
@@ -252,7 +249,7 @@ export default function Register({
                                             event.target.value,
                                         )
                                     }
-                                    placeholder="e.g. +63 912 345 6789"
+                                    placeholder="09XX XXX XXXX"
                                     autoComplete="tel"
                                     required
                                     aria-invalid={!!errors.phone_number}
@@ -270,6 +267,7 @@ export default function Register({
                             value={data.password}
                             show={showPasswords}
                             error={errors.password}
+                            placeholder="8+ chars"
                             onChange={(value) => setData('password', value)}
                             onToggle={() => setShowPasswords((value) => !value)}
                         />
@@ -278,6 +276,7 @@ export default function Register({
                             label="Confirm password"
                             value={data.password_confirmation}
                             show={showPasswords}
+                            placeholder="Repeat"
                             onChange={(value) =>
                                 setData('password_confirmation', value)
                             }
@@ -326,6 +325,7 @@ function PasswordField({
     value,
     show,
     error,
+    placeholder,
     onChange,
     onToggle,
 }: {
@@ -334,6 +334,7 @@ function PasswordField({
     value: string;
     show: boolean;
     error?: string;
+    placeholder: string;
     onChange: (value: string) => void;
     onToggle: () => void;
 }) {
@@ -343,28 +344,28 @@ function PasswordField({
                 {label}
             </Label>
             <div className="relative">
-                <Lock className="pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-[#82908b]" />
+                <Lock className={inputIconClassName} />
                 <Input
                     id={id}
                     type={show ? 'text' : 'password'}
                     value={value}
                     onChange={(event) => onChange(event.target.value)}
-                    placeholder="At least 8 characters"
+                    placeholder={placeholder}
                     autoComplete="new-password"
                     required
                     aria-invalid={!!error}
-                    className={`${inputClassName} pr-12`}
+                    className={`${inputClassName} pr-11`}
                 />
                 <button
                     type="button"
                     onClick={onToggle}
-                    className="absolute top-1/2 right-3 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-[#71807a] transition-colors hover:bg-[#eef3f0] hover:text-[#173e31]"
+                    className="absolute top-1/2 right-1.5 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-[#71807a] transition-colors hover:bg-[#eef3f0] hover:text-[#173e31] min-[420px]:right-2"
                     aria-label={show ? 'Hide passwords' : 'Show passwords'}
                 >
                     {show ? (
-                        <EyeOff className="size-[18px]" />
+                        <EyeOff className="size-[17px]" />
                     ) : (
-                        <Eye className="size-[18px]" />
+                        <Eye className="size-[17px]" />
                     )}
                 </button>
             </div>
