@@ -8,7 +8,7 @@ import Highlight2 from '../../images/highlight2.jpg';
 import Logo from '../../images/logo.png';
 import LoyaltyMobile from '../../images/loyaltymobile.png';
 import Meats from '../../images/meats-optimized.jpg';
-import Pasta from '../../images/pasta-optimized.jpg';
+import Pasta from '../../images/pasta.jpg';
 
 const scriptFont = {
     fontFamily:
