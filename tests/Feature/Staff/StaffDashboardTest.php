@@ -8,9 +8,19 @@ use App\Models\PerkClaim;
 use App\Models\Staff;
 use App\Models\StampCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\URL;
 use Inertia\Testing\AssertableInertia as Assert;
 
 uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    URL::forceRootUrl(portalUrl('staff'));
+    URL::forceScheme('https');
+    $this->withServerVariables([
+        'HTTP_HOST' => config('portals.domains.staff'),
+        'HTTPS' => 'on',
+    ]);
+});
 
 function staffDashboardFixtures(): array
 {
@@ -24,7 +34,7 @@ function staffDashboardFixtures(): array
 test('viewing or refreshing the staff dashboard does not generate a stamp code', function () {
     [, $staff, $card] = staffDashboardFixtures();
 
-    $url = "/staff/dashboard?loyalty_card_id={$card->id}&transaction_number=ORDER-100";
+    $url = "/dashboard?loyalty_card_id={$card->id}&transaction_number=ORDER-100";
 
     $this->actingAs($staff, 'staff')->get($url)->assertOk();
     $this->get($url)->assertOk();
@@ -35,20 +45,20 @@ test('viewing or refreshing the staff dashboard does not generate a stamp code',
 test('staff code generation creates exactly one code and refresh is safe', function () {
     [, $staff, $card] = staffDashboardFixtures();
 
-    $response = $this->actingAs($staff, 'staff')->post('/staff/dashboard/generate-code', [
+    $response = $this->actingAs($staff, 'staff')->post('/dashboard/generate-code', [
         'loyalty_card_id' => $card->id,
         'transaction_number' => 'ORDER-101',
         'amount_spent' => 0,
     ]);
 
-    $response->assertRedirect('/staff/dashboard?tab=issue-stamp');
+    $response->assertRedirect(route('staff.dashboard', ['tab' => 'issue-stamp']));
     $this->assertDatabaseCount('stamp_codes', 1);
     $this->assertDatabaseHas('stamp_codes', [
         'transaction_number' => 'ORDER-101',
         'amount_spent' => 0,
     ]);
 
-    $this->get('/staff/dashboard?tab=issue-stamp')->assertOk();
+    $this->get('/dashboard?tab=issue-stamp')->assertOk();
     $this->assertDatabaseCount('stamp_codes', 1);
 });
 
@@ -56,7 +66,7 @@ test('staff cannot generate a stamp below the loyalty card minimum spend', funct
     [, $staff, $card] = staffDashboardFixtures();
     $card->update(['minimum_amount_spent' => 500]);
 
-    $this->actingAs($staff, 'staff')->post('/staff/dashboard/generate-code', [
+    $this->actingAs($staff, 'staff')->post('/dashboard/generate-code', [
         'loyalty_card_id' => $card->id,
         'transaction_number' => 'ORDER-LOW',
         'amount_spent' => 499,
@@ -85,7 +95,7 @@ test('staff reward and code tabs are paginated by ten', function () {
     ]);
 
     $this->actingAs($staff, 'staff')
-        ->get('/staff/dashboard?tab=stamp-codes')
+        ->get('/dashboard?tab=stamp-codes')
         ->assertInertia(fn (Assert $page) => $page
             ->component('Staff/Dashboard/Index')
             ->where('active_tab', 'stamp-codes')
@@ -113,7 +123,7 @@ test('staff dashboard identifies the staff member who redeemed a perk', function
     ]);
 
     $this->actingAs($staff, 'staff')
-        ->get('/staff/dashboard?tab=perk-claims')
+        ->get('/dashboard?tab=perk-claims')
         ->assertInertia(fn (Assert $page) => $page
             ->where('active_tab', 'perk-claims')
             ->where('perkClaims.data.0.redeemed_by_staff.username', $staff->username)

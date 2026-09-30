@@ -29,7 +29,15 @@ const navItems = [
     { label: 'How It Works', href: '#details' },
 ];
 
-export default function Welcome() {
+type WelcomeProps = {
+    customerLoginUrl: string;
+    customerRegisterUrl: string;
+};
+
+export default function Welcome({
+    customerLoginUrl,
+    customerRegisterUrl,
+}: WelcomeProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
@@ -113,7 +121,7 @@ export default function Welcome() {
                             </a>
                             <button
                                 type="button"
-                                onClick={() => router.get('/customer/login')}
+                                onClick={() => router.get(customerLoginUrl)}
                                 className="cursor-pointer text-sm text-[#2b2b2b] italic decoration-[#b3262d] decoration-1 underline-offset-4 transition-colors hover:text-[#8f1d24] hover:underline"
                             >
                                 Sign in
@@ -151,7 +159,7 @@ export default function Welcome() {
                                 <button
                                     type="button"
                                     onClick={() =>
-                                        router.get('/customer/login')
+                                        router.get(customerLoginUrl)
                                     }
                                     className="cursor-pointer rounded-lg px-4 py-3 text-left text-sm text-[#2b2b2b] italic hover:bg-[#2b2b2b]/5 hover:text-[#8f1d24]"
                                 >
@@ -301,7 +309,7 @@ export default function Welcome() {
                                             style={titleFont}
                                         >
                                             <Link
-                                                href="/customer/register"
+                                                href={customerRegisterUrl}
                                                 className="group inline-flex items-center gap-3 rounded-sm focus-visible:ring-2 focus-visible:ring-[#b3262d] focus-visible:ring-offset-4 focus-visible:outline-none"
                                             >
                                                 Join Now

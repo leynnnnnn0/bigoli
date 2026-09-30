@@ -14,13 +14,19 @@ function sessionCookieLifetimeInMinutes($response): int
 }
 
 test('business sessions last one day', function () {
-    expect(sessionCookieLifetimeInMinutes($this->get('/login')))->toBe(1440);
+    $domain = config('portals.domains.admin');
+
+    expect(sessionCookieLifetimeInMinutes($this->get("https://{$domain}/login")))->toBe(1440);
 });
 
 test('staff sessions last seven days', function () {
-    expect(sessionCookieLifetimeInMinutes($this->get('/staff/login')))->toBe(10080);
+    $domain = config('portals.domains.staff');
+
+    expect(sessionCookieLifetimeInMinutes($this->get("https://{$domain}/login")))->toBe(10080);
 });
 
 test('customer sessions last fourteen days', function () {
-    expect(sessionCookieLifetimeInMinutes($this->get('/customer/login')))->toBe(20160);
+    $domain = config('portals.domains.customer');
+
+    expect(sessionCookieLifetimeInMinutes($this->get("https://{$domain}/login")))->toBe(20160);
 });

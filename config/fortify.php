@@ -73,7 +73,7 @@ return [
     |
     */
 
-    'home' => '/business/dashboard',
+    'home' => '/dashboard',
 
     /*
     |--------------------------------------------------------------------------
@@ -88,7 +88,7 @@ return [
 
     'prefix' => '',
 
-    'domain' => null,
+    'domain' => env('ADMIN_DOMAIN', 'admin-rewards.bigoli.test'),
 
     /*
     |--------------------------------------------------------------------------

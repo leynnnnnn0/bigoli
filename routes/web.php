@@ -20,30 +20,16 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/sitemap.xml', function () {
-    $pages = [
-        ['loc' => url('/'), 'priority' => '1.0', 'changefreq' => 'weekly'],
-    ];
+Route::domain(config('portals.domains.admin'))->group(function () {
+    Route::redirect('/', '/dashboard');
 
-    return response()->view('sitemap', compact('pages'))
-        ->header('Content-Type', 'text/xml');
-});
-
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
-
-Route::middleware(['auth:web', 'verified'])->group(function () {
-    Route::prefix('business')->group(function () {
+    Route::middleware(['auth:web', 'verified'])->group(function () {
         Route::get('/stamp-codes/export', [StampCodeController::class, 'export'])
             ->name('business.stamp-codes.export');
 
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
         Route::resource('/staffs', StaffController::class)->only(['index', 'store', 'update', 'destroy']);
-
         Route::resource('/branches', BranchController::class)->only(['index', 'store', 'update', 'destroy']);
-
         Route::resource('/card-templates', CardTempalateController::class);
         Route::get('/qr-studio', [QRStudioController::class, 'index']);
         Route::get('/qr-studio/download', [QRStudioController::class, 'download']);
@@ -52,106 +38,94 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
         Route::get('/issue-stamp', [IssueStampController::class, 'index']);
         Route::post('/issue-stamp/scan-customer', [StampCodeController::class, 'recordCustomerScan']);
         Route::get('/stamp-codes', [StampCodeController::class, 'index']);
-
         Route::get('/perk-claims', [PerkClaimController::class, 'index'])->name('perk-claims.index');
         Route::post('/perk-claims/{perkClaim}/redeem', [PerkClaimController::class, 'markAsRedeemed'])->name('perk-claims.redeem');
         Route::post('/perk-claims/{perkClaim}/undo', [PerkClaimController::class, 'undoRedeem'])->name('perk-claims.undo');
-
         Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
         Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
         Route::get('/tickets/{id}', [TicketController::class, 'show'])->name('tickets.show');
         Route::post('/tickets/{id}/reply', [TicketController::class, 'reply'])->name('tickets.reply');
     });
+
+    require __DIR__.'/settings.php';
 });
 
-Route::post('/stamps/record', [StampCodeController::class, 'record'])
-    ->name('customer.stamps.record');
+Route::domain(config('portals.domains.customer'))->name('customer.')->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('welcome', [
+            'customerLoginUrl' => route('customer.login'),
+            'customerRegisterUrl' => route('customer.register'),
+        ]);
+    })->name('home');
 
-// Customer Authentication Routes
-Route::prefix('customer')->name('customer.')->group(function () {
+    Route::get('/sitemap.xml', function () {
+        $pages = [
+            ['loc' => url('/'), 'priority' => '1.0', 'changefreq' => 'weekly'],
+        ];
 
-    Route::post('/profile/update', [CustomerDashboardController::class, 'updateProfile'])->name('customer.profile.update');
-    Route::post('/password/update', [CustomerDashboardController::class, 'updatePassword'])->name('customer.password.update');
-
-    // Guest routes (not authenticated)
-    Route::middleware('guest:customer')->group(function () {
-        // Login
-        Route::get('/login', [CustomerAuthController::class, 'index'])
-            ->name('login');
-
-        Route::post('/login', [CustomerAuthController::class, 'login']);
-
-        // Register
-        Route::get('/register', [CustomerAuthController::class, 'showRegister'])
-            ->name('register');
-
-        Route::post('/register', [CustomerAuthController::class, 'register']);
-
-        Route::get('/forgot-password', [CustomerAuthController::class, 'showForgotPassword'])
-            ->name('password.request');
-
-        Route::post('/forgot-password', [CustomerAuthController::class, 'sendResetLink'])
-            ->name('password.email');
-
-        Route::get('/reset-password/{token}', [CustomerAuthController::class, 'showResetPassword'])
-            ->name('password.reset');
-
-        Route::post('/reset-password', [CustomerAuthController::class, 'resetPassword'])
-            ->name('password.update');
+        return response()->view('sitemap', compact('pages'))
+            ->header('Content-Type', 'text/xml');
     });
 
-    // Email Verification Notice
-    Route::get('/customer/verify-email', function () {
-        return Inertia::render('Customer/Auth/VerifyEmail');
-    })->middleware(['auth:customer'])->name('customer.verification.notice');
+    Route::post('/stamps/record', [StampCodeController::class, 'record'])->name('stamps.record');
 
-    // Email Verification Handler
-    Route::get('/customer/verify-email/{id}/{hash}', function (EmailVerificationRequest $request) {
-        $request->fulfill();
+    Route::middleware('guest:customer')->group(function () {
+        Route::get('/login', [CustomerAuthController::class, 'index'])->name('login');
+        Route::post('/login', [CustomerAuthController::class, 'login'])->name('login.store');
+        Route::get('/register', [CustomerAuthController::class, 'showRegister'])->name('register');
+        Route::post('/register', [CustomerAuthController::class, 'register'])->name('register.store');
+        Route::get('/forgot-password', [CustomerAuthController::class, 'showForgotPassword'])->name('password.request');
+        Route::post('/forgot-password', [CustomerAuthController::class, 'sendResetLink'])->name('password.email');
+        Route::get('/reset-password/{token}', [CustomerAuthController::class, 'showResetPassword'])->name('password.reset');
+        Route::post('/reset-password', [CustomerAuthController::class, 'resetPassword'])->name('password.update');
+    });
 
-        return redirect()->route('customer.dashboard');
-    })->middleware(['auth:customer', 'signed'])->name('customer.verification.verify');
-
-    // Resend Verification Email
-    Route::post('/customer/email/verification-notification', function (Request $request) {
-        $request->user('customer')->sendEmailVerificationNotification();
-
-        return back()->with('status', 'verification-link-sent');
-    })->middleware(['auth:customer', 'throttle:6,1'])->name('customer.verification.send');
-
-    // Authenticated customer routes
-    Route::middleware(['auth:customer'])->group(function () {
-        // Logout
-        Route::post('/logout', [CustomerAuthController::class, 'logout'])
-            ->name('logout');
-
-        // Dashboard
+    Route::middleware('auth:customer')->group(function () {
         Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
+        Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('logout');
+        Route::post('/profile/update', [CustomerDashboardController::class, 'updateProfile'])->name('profile.update');
+        Route::post('/password/update', [CustomerDashboardController::class, 'updatePassword'])->name('profile.password.update');
         Route::post('/stamps/{stampCode}/rating', [CustomerDashboardController::class, 'rateStamp'])->name('stamps.rating');
 
-        // Add more customer routes here...
+        Route::get('/verify-email', function () {
+            return Inertia::render('Customer/Auth/VerifyEmail');
+        })->name('verification.notice');
+
+        Route::get('/verify-email/{id}/{hash}', function (EmailVerificationRequest $request) {
+            $request->fulfill();
+
+            return redirect()->route('customer.dashboard');
+        })->middleware('signed')->name('verification.verify');
+
+        Route::post('/email/verification-notification', function (Request $request) {
+            $request->user('customer')->sendEmailVerificationNotification();
+
+            return back()->with('status', 'verification-link-sent');
+        })->middleware('throttle:6,1')->name('verification.send');
     });
 });
 
-Route::name('staff.')->prefix('staff')->group(function () {
+Route::domain(config('portals.domains.staff'))->name('staff.')->group(function () {
+    Route::redirect('/', '/dashboard');
+
+    Route::middleware('guest:staff')->group(function () {
+        Route::get('/login', [StaffAuthController::class, 'index'])->name('login');
+        Route::post('/login', [StaffAuthController::class, 'login'])->name('login.store');
+    });
+
     Route::middleware(['auth:staff', EnsureStaffIsActive::class])->group(function () {
         Route::get('/dashboard', [StaffDashboardController::class, 'index'])->name('dashboard');
         Route::post('/dashboard/generate-code', [StaffDashboardController::class, 'generateCode'])->name('dashboard.generate-code');
-
         Route::post('/scan-customer', [StaffDashboardController::class, 'recordCustomerScan'])->name('scan-customer');
         Route::post('/perk-claims/{perkClaim}/redeem', [StaffDashboardController::class, 'markAsRedeemed'])->name('perk-claims.redeem');
         Route::post('/perk-claims/{perkClaim}/undo', [StaffDashboardController::class, 'undoRedeem'])->name('perk-claims.undo');
-
-        Route::post('/logout', [StaffAuthController::class, 'logout'])
-            ->name('logout');
-    });
-
-    Route::middleware('guest:staff')->group(function () {
-        Route::get('/login', [StaffAuthController::class, 'index'])
-            ->name('login');
-
-        Route::post('/login', [StaffAuthController::class, 'login']);
+        Route::post('/logout', [StaffAuthController::class, 'logout'])->name('logout');
     });
 });
 
-require __DIR__.'/settings.php';
+Route::get('/', function () {
+    return Inertia::render('welcome', [
+        'customerLoginUrl' => route('customer.login'),
+        'customerRegisterUrl' => route('customer.register'),
+    ]);
+})->name('home');

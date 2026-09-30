@@ -57,7 +57,7 @@ export default function Index({
         setSelectedBranchId(value);
         setSelectedCardId('');
         router.get(
-            '/business/issue-stamp',
+            '/issue-stamp',
             { branch_id: value },
             { preserveScroll: true, replace: true },
         );
@@ -67,7 +67,7 @@ export default function Index({
         setSelectedBranchId('');
         setSelectedCardId('');
         router.get(
-            '/business/issue-stamp',
+            '/issue-stamp',
             {},
             { preserveScroll: true, replace: true },
         );
@@ -92,7 +92,7 @@ export default function Index({
         }
         setLoading(true);
         setError(null);
-        router.get('/business/issue-stamp', {
+        router.get('/issue-stamp', {
             loyalty_card_id: selectedCardId,
             branch_id: selectedBranchId || undefined,
             transaction_number: transactionNumber,
@@ -203,7 +203,7 @@ export default function Index({
                                 {loading ? 'Generating...' : 'Generate Code'}
                             </button>
                             <CustomerQrScanner
-                                endpoint="/business/issue-stamp/scan-customer"
+                                endpoint="/issue-stamp/scan-customer"
                                 data={{
                                     loyalty_card_id: selectedCardId,
                                     branch_id: selectedBranchId || undefined,
@@ -325,7 +325,7 @@ export default function Index({
                                 Generate New Code
                             </button>
                             <CustomerQrScanner
-                                endpoint="/business/issue-stamp/scan-customer"
+                                endpoint="/issue-stamp/scan-customer"
                                 data={{
                                     loyalty_card_id: selectedCardId,
                                     branch_id: selectedBranchId || undefined,

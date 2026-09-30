@@ -150,7 +150,7 @@ export default function Index({
     };
 
     const navigate = (params: Filters) => {
-        router.get('/business/stamp-codes', params as Record<string, string>, {
+        router.get('/stamp-codes', params as Record<string, string>, {
             preserveState: true,
             replace: true,
         });
@@ -199,7 +199,7 @@ export default function Index({
                 Object.entries(params).filter(([, v]) => v !== undefined),
             ) as Record<string, string>,
         ).toString();
-        return `/business/stamp-codes/export${qs ? '?' + qs : ''}`;
+        return `/stamp-codes/export${qs ? '?' + qs : ''}`;
     };
 
     const activeFilterCount = [

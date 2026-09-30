@@ -91,7 +91,7 @@ export default function Index({
 
         // Update URL to reflect selected branch without reloading
         const params = id ? { branch_id: String(id) } : {};
-        router.get('/business/qr-studio', params, {
+        router.get('/qr-studio', params, {
             preserveState: true,
             preserveScroll: true,
             replace: true,
@@ -131,7 +131,7 @@ export default function Index({
 
     const handleSave = (e: FormEvent) => {
         e.preventDefault();
-        post('/business/qr-studio/update', {
+        post('/qr-studio/update', {
             onSuccess: () =>
                 toast.success('QR Code settings saved successfully!'),
             onError: () =>
@@ -142,8 +142,8 @@ export default function Index({
     const handleDownload = () => {
         setIsDownloading(true);
         const url = data.branch_id
-            ? `/business/qr-studio/download?branch_id=${data.branch_id}`
-            : '/business/qr-studio/download';
+            ? `/qr-studio/download?branch_id=${data.branch_id}`
+            : '/qr-studio/download';
         window.location.href = url;
         setTimeout(() => setIsDownloading(false), 2000);
     };

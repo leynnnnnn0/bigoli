@@ -62,7 +62,7 @@ export default function Index({
 
     const handleBranchChange = (value: string) => {
         router.get(
-            '/business/dashboard',
+            '/dashboard',
             { branch_id: value === 'all' ? undefined : value },
             { preserveState: true, preserveScroll: true, replace: true },
         );

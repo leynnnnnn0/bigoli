@@ -17,52 +17,52 @@ import LOGO from '../../images/mainLogo.png';
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: '/business/dashboard',
+        href: '/dashboard',
         icon: LayoutGrid,
     },
     {
         title: 'Staff Accounts',
-        href: '/business/staffs',
+        href: '/staffs',
         icon: StoreIcon,
     },
     {
         title: 'Issue Stamp',
-        href: '/business/issue-stamp',
+        href: '/issue-stamp',
         icon: StampIcon,
     },
     {
         title: 'Perk Claims',
-        href: '/business/perk-claims',
+        href: '/perk-claims',
         icon: AwardIcon,
     },
     {
         title: 'Stamp Codes',
-        href: '/business/stamp-codes',
+        href: '/stamp-codes',
         icon: Code2Icon,
     },
     {
         title: 'Loyalty Cards',
-        href: '/business/card-templates',
+        href: '/card-templates',
         icon: IdCard,
     },
     {
         title: 'Customers',
-        href: '/business/customers',
+        href: '/customers',
         icon: Users2Icon,
     },
     {
         title: 'QR Studio',
-        href: '/business/qr-studio',
+        href: '/qr-studio',
         icon: QrCodeIcon,
     },
     {
         title: 'Tickets',
-        href: '/business/tickets',
+        href: '/tickets',
         icon: TicketIcon,
     },
     {
         title: 'Branches',
-        href: '/business/branches',
+        href: '/branches',
         icon: Building,
     },
 ];
@@ -74,7 +74,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href='/business/dashboard' prefetch>
+                            <Link href='/dashboard' prefetch>
                                 <img src={LOGO} alt="logo" className='w-full h-12' />
                             </Link>
                         </SidebarMenuButton>

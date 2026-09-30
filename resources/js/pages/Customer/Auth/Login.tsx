@@ -23,7 +23,7 @@ export default function Login({ business, status, isDemo }: LoginProps) {
 
     const submit: FormEventHandler = (event) => {
         event.preventDefault();
-        post('/customer/login', { onFinish: () => reset('password') });
+        post('/login', { onFinish: () => reset('password') });
     };
 
     return (
@@ -93,7 +93,7 @@ export default function Login({ business, status, isDemo }: LoginProps) {
                                 Password
                             </Label>
                             <Link
-                                href="/customer/forgot-password"
+                                href="/forgot-password"
                                 className="text-xs font-semibold text-[#008c45] hover:underline"
                             >
                                 Forgot password?
@@ -157,7 +157,7 @@ export default function Login({ business, status, isDemo }: LoginProps) {
                     <p className="text-center text-sm text-[#64736d]">
                         New to Bigoli Rewards?{' '}
                         <Link
-                            href="/customer/register"
+                            href="/register"
                             className="font-semibold text-[#008c45] hover:underline"
                         >
                             Create an account

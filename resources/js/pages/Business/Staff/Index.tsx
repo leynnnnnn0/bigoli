@@ -74,7 +74,7 @@ export default function Index({ staffs, branches, filters }: Props) {
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             router.get(
-                '/business/staffs',
+                '/staffs',
                 { search },
                 { preserveState: true, preserveScroll: true, replace: true },
             );
@@ -114,7 +114,7 @@ export default function Index({ staffs, branches, filters }: Props) {
 
     const handleSubmit = () => {
         if (editingStaff) {
-            form.put(`/business/staffs/${editingStaff.id}`, {
+            form.put(`/staffs/${editingStaff.id}`, {
                 onSuccess: () => {
                     toast.success('Staff updated successfully');
                     setDialogOpen(false);
@@ -123,7 +123,7 @@ export default function Index({ staffs, branches, filters }: Props) {
                 onError: () => toast.error('Failed to update staff'),
             });
         } else {
-            form.post('/business/staffs', {
+            form.post('/staffs', {
                 onSuccess: () => {
                     toast.success('Staff created successfully');
                     setDialogOpen(false);
@@ -136,7 +136,7 @@ export default function Index({ staffs, branches, filters }: Props) {
 
     const handleDelete = () => {
         if (!deleteConfirm) return;
-        form.delete(`/business/staffs/${deleteConfirm.id}`, {
+        form.delete(`/staffs/${deleteConfirm.id}`, {
             onSuccess: (page) => {
                 const flash = page.props.flash as
                     | { error?: string }

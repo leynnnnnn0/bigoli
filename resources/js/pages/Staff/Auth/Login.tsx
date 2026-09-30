@@ -21,7 +21,7 @@ export default function Login({ status }: LoginProps) {
 
     const submit: FormEventHandler = (event) => {
         event.preventDefault();
-        post('/staff/login', { onFinish: () => reset('password') });
+        post('/login', { onFinish: () => reset('password') });
     };
 
     return (

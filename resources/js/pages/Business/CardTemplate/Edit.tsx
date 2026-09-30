@@ -116,7 +116,7 @@ export default function Edit({
     };
 
     const confirmUpdate = () => {
-        put(`/business/card-templates/${cardTemplate.id}`, {
+        put(`/card-templates/${cardTemplate.id}`, {
             onSuccess: () => {
                 toast.success('Updated Successfully.');
                 setShowConfirmDialog(false);

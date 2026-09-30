@@ -7,9 +7,19 @@ use App\Models\Staff;
 use App\Models\StampCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\URL;
 use Inertia\Testing\AssertableInertia as Assert;
 
 uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    URL::forceRootUrl(portalUrl('admin'));
+    URL::forceScheme('https');
+    $this->withServerVariables([
+        'HTTP_HOST' => config('portals.domains.admin'),
+        'HTTPS' => 'on',
+    ]);
+});
 
 function businessOwner(): array
 {
@@ -28,7 +38,7 @@ test('business owners can view only their staff accounts', function () {
     $otherStaff = Staff::factory()->create(['username' => 'other-staff']);
 
     $this->actingAs($owner)
-        ->get('/business/staffs')
+        ->get('/staffs')
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('Business/Staff/Index')
@@ -47,7 +57,7 @@ test('business owners can create staff for their own branch', function () {
     [$business, $owner] = businessOwner();
     $branch = Branch::factory()->for($business)->create();
 
-    $response = $this->actingAs($owner)->post('/business/staffs', [
+    $response = $this->actingAs($owner)->post('/staffs', [
         'branch_id' => $branch->id,
         'username' => 'new-staff',
         'password' => 'secure-password',
@@ -73,7 +83,7 @@ test('business owners cannot create staff for another business branch', function
     $otherBranch = Branch::factory()->create();
 
     $this->actingAs($owner)
-        ->post('/business/staffs', [
+        ->post('/staffs', [
             'branch_id' => $otherBranch->id,
             'username' => 'unauthorized-staff',
             'password' => 'secure-password',
@@ -98,7 +108,7 @@ test('business owners can update their staff without changing the password', fun
     ]);
 
     $this->actingAs($owner)
-        ->put("/business/staffs/{$staff->id}", [
+        ->put("/staffs/{$staff->id}", [
             'branch_id' => $newBranch->id,
             'username' => 'updated-staff',
             'remarks' => 'Evening shift',
@@ -122,14 +132,14 @@ test('business owners cannot update or delete staff from another business', func
     $otherBranch = Branch::factory()->for($otherStaff->business)->create();
 
     $this->actingAs($owner)
-        ->put("/business/staffs/{$otherStaff->id}", [
+        ->put("/staffs/{$otherStaff->id}", [
             'branch_id' => $otherBranch->id,
             'username' => 'changed-staff',
         ])
         ->assertForbidden();
 
     $this->actingAs($owner)
-        ->delete("/business/staffs/{$otherStaff->id}")
+        ->delete("/staffs/{$otherStaff->id}")
         ->assertForbidden();
 
     $this->assertDatabaseHas('staff', ['id' => $otherStaff->id]);
@@ -140,7 +150,7 @@ test('business owners can delete their own staff account', function () {
     $staff = Staff::factory()->for($business)->create();
 
     $this->actingAs($owner)
-        ->delete("/business/staffs/{$staff->id}")
+        ->delete("/staffs/{$staff->id}")
         ->assertRedirect();
 
     $this->assertDatabaseMissing('staff', ['id' => $staff->id]);
@@ -154,7 +164,7 @@ test('business owners cannot delete staff with recorded activity', function () {
     PerkClaim::factory()->create(['redeemed_by_staff_id' => $staff->id]);
 
     $this->actingAs($owner)
-        ->delete("/business/staffs/{$staff->id}")
+        ->delete("/staffs/{$staff->id}")
         ->assertRedirect()
         ->assertSessionHas('error', 'This staff account cannot be deleted because it has recorded activity.');
 

@@ -61,7 +61,7 @@ export default function Index({ branches, filters }: Props) {
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             router.get(
-                '/business/branches',
+                '/branches',
                 { search },
                 {
                     preserveState: true,
@@ -100,7 +100,7 @@ export default function Index({ branches, filters }: Props) {
 
     const handleSubmit = () => {
         if (editingBranch) {
-            form.put(`/business/branches/${editingBranch.id}`, {
+            form.put(`/branches/${editingBranch.id}`, {
                 onSuccess: () => {
                     toast.success('Branch updated successfully');
                     setDialogOpen(false);
@@ -111,7 +111,7 @@ export default function Index({ branches, filters }: Props) {
                 },
             });
         } else {
-            form.post('/business/branches', {
+            form.post('/branches', {
                 onSuccess: () => {
                     toast.success('Branch created successfully');
                     setDialogOpen(false);
@@ -127,7 +127,7 @@ export default function Index({ branches, filters }: Props) {
    const handleDelete = () => {
        if (!deleteConfirm) return;
 
-       form.delete(`/business/branches/${deleteConfirm.id}`, {
+       form.delete(`/branches/${deleteConfirm.id}`, {
            onSuccess: () => {
                if (props.flash?.error) {
                   toast.error(props.flash.error);

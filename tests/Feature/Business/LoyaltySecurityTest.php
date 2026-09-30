@@ -57,7 +57,7 @@ test('deactivating logged in staff prevents further loyalty actions', function (
     [, , $staff, , $input] = loyaltySecurityFixture();
     $this->actingAs($staff, 'staff');
     $staff->update(['is_active' => false]);
-    $this->postJson('/staff/scan-customer', $input)->assertForbidden();
+    $this->postJson(portalUrl('staff', '/scan-customer'), $input)->assertForbidden();
     $this->assertGuest('staff');
     expect(StampCode::whereNotNull('used_at')->count())->toBe(0);
 });
@@ -65,15 +65,15 @@ test('deactivating logged in staff prevents further loyalty actions', function (
 test('inactive staff cannot reopen or redeem rewards', function () {
     [, , $staff, , $claim] = earnedSecurityClaim();
     $staff->update(['is_active' => false]);
-    $this->actingAs($staff, 'staff')->postJson("/staff/perk-claims/{$claim->id}/redeem")->assertForbidden();
-    $this->actingAs($staff, 'staff')->postJson("/staff/perk-claims/{$claim->id}/undo")->assertForbidden();
+    $this->actingAs($staff, 'staff')->postJson(portalUrl('staff', "/perk-claims/{$claim->id}/redeem"))->assertForbidden();
+    $this->actingAs($staff, 'staff')->postJson(portalUrl('staff', "/perk-claims/{$claim->id}/undo"))->assertForbidden();
     expect($claim->fresh()->is_redeemed)->toBeFalse();
 });
 
 test('removed offline endpoints cannot generate stamps', function () {
     [$business, , $staff, $card] = loyaltySecurityFixture();
-    $this->actingAs($staff, 'staff')->get("/staff/generate-offline?id={$card->id}")->assertNotFound();
-    $this->actingAs($business->user)->get("/business/issue-stamps/generate-offline?id={$card->id}")->assertNotFound();
+    $this->actingAs($staff, 'staff')->get(portalUrl('staff', "/generate-offline?id={$card->id}"))->assertNotFound();
+    $this->actingAs($business->user)->get(portalUrl('admin', "/issue-stamps/generate-offline?id={$card->id}"))->assertNotFound();
     expect(StampCode::count())->toBe(1);
 });
 
@@ -92,8 +92,8 @@ test('expired loyalty cards cannot receive stamps through either path', function
     [, $customer, $staff, $card, $input] = loyaltySecurityFixture();
     $card->update(['valid_until' => now()->subDay()->toDateString()]);
     $code = StampCode::firstOrFail();
-    $this->actingAs($customer, 'customer')->post('/stamps/record', ['code' => $code->code, 'loyalty_card_id' => $card->id])->assertSessionHasErrors('code');
-    $this->actingAs($staff, 'staff')->post('/staff/scan-customer', $input)->assertSessionHasErrors('loyalty_card_id');
+    $this->actingAs($customer, 'customer')->post(portalUrl('customer', '/stamps/record'), ['code' => $code->code, 'loyalty_card_id' => $card->id])->assertSessionHasErrors('code');
+    $this->actingAs($staff, 'staff')->post(portalUrl('staff', '/scan-customer'), $input)->assertSessionHasErrors('loyalty_card_id');
     expect($code->fresh()->used_at)->toBeNull()
         ->and(PerkClaim::count())->toBe(0);
 });
@@ -131,7 +131,7 @@ test('earned perks cannot be modified removed or bypassed by deleting their card
     // Design/name edits still work when the earned reward is unchanged.
     $data['heading'] = 'New heading';
     expect($service->update($business, $card->id, $data)->heading)->toBe('New heading');
-    $this->actingAs($business->user)->get("/business/card-templates/{$card->id}/edit")
+    $this->actingAs($business->user)->get(portalUrl('admin', "/card-templates/{$card->id}/edit"))
         ->assertInertia(fn (AssertableInertia $page) => $page->where('cardTemplate.perks.0.claims_exists', true));
 });
 

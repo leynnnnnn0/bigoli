@@ -16,7 +16,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/customer/forgot-password');
+        post('/forgot-password');
     };
 
     return (
@@ -67,7 +67,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                 <div className="space-x-1 text-center text-sm text-muted-foreground">
                     <span>Or, return to</span>
-                    <TextLink href="/customer/login">log in</TextLink>
+                    <TextLink href="/login">log in</TextLink>
                 </div>
             </div>
         </AuthLayout>

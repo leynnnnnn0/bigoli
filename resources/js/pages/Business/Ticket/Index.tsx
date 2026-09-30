@@ -87,7 +87,7 @@ export default function Index({ tickets, counts, currentStatus }: Props) {
       formData.append(`images[${index}]`, image);
     });
 
-    router.post('/business/tickets', formData, {
+    router.post('/tickets', formData, {
       onSuccess: () => {
         setIsDialogOpen(false);
         reset();
@@ -115,7 +115,7 @@ export default function Index({ tickets, counts, currentStatus }: Props) {
   };
 
   const handleTabChange = (status: string) => {
-    router.get('/business/tickets', { status }, { preserveState: true });
+    router.get('/tickets', { status }, { preserveState: true });
   };
 
   const getStatusIcon = (status: string) => {
@@ -356,7 +356,7 @@ export default function Index({ tickets, counts, currentStatus }: Props) {
                   <Card
                     key={ticket.id}
                     className="hover:shadow-md transition-shadow cursor-pointer"
-                    onClick={() => router.visit(`/business/tickets/${ticket.id}`)}
+                    onClick={() => router.visit(`/tickets/${ticket.id}`)}
                   >
                     <CardHeader className="pb-3">
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">

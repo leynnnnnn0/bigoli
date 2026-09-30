@@ -52,7 +52,7 @@ export default function Index({ customers, filters }: Props) {
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       router.get(
-        '/business/customers',
+        '/customers',
         { search },
         {
           preserveState: true,
@@ -113,7 +113,7 @@ export default function Index({ customers, filters }: Props) {
                     <TableCell>{customer.email}</TableCell>
                     <TableCell>{formatDate(customer.created_at)}</TableCell>
                     <TableCell className="justify-center">
-                      <button className="cursor-pointer" onClick={() => router.visit(`/business/customers/${customer.id}`)}>
+                      <button className="cursor-pointer" onClick={() => router.visit(`/customers/${customer.id}`)}>
                         <Eye/>
                       </button>
                     </TableCell> 
@@ -135,7 +135,7 @@ export default function Index({ customers, filters }: Props) {
           {customers.data.length > 0 ? (
             customers.data.map((customer) => (
               <div
-              onClick={() => router.visit(`/business/customers/${customer.id}`)}
+              onClick={() => router.visit(`/customers/${customer.id}`)}
                 key={customer.id}
                 className="border rounded-lg p-4 bg-white shadow-sm space-y-3"
               >

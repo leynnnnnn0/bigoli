@@ -13,9 +13,11 @@ class SetSessionLifetime
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $host = $request->getHost();
+
         $accountType = match (true) {
-            $request->is('customer', 'customer/*', 'stamps', 'stamps/*') => 'customer',
-            $request->is('staff', 'staff/*') => 'staff',
+            $host === config('portals.domains.customer') => 'customer',
+            $host === config('portals.domains.staff') => 'staff',
             default => 'business',
         };
 

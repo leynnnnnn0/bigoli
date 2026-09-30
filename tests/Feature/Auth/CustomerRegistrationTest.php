@@ -2,13 +2,23 @@
 
 use App\Models\Branch;
 use App\Models\Business;
+use Illuminate\Support\Facades\URL;
 use Inertia\Testing\AssertableInertia as Assert;
+
+beforeEach(function () {
+    URL::forceRootUrl(portalUrl('customer'));
+    URL::forceScheme('https');
+    $this->withServerVariables([
+        'HTTP_HOST' => config('portals.domains.customer'),
+        'HTTPS' => 'on',
+    ]);
+});
 
 test('customers can open registration without a QR and choose a Bigoli branch', function () {
     $business = Business::factory()->create(['name' => 'Bigoli']);
     $branches = Branch::factory()->for($business)->count(2)->create();
 
-    $this->get('/customer/register')->assertOk()->assertInertia(fn (Assert $page) => $page
+    $this->get('/register')->assertOk()->assertInertia(fn (Assert $page) => $page
         ->component('Customer/Auth/Register')
         ->where('business.id', $business->id)
         ->where('branch_id', null)
@@ -17,7 +27,7 @@ test('customers can open registration without a QR and choose a Bigoli branch', 
         ->missing('businesses')
         ->missing('business.qr_token'));
 
-    $this->post('/customer/register', [
+    $this->post('/register', [
         'branch_id' => $branches->first()->id,
         'username' => 'newcustomer',
         'email' => 'newcustomer@example.com',
@@ -25,7 +35,7 @@ test('customers can open registration without a QR and choose a Bigoli branch', 
         'phone_number' => '+63 912 345 6789',
         'password' => 'password123',
         'password_confirmation' => 'password123',
-    ])->assertSessionHasNoErrors()->assertRedirect('/customer/dashboard');
+    ])->assertSessionHasNoErrors()->assertRedirect(route('customer.dashboard'));
 
     $this->assertAuthenticated('customer');
     $this->assertDatabaseHas('customers', [
@@ -41,7 +51,7 @@ test('registration requires a valid date of birth and phone number', function ()
     $business = Business::factory()->create(['name' => 'Bigoli']);
     $branch = Branch::factory()->for($business)->create();
 
-    $this->post('/customer/register', [
+    $this->post('/register', [
         'branch_id' => $branch->id,
         'username' => 'invaliddetails',
         'email' => 'invaliddetails@example.com',
@@ -57,7 +67,7 @@ test('QR registration preserves its business and branch selection', function () 
     $business = Business::factory()->create(['name' => 'Bigoli']);
     $branch = Branch::factory()->for($business)->create();
 
-    $this->get("/customer/register?business={$business->qr_token}&branch_id={$branch->id}")
+    $this->get("/register?business={$business->qr_token}&branch_id={$branch->id}")
         ->assertOk()->assertInertia(fn (Assert $page) => $page
         ->where('business.id', $business->id)
         ->where('branch_id', $branch->id));
@@ -67,7 +77,7 @@ test('registration rejects a branch from a different business', function () {
     $business = Business::factory()->create(['name' => 'Bigoli']);
     $other = Branch::factory()->create();
 
-    $this->post('/customer/register', [
+    $this->post('/register', [
         'branch_id' => $other->id,
         'username' => 'wrongbranch', 'email' => 'wrongbranch@example.com',
         'password' => 'password123', 'password_confirmation' => 'password123',
@@ -79,7 +89,7 @@ test('registration rejects a branch from a different business', function () {
 test('registration requires a branch', function () {
     Business::factory()->create(['name' => 'Bigoli']);
 
-    $this->post('/customer/register', [
+    $this->post('/register', [
         'username' => 'nobranch', 'email' => 'nobranch@example.com',
         'password' => 'password123', 'password_confirmation' => 'password123',
     ])->assertSessionHasErrors('branch_id');

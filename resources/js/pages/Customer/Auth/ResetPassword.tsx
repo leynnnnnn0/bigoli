@@ -23,7 +23,7 @@ export default function ResetPassword({ email, token }: ResetPasswordProps) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/customer/reset-password');
+        post('/reset-password');
     };
 
     return (
@@ -101,7 +101,7 @@ export default function ResetPassword({ email, token }: ResetPasswordProps) {
 
                 <div className="space-x-1 text-center text-sm text-muted-foreground">
                     <span>Remember your password?</span>
-                    <TextLink href="/customer/login">Log in</TextLink>
+                    <TextLink href="/login">Log in</TextLink>
                 </div>
             </div>
         </AuthLayout>

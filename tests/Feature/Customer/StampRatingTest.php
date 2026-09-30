@@ -4,7 +4,17 @@ use App\Models\Business;
 use App\Models\Customer;
 use App\Models\LoyaltyCard;
 use App\Models\StampCode;
+use Illuminate\Support\Facades\URL;
 use Inertia\Testing\AssertableInertia as Assert;
+
+beforeEach(function () {
+    URL::forceRootUrl(portalUrl('customer'));
+    URL::forceScheme('https');
+    $this->withServerVariables([
+        'HTTP_HOST' => config('portals.domains.customer'),
+        'HTTPS' => 'on',
+    ]);
+});
 
 function receivedStamp(Customer $customer, LoyaltyCard $card, array $attributes = []): StampCode
 {
@@ -24,18 +34,18 @@ test('customer is prompted to rate each received stamp and can give a thumbs up'
     $stamp = receivedStamp($customer, $card);
 
     $this->actingAs($customer, 'customer')
-        ->get('/customer/dashboard')
+        ->get('/dashboard')
         ->assertInertia(fn (Assert $page) => $page
             ->where('pendingStampRating.id', $stamp->id)
             ->where('pendingStampRating.loyalty_card_name', 'Coffee Card'));
 
-    $this->post("/customer/stamps/{$stamp->id}/rating", ['rating' => 'up'])
+    $this->post("/stamps/{$stamp->id}/rating", ['rating' => 'up'])
         ->assertSessionHasNoErrors();
 
     expect($stamp->fresh()->customer_rating)->toBeTrue()
         ->and($stamp->fresh()->rating_dismissed_at)->toBeNull();
 
-    $this->get('/customer/dashboard')
+    $this->get('/dashboard')
         ->assertInertia(fn (Assert $page) => $page->where('pendingStampRating', null));
 });
 
@@ -47,7 +57,7 @@ test('customer can dismiss a stamp rating and completed-card stamps remain ratea
     $stamp->delete();
 
     $this->actingAs($customer, 'customer')
-        ->post("/customer/stamps/{$stamp->id}/rating", ['rating' => null])
+        ->post("/stamps/{$stamp->id}/rating", ['rating' => null])
         ->assertSessionHasNoErrors();
 
     $stamp = StampCode::withTrashed()->findOrFail($stamp->id);
@@ -63,10 +73,10 @@ test('customer cannot rate another customer stamp or submit an invalid rating', 
     $stamp = receivedStamp($otherCustomer, $card);
 
     $this->actingAs($customer, 'customer')
-        ->post("/customer/stamps/{$stamp->id}/rating", ['rating' => 'up'])
+        ->post("/stamps/{$stamp->id}/rating", ['rating' => 'up'])
         ->assertNotFound();
 
     $ownStamp = receivedStamp($customer, $card);
-    $this->post("/customer/stamps/{$ownStamp->id}/rating", ['rating' => 'maybe'])
+    $this->post("/stamps/{$ownStamp->id}/rating", ['rating' => 'maybe'])
         ->assertSessionHasErrors('rating');
 });

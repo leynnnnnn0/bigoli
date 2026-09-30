@@ -34,7 +34,7 @@ export default function Index({ cardTemplates = [] }: Props) {
   const [templateToDelete, setTemplateToDelete] = useState<number | null>(null);
 
   const handleEdit = (id: number) => {
-    router.visit(`/business/card-templates/${id}/edit`);
+    router.visit(`/card-templates/${id}/edit`);
   };
 
   const handleDelete = (id: number) => {
@@ -44,7 +44,7 @@ export default function Index({ cardTemplates = [] }: Props) {
 
   const confirmDelete = () => {
     if (templateToDelete) {
-      router.delete(`/business/card-templates/${templateToDelete}`, {
+      router.delete(`/card-templates/${templateToDelete}`, {
         onSuccess: () => {
           toast.success("Deleted Successfully.");
         },
@@ -67,7 +67,7 @@ export default function Index({ cardTemplates = [] }: Props) {
   };
 
   const handleView = (id: number) => {
-    router.visit(`/business/card-templates/${id}`);
+    router.visit(`/card-templates/${id}`);
   };
 
   const getPerkForStamp = (perks: CardTemplatePerk[], stampNumber: number) => {
@@ -83,7 +83,7 @@ export default function Index({ cardTemplates = [] }: Props) {
           >
               <Button
                   onClick={() =>
-                      router.visit('/business/card-templates/create')
+                      router.visit('/card-templates/create')
                   }
               >
                   <Plus className="h-4 w-4" /> Create New Template

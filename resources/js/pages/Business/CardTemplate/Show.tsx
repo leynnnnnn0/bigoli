@@ -34,7 +34,7 @@ export default function Show({ cardTemplate }: Props) {
       <div className="max-w-md mx-auto mt-6">
         {/* Back Button */}
         <div className="mb-4">
-          <Link href="/business/card-templates">
+          <Link href="/card-templates">
             <Button variant="ghost" size="sm" className="text-gray-400">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back

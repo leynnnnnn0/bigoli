@@ -61,8 +61,8 @@ class QRStudioService
             'heading' => 'Taylora', 'subheading' => 'Join our loyalty program by scanning the QR code',
         ]);
         $url = $business->subdomain
-            ? $business->subdomain.'/customer/register/?business='.$business->qr_token
-            : 'https://stampbayan.com/customer/register?business='.$business->qr_token;
+            ? rtrim($business->subdomain, '/').'/register?business='.$business->qr_token
+            : route('customer.register', ['business' => $business->qr_token]);
         if ($qrCode->branch_id) {
             $url .= '&branch_id='.$qrCode->branch_id;
         }

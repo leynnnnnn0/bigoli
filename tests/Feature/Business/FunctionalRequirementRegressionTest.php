@@ -7,7 +7,17 @@ use App\Models\LoyaltyCard;
 use App\Models\Perk;
 use App\Models\PerkClaim;
 use App\Models\StampCode;
+use Illuminate\Support\Facades\URL;
 use Inertia\Testing\AssertableInertia as Assert;
+
+beforeEach(function () {
+    URL::forceRootUrl(portalUrl('admin'));
+    URL::forceScheme('https');
+    $this->withServerVariables([
+        'HTTP_HOST' => config('portals.domains.admin'),
+        'HTTPS' => 'on',
+    ]);
+});
 
 function requirementOwner(): array
 {
@@ -37,7 +47,7 @@ test('IS-03 requires a transaction number whenever an online stamp code is reque
     $card = LoyaltyCard::factory()->for($business)->create();
 
     $this->actingAs($owner)
-        ->get("/business/issue-stamp?loyalty_card_id={$card->id}")
+        ->get("/issue-stamp?loyalty_card_id={$card->id}")
         ->assertSessionHasErrors('transaction_number');
 
     expect($business->stampCodes()->count())->toBe(0);
@@ -48,13 +58,13 @@ test('admin stamp generation enforces and records the loyalty card minimum spend
     $card = LoyaltyCard::factory()->for($business)->create(['minimum_amount_spent' => 500]);
 
     $this->actingAs($owner)
-        ->get("/business/issue-stamp?loyalty_card_id={$card->id}&transaction_number=TX-LOW&amount_spent=499")
+        ->get("/issue-stamp?loyalty_card_id={$card->id}&transaction_number=TX-LOW&amount_spent=499")
         ->assertSessionHasErrors([
             'amount_spent' => 'Minimum amount spent should be 500.00 to generate a stamp.',
         ]);
 
     $this->actingAs($owner)
-        ->get("/business/issue-stamp?loyalty_card_id={$card->id}&transaction_number=TX-OK&amount_spent=500")
+        ->get("/issue-stamp?loyalty_card_id={$card->id}&transaction_number=TX-OK&amount_spent=500")
         ->assertOk();
 
     $this->assertDatabaseHas('stamp_codes', [
@@ -78,7 +88,7 @@ test('online stamp codes do not expire and remain redeemable until used', functi
         'is_offline_code' => false,
     ]);
 
-    $this->actingAs($owner)->get('/business/issue-stamp')->assertOk();
+    $this->actingAs($owner)->get('/issue-stamp')->assertOk();
     expect($viewedCode->fresh()->is_expired)->toBeFalse()
         ->and($viewedCode->fresh()->used_at)->toBeNull();
 
@@ -93,7 +103,7 @@ test('online stamp codes do not expire and remain redeemable until used', functi
     ]);
 
     $this->actingAs($customer, 'customer')
-        ->post('/stamps/record', ['code' => $redeemedCode->code, 'loyalty_card_id' => $card->id])
+        ->post(portalUrl('customer', '/stamps/record'), ['code' => $redeemedCode->code, 'loyalty_card_id' => $card->id])
         ->assertSessionHasNoErrors();
 
     expect($redeemedCode->fresh()->is_expired)->toBeTrue()
@@ -103,7 +113,7 @@ test('online stamp codes do not expire and remain redeemable until used', functi
 test('LC-03 creates a card when optional perk color is omitted', function () {
     [$business, $owner] = requirementOwner();
 
-    $this->actingAs($owner)->post('/business/card-templates', validCardRequest([
+    $this->actingAs($owner)->post('/card-templates', validCardRequest([
         'perks' => [['stampNumber' => 3, 'reward' => 'Free drink']],
     ]))->assertRedirect();
 
@@ -115,14 +125,14 @@ test('LC-03 creates a card when optional perk color is omitted', function () {
 test('loyalty card create and edit persist the minimum amount spent', function () {
     [$business, $owner] = requirementOwner();
 
-    $this->actingAs($owner)->post('/business/card-templates', validCardRequest([
+    $this->actingAs($owner)->post('/card-templates', validCardRequest([
         'minimum_amount_spent' => 500,
     ]))->assertRedirect();
 
     $card = $business->loyaltyCards()->where('name', 'Regression Card')->firstOrFail();
     expect($card->minimum_amount_spent)->toBe('500.00');
 
-    $this->actingAs($owner)->put("/business/card-templates/{$card->id}", validCardRequest([
+    $this->actingAs($owner)->put("/card-templates/{$card->id}", validCardRequest([
         'name' => $card->name,
         'minimum_amount_spent' => 750,
     ]))->assertRedirect();
@@ -135,7 +145,7 @@ test('LC-09 preserves an existing perk color when an edit omits the optional col
     $card = LoyaltyCard::factory()->for($business)->create(['name' => 'Existing Card']);
     $perk = Perk::factory()->for($card, 'loyaltyCard')->create(['color' => '#ABCDEF']);
 
-    $this->actingAs($owner)->put("/business/card-templates/{$card->id}", validCardRequest([
+    $this->actingAs($owner)->put("/card-templates/{$card->id}", validCardRequest([
         'name' => $card->name,
         'perks' => [['id' => $perk->id, 'stampNumber' => 4, 'reward' => 'Updated reward']],
     ]))->assertRedirect();
@@ -147,7 +157,7 @@ test('LC-09 preserves an existing perk color when an edit omits the optional col
 test('LC-06 rejects rewards outside the loyalty card stamp range', function () {
     [$business, $owner] = requirementOwner();
 
-    $this->actingAs($owner)->post('/business/card-templates', validCardRequest([
+    $this->actingAs($owner)->post('/card-templates', validCardRequest([
         'stampsNeeded' => 5,
         'perks' => [['stampNumber' => 6, 'reward' => 'Impossible reward']],
     ]))->assertSessionHasErrors('perks.0.stampNumber');
@@ -170,7 +180,7 @@ test('customer stamp history ignores the legacy expiration flag', function () {
     ]);
 
     $this->actingAs($owner)
-        ->get("/business/customers/{$customer->id}")
+        ->get("/customers/{$customer->id}")
         ->assertInertia(fn (Assert $page) => $page
             ->missing('customer.stamp_codes.0.is_expired')
             ->where('customer.stamp_codes.0.used_at', null));
@@ -184,7 +194,7 @@ test('customer details show date of birth and phone number', function () {
     ]);
 
     $this->actingAs($owner)
-        ->get("/business/customers/{$customer->id}")
+        ->get("/customers/{$customer->id}")
         ->assertInertia(fn (Assert $page) => $page
             ->component('Business/Customer/Show')
             ->where('customer.date_of_birth', '1995-06-15')
@@ -218,7 +228,7 @@ test('perk claim summary reflects the searched customer', function () {
     ]);
 
     $this->actingAs($owner)
-        ->get('/business/perk-claims?search=Jashreil&status=available')
+        ->get('/perk-claims?search=Jashreil&status=available')
         ->assertInertia(fn (Assert $page) => $page
             ->has('perkClaims.data', 1)
             ->where('perkClaims.data.0.customer.username', 'Jashreil')
@@ -240,7 +250,7 @@ test('B-07 blocks branch deletion when soft-deleted stamp history remains linked
     $stamp->delete();
 
     $this->actingAs($owner)
-        ->delete("/business/branches/{$branch->id}")
+        ->delete("/branches/{$branch->id}")
         ->assertSessionHas('error', 'Cannot delete branch because it has stamp codes linked to it.');
 
     $this->assertDatabaseHas('branches', ['id' => $branch->id]);

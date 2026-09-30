@@ -316,7 +316,7 @@ export default function Index({
         setSelectedBranchId(value);
         setSelectedCardId('');
         router.get(
-            '/staff/dashboard',
+            '/dashboard',
             { branch_id: value },
             { preserveScroll: true, replace: true },
         );
@@ -342,7 +342,7 @@ export default function Index({
         setLoading(true);
         setError(null);
         router.post(
-            '/staff/dashboard/generate-code',
+            '/dashboard/generate-code',
             {
                 loyalty_card_id: selectedCardId,
                 branch_id: selectedBranchId || undefined,
@@ -389,7 +389,7 @@ export default function Index({
         if (!selectedClaim) return;
         setProcessing(true);
         router.post(
-            `/staff/perk-claims/${selectedClaim.id}/redeem`,
+            `/perk-claims/${selectedClaim.id}/redeem`,
             { remarks },
             {
                 onSuccess: () => {
@@ -411,7 +411,7 @@ export default function Index({
     const handleUndoRedeem = (claim: PerkClaim) => {
         if (!confirm('Are you sure you want to undo this redemption?')) return;
         router.post(
-            `/staff/perk-claims/${claim.id}/undo`,
+            `/perk-claims/${claim.id}/undo`,
             {},
             {
                 onSuccess: () => {
@@ -425,7 +425,7 @@ export default function Index({
     };
 
     const handleLogout = () => {
-        router.post('/staff/logout');
+        router.post('/logout');
     };
 
     const getStatusBadge = (stampCode: StampCodeRecord) => {
@@ -629,7 +629,7 @@ export default function Index({
                                             : 'Generate Code'}
                                     </Button>
                                     <CustomerQrScanner
-                                        endpoint="/staff/scan-customer"
+                                        endpoint="/scan-customer"
                                         data={{
                                             loyalty_card_id: selectedCardId,
                                             transaction_number:
@@ -737,7 +737,7 @@ export default function Index({
                                         Generate New
                                     </Button>
                                     <CustomerQrScanner
-                                        endpoint="/staff/scan-customer"
+                                        endpoint="/scan-customer"
                                         data={{
                                             loyalty_card_id: selectedCardId,
                                             transaction_number:

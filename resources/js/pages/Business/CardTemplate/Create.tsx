@@ -69,7 +69,7 @@ export default function Create({ branches = [] }: { branches?: BranchOption[] })
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    post('/business/card-templates', {
+    post('/card-templates', {
       onSuccess: () => {
         toast.success('Loyalty Card Created Successfully.');
       },

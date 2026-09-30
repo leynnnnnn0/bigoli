@@ -107,7 +107,7 @@ export default function Index({ perkClaims, filters, stats }: Props) {
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       router.get(
-        '/business/perk-claims',
+        '/perk-claims',
         { search, status: filters.status },
         {
           preserveState: true,
@@ -121,7 +121,7 @@ export default function Index({ perkClaims, filters, stats }: Props) {
 
   const handleStatusFilter = (status: string) => {
     router.get(
-      '/business/perk-claims',
+      '/perk-claims',
       { search, status },
       {
         preserveState: true,
@@ -156,7 +156,7 @@ export default function Index({ perkClaims, filters, stats }: Props) {
 
     setProcessing(true);
     router.post(
-      `/business/perk-claims/${selectedClaim.id}/redeem`,
+      `/perk-claims/${selectedClaim.id}/redeem`,
       { remarks },
       {
         onSuccess: () => {
@@ -179,7 +179,7 @@ export default function Index({ perkClaims, filters, stats }: Props) {
     if (!confirm('Are you sure you want to undo this redemption?')) return;
 
     router.post(
-      `/business/perk-claims/${claim.id}/undo`,
+      `/perk-claims/${claim.id}/undo`,
       {},
       {
         onSuccess: () => {

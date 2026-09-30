@@ -65,7 +65,7 @@ export default function Register({
 
     const submit: FormEventHandler = (event) => {
         event.preventDefault();
-        post('/customer/register', {
+        post('/register', {
             onSuccess: () => {
                 toast.success(
                     'Registration successful! You can now start earning stamps.',
@@ -303,7 +303,7 @@ export default function Register({
                     <p className="text-center text-sm text-[#64736d]">
                         Already have an account?{' '}
                         <Link
-                            href="/customer/login"
+                            href="/login"
                             className="font-semibold text-[#008c45] hover:underline"
                         >
                             Sign in

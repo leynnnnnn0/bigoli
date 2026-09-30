@@ -189,7 +189,7 @@ export default function Index({
 
         setRatingSubmitting(true);
         router.post(
-            `/customer/stamps/${ratingPrompt.id}/rating`,
+            `/stamps/${ratingPrompt.id}/rating`,
             { rating },
             {
                 preserveScroll: true,
@@ -227,7 +227,7 @@ export default function Index({
 
     const handleUpdateProfile = (e: React.FormEvent) => {
         e.preventDefault();
-        postProfile('/customer/profile/update', {
+        postProfile('/profile/update', {
             onSuccess: () => {
                 toast.success('Profile updated successfully');
             },
@@ -243,7 +243,7 @@ export default function Index({
 
     const handleUpdatePassword = (e: React.FormEvent) => {
         e.preventDefault();
-        postPassword('/customer/password/update', {
+        postPassword('/password/update', {
             onSuccess: () => {
                 toast.success('Password updated successfully');
                 resetPassword();
@@ -1016,7 +1016,7 @@ export default function Index({
                                 Profile
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                                onClick={() => router.post('/customer/logout')}
+                                onClick={() => router.post('/logout')}
                             >
                                 Logout
                             </DropdownMenuItem>
@@ -1084,7 +1084,7 @@ export default function Index({
                                 Profile
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                                onClick={() => router.post('/customer/logout')}
+                                onClick={() => router.post('/logout')}
                             >
                                 Logout
                             </DropdownMenuItem>
@@ -1611,7 +1611,7 @@ export default function Index({
                             </button>
 
                             <button
-                                onClick={() => router.post('/customer/logout')}
+                                onClick={() => router.post('/logout')}
                                 className="flex w-full items-center gap-3 px-4 py-4 text-left transition-colors active:bg-red-50"
                             >
                                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-50">
