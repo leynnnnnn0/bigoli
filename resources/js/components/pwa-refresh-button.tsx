@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { RefreshCw } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 
 type NavigatorWithStandalone = Navigator & {
     standalone?: boolean;
@@ -18,13 +18,21 @@ function isStandalonePwa() {
     );
 }
 
-export function PwaRefreshButton() {
-    const [visible, setVisible] = useState(false);
-    const [refreshing, setRefreshing] = useState(false);
+function subscribeToDisplayMode(onChange: () => void) {
+    const mediaQuery = window.matchMedia('(display-mode: standalone)');
 
-    useEffect(() => {
-        setVisible(isStandalonePwa());
-    }, []);
+    mediaQuery.addEventListener('change', onChange);
+
+    return () => mediaQuery.removeEventListener('change', onChange);
+}
+
+export function PwaRefreshButton() {
+    const visible = useSyncExternalStore(
+        subscribeToDisplayMode,
+        isStandalonePwa,
+        () => false,
+    );
+    const [refreshing, setRefreshing] = useState(false);
 
     const refreshApp = async () => {
         setRefreshing(true);
