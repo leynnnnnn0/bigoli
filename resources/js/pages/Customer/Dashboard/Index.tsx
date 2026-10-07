@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { router, useForm } from '@inertiajs/react';
+import { useEcho } from '@laravel/echo-react';
 import {
     Award,
     Calendar,
@@ -141,6 +142,7 @@ interface Props {
     active_card_id?: number;
     perkClaims: PerkClaim[];
     customer: {
+        id: number;
         username: string;
     };
     customerQrSvg: string;
@@ -180,9 +182,16 @@ export default function Index({
     const [ratingPrompt, setRatingPrompt] = useState(pendingStampRating);
     const [ratingSubmitting, setRatingSubmitting] = useState(false);
 
+    useEcho<{ stamp: NonNullable<Props['pendingStampRating']> }>(
+        `customers.${customer.id}`,
+        '.stamp.received',
+        ({ stamp }) => setRatingPrompt(stamp),
+        [customer.id],
+    );
+
     useEffect(() => {
         setRatingPrompt(pendingStampRating);
-    }, [pendingStampRating?.id]);
+    }, [pendingStampRating]);
 
     const submitStampRating = (rating: 'up' | 'down' | null) => {
         if (!ratingPrompt || ratingSubmitting) return;

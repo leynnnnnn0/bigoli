@@ -1,9 +1,12 @@
 <?php
 
+use App\Events\StampReceived;
 use App\Models\Business;
 use App\Models\Customer;
 use App\Models\LoyaltyCard;
 use App\Models\StampCode;
+use App\Services\LoyaltyStampService;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -79,4 +82,22 @@ test('customer cannot rate another customer stamp or submit an invalid rating', 
     $ownStamp = receivedStamp($customer, $card);
     $this->post("/stamps/{$ownStamp->id}/rating", ['rating' => 'maybe'])
         ->assertSessionHasErrors('rating');
+});
+
+test('applying a stamp broadcasts a private customer feedback event', function () {
+    Event::fake([StampReceived::class]);
+
+    $business = Business::factory()->create();
+    $customer = Customer::factory()->for($business)->create();
+    $card = LoyaltyCard::factory()->for($business)->create(['name' => 'Coffee Card']);
+    $stamp = receivedStamp($customer, $card);
+
+    app(LoyaltyStampService::class)->apply($stamp, $customer->id);
+
+    Event::assertDispatched(StampReceived::class, fn (StampReceived $event): bool => $event->customerId === $customer->id
+        && $event->stamp === [
+            'id' => $stamp->id,
+            'loyalty_card_name' => 'Coffee Card',
+        ]
+    );
 });

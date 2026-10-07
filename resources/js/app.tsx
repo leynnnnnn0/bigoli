@@ -8,6 +8,11 @@ import { createRoot } from 'react-dom/client';
 import { PwaInstallPrompt } from './components/pwa-install-prompt';
 import { PwaRefreshButton } from './components/pwa-refresh-button';
 import { initializeTheme } from './hooks/use-appearance';
+import { configureEcho } from '@laravel/echo-react';
+
+configureEcho({
+    broadcaster: 'reverb',
+});
 
 const appName = 'Stamp Bayan';
 

@@ -2,6 +2,7 @@
 
 use App\Models\Customer;
 use App\Models\Staff;
+use Illuminate\Broadcasting\BroadcastManager;
 use Inertia\Testing\AssertableInertia as Assert;
 
 dataset('portal login pages', [
@@ -84,4 +85,33 @@ test('staff logout uses the clean portal path', function () {
         ->assertRedirect(route('staff.login'));
 
     $this->assertGuest('staff');
+});
+
+test('customers can only authorize their own private broadcast channel', function () {
+    config()->set('broadcasting.default', 'reverb');
+    config()->set('broadcasting.connections.reverb', [
+        'driver' => 'reverb',
+        'key' => 'test-key',
+        'secret' => 'test-secret',
+        'app_id' => 'test-app',
+        'options' => ['host' => 'localhost', 'port' => 8080, 'scheme' => 'http', 'useTLS' => false],
+    ]);
+    app(BroadcastManager::class)->forgetDrivers();
+    require base_path('routes/channels.php');
+
+    $customer = Customer::factory()->create();
+    $otherCustomer = Customer::factory()->create();
+    $payload = ['socket_id' => '1234.5678'];
+
+    $this->actingAs($customer, 'customer')
+        ->post(portalUrl('customer', '/broadcasting/auth'), [
+            ...$payload,
+            'channel_name' => "private-customers.{$customer->id}",
+        ])
+        ->assertOk();
+
+    $this->post(portalUrl('customer', '/broadcasting/auth'), [
+        ...$payload,
+        'channel_name' => "private-customers.{$otherCustomer->id}",
+    ])->assertForbidden();
 });

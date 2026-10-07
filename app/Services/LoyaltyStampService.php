@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\StampReceived;
 use App\Models\CompletedLoyaltyCard;
 use App\Models\LoyaltyCard;
 use App\Models\PerkClaim;
@@ -22,6 +23,11 @@ class LoyaltyStampService
 
         $loyaltyCard = LoyaltyCard::with('perks')->findOrFail($stampCode->loyalty_card_id);
         $newlyUnlockedPerks = [];
+
+        StampReceived::dispatch($customerId, [
+            'id' => $stampCode->id,
+            'loyalty_card_name' => $loyaltyCard->name,
+        ]);
 
         foreach ($loyaltyCard->perks->where('stampNumber', $totalStamps) as $perk) {
             PerkClaim::create([
