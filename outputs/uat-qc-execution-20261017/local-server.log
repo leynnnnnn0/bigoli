@@ -1,0 +1,606 @@
+
+   INFO  Preparing database.  
+
+  Creating migration table ....................................... 2.24ms DONE
+
+   INFO  Running migrations.  
+
+  0001_01_01_000000_create_users_table ........................... 2.77ms DONE
+  0001_01_01_000001_create_cache_table ........................... 1.05ms DONE
+  0001_01_01_000002_create_jobs_table ............................ 1.65ms DONE
+  2025_08_26_100418_add_two_factor_columns_to_users_table ........ 0.85ms DONE
+  2025_11_24_005001_create_businesses_table ...................... 0.80ms DONE
+  2025_11_24_005018_create_loyalty_cards_table ................... 0.56ms DONE
+  2025_11_24_005345_create_perks_table ........................... 0.56ms DONE
+  2025_11_24_071727_create_qr_codes_table ........................ 0.98ms DONE
+  2025_11_24_082753_create_customers_table ....................... 1.43ms DONE
+  2025_11_24_131624_create_stamp_codes_table ..................... 0.91ms DONE
+  2025_11_25_133534_create_completed_loyalty_cards_table ......... 0.68ms DONE
+  2025_11_25_211344_create_perk_claims_table ..................... 0.77ms DONE
+  2025_11_26_120242_create_tickets_table ......................... 1.01ms DONE
+  2025_11_26_120654_create_ticket_replies_table .................. 0.55ms DONE
+  2025_12_06_152527_create_staff_table ........................... 0.96ms DONE
+  2025_12_10_161716_create_customer_password_reset_tokens_table .. 0.56ms DONE
+  2025_12_13_123147_create_suggestions_table ..................... 0.52ms DONE
+  2026_01_04_163925_create_personal_access_tokens_table .......... 1.68ms DONE
+  2026_01_17_202734_add_subdomain_column_on_businesses_table ..... 0.59ms DONE
+  2026_04_13_202338_create_branches_table ........................ 0.58ms DONE
+  2026_04_14_163556_create_branch_loyalty_cards_table ............ 0.51ms DONE
+  2026_04_14_205707_add_column_branch_id_to_staff_table .......... 3.55ms DONE
+  2026_04_14_211234_add_column_branch_id_to_customer_table ....... 3.34ms DONE
+  2026_04_14_221818_add_branch_id_column_to_stamp_codes_table .... 3.07ms DONE
+  2026_04_15_083615_add_branch_id_column_to_qr_codes_table ....... 3.02ms DONE
+  2026_04_16_101350_add_reference_number__column_to_stamp_codes_table  0.62ms DONE
+  2026_04_16_112346_add_staff_id_column_to_stamp_codes_table ..... 3.12ms DONE
+  2026_04_27_094653_add_redeemed_by_staff_id_column_on_perk_claims_table  2.97ms DONE
+  2026_09_02_210000_drop_suggestions_table ....................... 0.34ms DONE
+  2026_09_15_000000_add_date_of_birth_and_phone_number_to_customers_table  1.20ms DONE
+  2026_09_15_010000_add_spending_requirements_and_rename_transaction_number  2.45ms DONE
+  2026_09_15_020000_add_customer_rating_to_stamp_codes_table ..... 1.31ms DONE
+
+
+   INFO  Seeding database.  
+
+Isolated local QA server ready on port 3147
+
+   INFO  Server running on [http://127.0.0.1:3147].  
+
+  Press Ctrl+C to stop the server
+
+  2026-10-17 18:55:23 /login ..................................... ~ 505.35ms
+  2026-10-17 18:55:23 /build/assets/app-BGAoCQB6.css ............... ~ 0.02ms
+  2026-10-17 18:55:23 /build/assets/login-DDSHsE7_.js .............. ~ 0.02ms
+  2026-10-17 18:55:23 /build/assets/app-Cmjjc_8e.js ................ ~ 0.10ms
+  2026-10-17 18:55:23 /build/assets/branded-auth-shell-DARx2Qyn.js . ~ 0.17ms
+  2026-10-17 18:55:23 /build/assets/input-error-jUudtgEt.js ........ ~ 0.01ms
+  2026-10-17 18:55:23 /build/assets/alert-tPseXPpv.js .............. ~ 0.03ms
+  2026-10-17 18:55:23 /build/assets/checkbox-BxcbN4Dr.js ........... ~ 0.11ms
+  2026-10-17 18:55:23 /build/assets/input-C6KI5-nY.js .............. ~ 0.17ms
+  2026-10-17 18:55:23 /build/assets/label-Z_mgknoc.js .............. ~ 0.24ms
+  2026-10-17 18:55:23 /build/assets/spinner-BnrYR9J2.js ............ ~ 0.32ms
+  2026-10-17 18:55:23 /build/assets/index-CSEUMRIG.js .............. ~ 0.38ms
+  2026-10-17 18:55:23 /build/assets/mail-aFAyorXF.js ............... ~ 0.38ms
+  2026-10-17 18:55:23 /build/assets/eye-off-DCOR01dC.js ............ ~ 0.25ms
+  2026-10-17 18:55:23 /build/assets/eye-DdcN07ZP.js ................ ~ 0.32ms
+  2026-10-17 18:55:23 /build/assets/mainLogo-l-PLDyHm.js ........... ~ 0.33ms
+  2026-10-17 18:55:23 /build/assets/arrow-left-ChDZQ9FX.js ......... ~ 0.33ms
+  2026-10-17 18:55:23 /build/assets/index-DJ7kKohB.js .............. ~ 0.30ms
+  2026-10-17 18:55:23 /build/assets/index-DfHGYS_q.js .............. ~ 0.30ms
+  2026-10-17 18:55:23 /build/assets/index-BTt7Fy2x.js .............. ~ 0.29ms
+  2026-10-17 18:55:23 /build/assets/check-BGexV6Bb.js .............. ~ 0.29ms
+  2026-10-17 18:55:23 /build/assets/app-BGAoCQB6.css ............... ~ 0.01ms
+  2026-10-17 18:55:23 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.01ms
+  2026-10-17 18:55:23 /favicon.ico ................................. ~ 0.01ms
+  2026-10-17 18:55:23 /sw.js ....................................... ~ 0.01ms
+  2026-10-17 18:55:23 /favicon.ico ................................. ~ 0.02ms
+  2026-10-17 18:55:23 /apple-touch-icon.png ........................ ~ 0.15ms
+  2026-10-17 18:55:23 /web-app-manifest-192x192.png ................ ~ 0.26ms
+  2026-10-17 18:55:23 /web-app-manifest-512x512.png ................ ~ 0.01ms
+  2026-10-17 18:55:23 /sw.js ....................................... ~ 0.01ms
+  2026-10-17 18:55:26 /login ....................................... ~ 0.07ms
+  2026-10-17 18:55:26 /login ....................................... ~ 0.02ms
+  2026-10-17 18:55:30 /login ....................................... ~ 0.05ms
+  2026-10-17 18:55:30 /dashboard ................................... ~ 0.01ms
+  2026-10-17 18:55:30 /build/assets/card-DLPez5Tq.js ............... ~ 0.03ms
+  2026-10-17 18:55:30 /build/assets/arrow-up-right-DtBQaa1V.js ..... ~ 0.11ms
+  2026-10-17 18:55:30 /build/assets/Index-Dcq-Wi6Y.js .............. ~ 0.16ms
+  2026-10-17 18:55:30 /build/assets/select-Bddy7cNG.js ............. ~ 0.22ms
+  2026-10-17 18:55:30 /build/assets/index-CN8R85pe.js .............. ~ 0.29ms
+  2026-10-17 18:55:30 /build/assets/index-CSHxGiom.js .............. ~ 0.37ms
+  2026-10-17 18:55:30 /build/assets/app-layout-cxZkIDxm.js ......... ~ 0.36ms
+  2026-10-17 18:55:30 /build/assets/use-mobile-nmnMtlOW.js ......... ~ 0.37ms
+  2026-10-17 18:55:30 /build/assets/dropdown-menu-DQWVfz8W.js ...... ~ 0.28ms
+  2026-10-17 18:55:30 /build/assets/index-CDkOghj2.js .............. ~ 0.25ms
+  2026-10-17 18:55:30 /build/assets/settings-Cn_W4qzQ.js ........... ~ 0.24ms
+  2026-10-17 18:55:30 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.01ms
+  2026-10-17 18:55:31 /login ....................................... ~ 0.07ms
+  2026-10-17 18:55:31 /build/assets/app-BGAoCQB6.css ............... ~ 0.01ms
+  2026-10-17 18:55:31 /build/assets/app-Cmjjc_8e.js ................ ~ 0.01ms
+  2026-10-17 18:55:31 /build/assets/Login-CRv3Kzxv.js .............. ~ 0.01ms
+  2026-10-17 18:55:31 /build/assets/branded-auth-shell-DARx2Qyn.js . ~ 0.08ms
+  2026-10-17 18:55:31 /build/assets/alert-tPseXPpv.js .............. ~ 0.01ms
+  2026-10-17 18:55:31 /build/assets/input-C6KI5-nY.js .............. ~ 0.09ms
+  2026-10-17 18:55:31 /build/assets/label-Z_mgknoc.js .............. ~ 0.02ms
+  2026-10-17 18:55:31 /build/assets/circle-alert-DebtTQa8.js ....... ~ 0.10ms
+  2026-10-17 18:55:31 /build/assets/mail-aFAyorXF.js ............... ~ 0.06ms
+  2026-10-17 18:55:31 /build/assets/eye-off-DCOR01dC.js ............ ~ 0.13ms
+  2026-10-17 18:55:31 /build/assets/eye-DdcN07ZP.js ................ ~ 0.02ms
+  2026-10-17 18:55:31 /build/assets/mainLogo-l-PLDyHm.js ........... ~ 0.09ms
+  2026-10-17 18:55:31 /build/assets/arrow-left-ChDZQ9FX.js ......... ~ 0.02ms
+  2026-10-17 18:55:31 /build/assets/index-BTt7Fy2x.js .............. ~ 0.07ms
+  2026-10-17 18:55:31 /build/assets/app-BGAoCQB6.css ............... ~ 0.01ms
+  2026-10-17 18:55:31 /sw.js ....................................... ~ 0.01ms
+  2026-10-17 18:55:31 /favicon.ico ................................. ~ 0.02ms
+  2026-10-17 18:55:31 /apple-touch-icon.png ........................ ~ 0.16ms
+  2026-10-17 18:55:31 /web-app-manifest-192x192.png ................ ~ 0.26ms
+  2026-10-17 18:55:31 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.02ms
+  2026-10-17 18:55:31 /web-app-manifest-512x512.png ................ ~ 0.08ms
+  2026-10-17 18:55:31 /favicon.ico ................................. ~ 0.11ms
+  2026-10-17 18:55:31 /sw.js ....................................... ~ 0.01ms
+  2026-10-17 18:55:31 /login ....................................... ~ 0.05ms
+  2026-10-17 18:55:31 /build/assets/app-BGAoCQB6.css ............... ~ 0.01ms
+  2026-10-17 18:55:31 /build/assets/app-Cmjjc_8e.js ................ ~ 0.01ms
+  2026-10-17 18:55:31 /build/assets/Login-BNRemrfs.js .............. ~ 0.01ms
+  2026-10-17 18:55:31 /build/assets/branded-auth-shell-DARx2Qyn.js . ~ 0.08ms
+  2026-10-17 18:55:31 /build/assets/alert-tPseXPpv.js .............. ~ 0.04ms
+  2026-10-17 18:55:31 /build/assets/input-C6KI5-nY.js .............. ~ 0.10ms
+  2026-10-17 18:55:31 /build/assets/label-Z_mgknoc.js .............. ~ 0.01ms
+  2026-10-17 18:55:31 /build/assets/circle-alert-DebtTQa8.js ....... ~ 0.02ms
+  2026-10-17 18:55:31 /build/assets/eye-off-DCOR01dC.js ............ ~ 0.06ms
+  2026-10-17 18:55:31 /build/assets/eye-DdcN07ZP.js ................ ~ 0.12ms
+  2026-10-17 18:55:31 /build/assets/mainLogo-l-PLDyHm.js ........... ~ 0.19ms
+  2026-10-17 18:55:31 /build/assets/arrow-left-ChDZQ9FX.js ......... ~ 0.01ms
+  2026-10-17 18:55:31 /build/assets/index-BTt7Fy2x.js .............. ~ 0.01ms
+  2026-10-17 18:55:31 /build/assets/app-BGAoCQB6.css ............... ~ 0.01ms
+  2026-10-17 18:55:31 /sw.js ....................................... ~ 0.01ms
+  2026-10-17 18:55:31 /favicon.ico ................................. ~ 0.02ms
+  2026-10-17 18:55:31 /apple-touch-icon.png ........................ ~ 0.15ms
+  2026-10-17 18:55:31 /web-app-manifest-192x192.png ................ ~ 0.26ms
+  2026-10-17 18:55:31 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.21ms
+  2026-10-17 18:55:31 /web-app-manifest-512x512.png ................ ~ 0.01ms
+  2026-10-17 18:55:31 /favicon.ico ................................. ~ 0.01ms
+  2026-10-17 18:55:31 /sw.js ....................................... ~ 0.01ms
+  2026-10-17 18:56:26 /login ..................................... ~ 503.38ms
+  2026-10-17 18:56:27 /login ....................................... ~ 0.02ms
+  2026-10-17 18:56:27 /login ....................................... ~ 0.02ms
+  2026-10-17 18:56:27 /login ....................................... ~ 0.02ms
+  2026-10-17 18:56:43 /login ....................................... ~ 0.18ms
+  2026-10-17 18:56:43 /dashboard ................................... ~ 0.05ms
+  2026-10-17 18:56:43 /build/assets/Index-B1asaBZQ.js .............. ~ 0.13ms
+  2026-10-17 18:56:43 /build/assets/sparkles-DeEgGT4K.js ........... ~ 0.47ms
+  2026-10-17 18:56:43 /build/assets/calendar-BsXUbSBd.js ........... ~ 0.56ms
+  2026-10-17 18:56:43 /build/assets/settings-Cn_W4qzQ.js ......... ~ 500.55ms
+  2026-10-17 18:56:43 /build/assets/badge-BtSKgCxJ.js ............ ~ 500.65ms
+  2026-10-17 18:56:43 /build/assets/dialog-CJMQKpQG.js ........... ~ 500.68ms
+  2026-10-17 18:56:43 /build/assets/index-CN8R85pe.js .............. ~ 0.39ms
+  2026-10-17 18:56:43 /build/assets/index-DJ7kKohB.js .............. ~ 0.46ms
+  2026-10-17 18:56:43 /build/assets/dropdown-menu-DQWVfz8W.js ...... ~ 0.38ms
+  2026-10-17 18:56:43 /build/assets/tabs-BVx7baQk.js ............... ~ 0.30ms
+  2026-10-17 18:56:43 /build/assets/user-gcxsYfyo.js ............... ~ 0.23ms
+  2026-10-17 18:56:43 /build/assets/house-qdKQlqGy.js .............. ~ 0.23ms
+  2026-10-17 18:56:43 /build/assets/plus-DbMnuHun.js ............... ~ 0.25ms
+  2026-10-17 18:56:43 /build/assets/BrowserQRCodeReader-Do4Wf9NK.js  ~ 0.55ms
+  2026-10-17 18:56:43 /build/assets/scan-line-D8g9fBrH.js .......... ~ 0.28ms
+  2026-10-17 18:56:43 /build/assets/chevron-left-C7UpWz0K.js ....... ~ 0.07ms
+  2026-10-17 18:56:43 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.01ms
+  2026-10-17 18:56:43 /login ....................................... ~ 0.01ms
+  2026-10-17 18:56:43 /dashboard ................................... ~ 0.01ms
+  2026-10-17 18:56:43 /build/assets/Index-BompbaJN.js .............. ~ 0.03ms
+  2026-10-17 18:56:43 /build/assets/index-CSHxGiom.js .............. ~ 0.11ms
+  2026-10-17 18:56:43 /build/assets/check-BGexV6Bb.js .............. ~ 0.18ms
+  2026-10-17 18:56:43 /build/assets/map-pin-Jj1qg_Cp.js ............ ~ 0.28ms
+  2026-10-17 18:56:43 /build/assets/dialog-CJMQKpQG.js ............. ~ 0.34ms
+  2026-10-17 18:56:43 /build/assets/customer-qr-scanner-BTRW7GoA.js  ~ 0.33ms
+  2026-10-17 18:56:43 /build/assets/select-Bddy7cNG.js ............. ~ 0.19ms
+  2026-10-17 18:56:43 /build/assets/index-DJ7kKohB.js .............. ~ 0.19ms
+  2026-10-17 18:56:43 /build/assets/BrowserQRCodeReader-Do4Wf9NK.js  ~ 0.58ms
+  2026-10-17 18:56:43 /build/assets/index-CN8R85pe.js .............. ~ 0.22ms
+  2026-10-17 18:56:43 /build/assets/scan-line-D8g9fBrH.js .......... ~ 0.29ms
+  2026-10-17 18:56:43 /build/assets/badge-BtSKgCxJ.js .............. ~ 0.32ms
+  2026-10-17 18:56:43 /build/assets/card-DLPez5Tq.js ............... ~ 0.23ms
+  2026-10-17 18:56:43 /build/assets/dropdown-menu-DQWVfz8W.js ...... ~ 0.24ms
+  2026-10-17 18:56:43 /build/assets/table-YZl3i2O2.js .............. ~ 0.22ms
+  2026-10-17 18:56:43 /build/assets/tabs-BVx7baQk.js ............... ~ 0.22ms
+  2026-10-17 18:56:43 /build/assets/textarea-Di2pktvs.js ........... ~ 0.30ms
+  2026-10-17 18:56:43 /build/assets/use-mobile-nmnMtlOW.js ......... ~ 0.29ms
+  2026-10-17 18:56:43 /build/assets/house-qdKQlqGy.js .............. ~ 0.30ms
+  2026-10-17 18:56:43 /build/assets/undo-2-XOgdviUN.js ............. ~ 0.30ms
+  2026-10-17 18:56:43 /build/assets/credit-card-vNh6Mtfn.js ........ ~ 0.29ms
+  2026-10-17 18:56:43 /build/assets/sparkles-DeEgGT4K.js ........... ~ 0.28ms
+  2026-10-17 18:56:43 /build/assets/user-gcxsYfyo.js ............... ~ 0.28ms
+  2026-10-17 18:56:43 /build/assets/calendar-BsXUbSBd.js ........... ~ 0.29ms
+  2026-10-17 18:56:43 /build/assets/index-DfHGYS_q.js .............. ~ 0.28ms
+  2026-10-17 18:56:43 /build/assets/search-BCpJa8eG.js ............. ~ 0.30ms
+  2026-10-17 18:56:43 /build/assets/chevron-left-C7UpWz0K.js ....... ~ 0.30ms
+  2026-10-17 18:56:43 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.01ms
+  2026-10-17 18:56:51 /tickets ..................................... ~ 0.06ms
+  2026-10-17 18:56:51 /build/assets/Index-v5wsnvwa.js .............. ~ 0.04ms
+  2026-10-17 18:56:51 /build/assets/module-heading-B0vF-JQ7.js ..... ~ 0.12ms
+  2026-10-17 18:56:51 /build/assets/dialog-CJMQKpQG.js ............. ~ 0.17ms
+  2026-10-17 18:56:51 /build/assets/textarea-Di2pktvs.js ........... ~ 0.25ms
+  2026-10-17 18:56:51 /build/assets/badge-BtSKgCxJ.js .............. ~ 0.32ms
+  2026-10-17 18:56:51 /build/assets/tabs-BVx7baQk.js ............... ~ 0.40ms
+  2026-10-17 18:56:51 /build/assets/plus-DbMnuHun.js ............... ~ 0.35ms
+  2026-10-17 18:56:51 /build/assets/image-BTLYQswR.js .............. ~ 0.35ms
+  2026-10-17 18:56:51 /build/assets/clock-BBQpTn3b.js .............. ~ 0.35ms
+  2026-10-17 18:56:51 /build/assets/circle-alert-DebtTQa8.js ....... ~ 0.34ms
+  2026-10-17 18:56:55 /dashboard/generate-code ..................... ~ 0.11ms
+  2026-10-17 18:56:55 /dashboard ................................... ~ 0.02ms
+  2026-10-17 18:56:59 /tickets ..................................... ~ 0.07ms
+  2026-10-17 18:56:59 /tickets ..................................... ~ 0.01ms
+  2026-10-17 18:57:07 /dashboard ................................... ~ 0.09ms
+  2026-10-17 18:57:07 /build/assets/app-BGAoCQB6.css ............... ~ 0.03ms
+  2026-10-17 18:57:07 /build/assets/Index-BompbaJN.js .............. ~ 0.05ms
+  2026-10-17 18:57:07 /build/assets/customer-qr-scanner-BTRW7GoA.js  ~ 0.18ms
+  2026-10-17 18:57:07 /build/assets/badge-BtSKgCxJ.js .............. ~ 0.24ms
+  2026-10-17 18:57:07 /build/assets/app-Cmjjc_8e.js ................ ~ 0.41ms
+  2026-10-17 18:57:07 /build/assets/card-DLPez5Tq.js ............... ~ 0.76ms
+  2026-10-17 18:57:07 /build/assets/dialog-CJMQKpQG.js ............. ~ 0.92ms
+  2026-10-17 18:57:07 /build/assets/dropdown-menu-DQWVfz8W.js ...... ~ 0.92ms
+  2026-10-17 18:57:07 /build/assets/input-C6KI5-nY.js .............. ~ 0.95ms
+  2026-10-17 18:57:07 /build/assets/label-Z_mgknoc.js .............. ~ 0.98ms
+  2026-10-17 18:57:07 /build/assets/table-YZl3i2O2.js .............. ~ 0.19ms
+  2026-10-17 18:57:07 /build/assets/tabs-BVx7baQk.js ............... ~ 0.32ms
+  2026-10-17 18:57:07 /build/assets/textarea-Di2pktvs.js ........... ~ 0.48ms
+  2026-10-17 18:57:07 /build/assets/use-mobile-nmnMtlOW.js ......... ~ 0.58ms
+  2026-10-17 18:57:07 /build/assets/mainLogo-l-PLDyHm.js ........... ~ 0.53ms
+  2026-10-17 18:57:07 /build/assets/house-qdKQlqGy.js .............. ~ 0.50ms
+  2026-10-17 18:57:07 /build/assets/map-pin-Jj1qg_Cp.js ............ ~ 0.19ms
+  2026-10-17 18:57:07 /build/assets/check-BGexV6Bb.js .............. ~ 0.17ms
+  2026-10-17 18:57:07 /build/assets/eye-DdcN07ZP.js ................ ~ 0.29ms
+  2026-10-17 18:57:07 /build/assets/undo-2-XOgdviUN.js ............. ~ 0.43ms
+  2026-10-17 18:57:07 /build/assets/credit-card-vNh6Mtfn.js ........ ~ 0.55ms
+  2026-10-17 18:57:07 /build/assets/sparkles-DeEgGT4K.js ........... ~ 0.64ms
+  2026-10-17 18:57:07 /build/assets/user-gcxsYfyo.js ............... ~ 0.75ms
+  2026-10-17 18:57:07 /build/assets/calendar-BsXUbSBd.js ........... ~ 0.50ms
+  2026-10-17 18:57:07 /build/assets/search-BCpJa8eG.js ............. ~ 0.40ms
+  2026-10-17 18:57:07 /build/assets/chevron-left-C7UpWz0K.js ....... ~ 0.41ms
+  2026-10-17 18:57:07 /build/assets/select-Bddy7cNG.js ............. ~ 0.37ms
+  2026-10-17 18:57:07 /build/assets/index-DJ7kKohB.js .............. ~ 0.49ms
+  2026-10-17 18:57:07 /build/assets/index-CN8R85pe.js .............. ~ 0.50ms
+  2026-10-17 18:57:07 /build/assets/index-BTt7Fy2x.js .............. ~ 0.51ms
+  2026-10-17 18:57:07 /build/assets/index-DfHGYS_q.js .............. ~ 0.55ms
+  2026-10-17 18:57:07 /build/assets/index-CSHxGiom.js .............. ~ 0.54ms
+  2026-10-17 18:57:07 /build/assets/scan-line-D8g9fBrH.js .......... ~ 0.40ms
+  2026-10-17 18:57:07 /build/assets/BrowserQRCodeReader-Do4Wf9NK.js  ~ 0.63ms
+  2026-10-17 18:57:07 /build/assets/app-BGAoCQB6.css ............... ~ 0.02ms
+  2026-10-17 18:57:07 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.02ms
+  2026-10-17 18:57:07 /sw.js ....................................... ~ 0.02ms
+  2026-10-17 18:57:09 /sw.js ....................................... ~ 0.13ms
+  2026-10-17 18:57:10 /stamps/record ............................... ~ 0.14ms
+  2026-10-17 18:57:10 /dashboard ................................... ~ 0.01ms
+  2026-10-17 18:57:10 /branches .................................... ~ 0.06ms
+  2026-10-17 18:57:10 /build/assets/app-BGAoCQB6.css ............... ~ 0.02ms
+  2026-10-17 18:57:10 /build/assets/Index-B_bBJRMM.js .............. ~ 0.03ms
+  2026-10-17 18:57:10 /build/assets/module-heading-B0vF-JQ7.js ..... ~ 0.12ms
+  2026-10-17 18:57:10 /build/assets/app-Cmjjc_8e.js ................ ~ 0.18ms
+  2026-10-17 18:57:10 /build/assets/alert-dialog-CFVFGmya.js ....... ~ 0.26ms
+  2026-10-17 18:57:10 /build/assets/dialog-CJMQKpQG.js ............. ~ 0.31ms
+  2026-10-17 18:57:10 /build/assets/input-C6KI5-nY.js .............. ~ 0.38ms
+  2026-10-17 18:57:10 /build/assets/label-Z_mgknoc.js .............. ~ 0.38ms
+  2026-10-17 18:57:10 /build/assets/textarea-Di2pktvs.js ........... ~ 0.04ms
+  2026-10-17 18:57:10 /build/assets/app-layout-cxZkIDxm.js ......... ~ 0.10ms
+  2026-10-17 18:57:10 /build/assets/pencil-nmu4JCNm.js ............. ~ 0.16ms
+  2026-10-17 18:57:10 /build/assets/trash-2-DCFSDH5W.js ............ ~ 0.24ms
+  2026-10-17 18:57:10 /build/assets/plus-DbMnuHun.js ............... ~ 0.31ms
+  2026-10-17 18:57:10 /build/assets/index-DJ7kKohB.js .............. ~ 0.39ms
+  2026-10-17 18:57:10 /build/assets/index-CN8R85pe.js .............. ~ 0.03ms
+  2026-10-17 18:57:10 /build/assets/index-BTt7Fy2x.js .............. ~ 0.26ms
+  2026-10-17 18:57:10 /build/assets/use-mobile-nmnMtlOW.js ......... ~ 0.46ms
+  2026-10-17 18:57:10 /build/assets/index-CSHxGiom.js .............. ~ 0.53ms
+  2026-10-17 18:57:10 /build/assets/dropdown-menu-DQWVfz8W.js ...... ~ 0.62ms
+  2026-10-17 18:57:10 /build/assets/index-CDkOghj2.js .............. ~ 0.69ms
+  2026-10-17 18:57:10 /build/assets/index-CSEUMRIG.js .............. ~ 0.22ms
+  2026-10-17 18:57:10 /build/assets/settings-Cn_W4qzQ.js ........... ~ 0.10ms
+  2026-10-17 18:57:10 /build/assets/mainLogo-l-PLDyHm.js ........... ~ 0.17ms
+  2026-10-17 18:57:10 /build/assets/app-BGAoCQB6.css ............... ~ 0.01ms
+  2026-10-17 18:57:10 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.01ms
+  2026-10-17 18:57:10 /sw.js ....................................... ~ 0.01ms
+  2026-10-17 18:57:10 /branches .................................... ~ 0.01ms
+  2026-10-17 18:57:12 /sw.js ....................................... ~ 0.10ms
+  2026-10-17 18:57:14 /stamps/2/rating ............................. ~ 0.14ms
+  2026-10-17 18:57:14 /dashboard ................................... ~ 0.02ms
+  2026-10-17 18:58:47 /branches .................................... ~ 0.09ms
+  2026-10-17 18:58:47 /branches .................................... ~ 0.02ms
+  2026-10-17 18:58:47 /dashboard ................................... ~ 0.12ms
+  2026-10-17 18:58:47 /build/assets/app-BGAoCQB6.css ............... ~ 0.02ms
+  2026-10-17 18:58:47 /build/assets/Index-B1asaBZQ.js .............. ~ 0.04ms
+  2026-10-17 18:58:47 /build/assets/badge-BtSKgCxJ.js .............. ~ 0.14ms
+  2026-10-17 18:58:47 /build/assets/dialog-CJMQKpQG.js ............. ~ 0.24ms
+  2026-10-17 18:58:47 /build/assets/app-Cmjjc_8e.js ................ ~ 0.36ms
+  2026-10-17 18:58:47 /build/assets/dropdown-menu-DQWVfz8W.js ...... ~ 0.45ms
+  2026-10-17 18:58:47 /build/assets/input-C6KI5-nY.js .............. ~ 0.51ms
+  2026-10-17 18:58:47 /build/assets/label-Z_mgknoc.js .............. ~ 0.42ms
+  2026-10-17 18:58:47 /build/assets/tabs-BVx7baQk.js ............... ~ 0.42ms
+  2026-10-17 18:58:47 /build/assets/mainLogo-l-PLDyHm.js ........... ~ 0.35ms
+  2026-10-17 18:58:47 /build/assets/user-gcxsYfyo.js ............... ~ 0.34ms
+  2026-10-17 18:58:47 /build/assets/house-qdKQlqGy.js .............. ~ 0.34ms
+  2026-10-17 18:58:47 /build/assets/BrowserQRCodeReader-Do4Wf9NK.js  ~ 0.56ms
+  2026-10-17 18:58:47 /build/assets/plus-DbMnuHun.js ............... ~ 0.38ms
+  2026-10-17 18:58:47 /build/assets/scan-line-D8g9fBrH.js .......... ~ 0.39ms
+  2026-10-17 18:58:47 /build/assets/chevron-left-C7UpWz0K.js ....... ~ 0.48ms
+  2026-10-17 18:58:47 /build/assets/sparkles-DeEgGT4K.js ........... ~ 0.44ms
+  2026-10-17 18:58:47 /build/assets/calendar-BsXUbSBd.js ........... ~ 0.43ms
+  2026-10-17 18:58:47 /build/assets/settings-Cn_W4qzQ.js ........... ~ 0.36ms
+  2026-10-17 18:58:47 /build/assets/index-CN8R85pe.js .............. ~ 0.36ms
+  2026-10-17 18:58:47 /build/assets/index-DJ7kKohB.js .............. ~ 0.39ms
+  2026-10-17 18:58:47 /build/assets/index-BTt7Fy2x.js .............. ~ 0.39ms
+  2026-10-17 18:58:47 /build/assets/app-BGAoCQB6.css ............... ~ 0.02ms
+  2026-10-17 18:58:47 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.02ms
+  2026-10-17 18:58:47 /sw.js ....................................... ~ 0.02ms
+  2026-10-17 18:58:49 /sw.js ....................................... ~ 0.13ms
+  2026-10-17 18:59:04 /stamps/record ............................... ~ 0.11ms
+  2026-10-17 18:59:04 /dashboard ................................... ~ 0.02ms
+  2026-10-17 18:59:10 /dashboard ................................... ~ 0.14ms
+  2026-10-17 18:59:10 /build/assets/app-BGAoCQB6.css ............... ~ 0.03ms
+  2026-10-17 18:59:10 /build/assets/Index-BompbaJN.js .............. ~ 0.04ms
+  2026-10-17 18:59:10 /build/assets/customer-qr-scanner-BTRW7GoA.js  ~ 0.14ms
+  2026-10-17 18:59:10 /build/assets/badge-BtSKgCxJ.js .............. ~ 0.17ms
+  2026-10-17 18:59:10 /build/assets/card-DLPez5Tq.js ............... ~ 0.27ms
+  2026-10-17 18:59:10 /build/assets/app-Cmjjc_8e.js ................ ~ 0.42ms
+  2026-10-17 18:59:10 /build/assets/dialog-CJMQKpQG.js ............. ~ 0.52ms
+  2026-10-17 18:59:10 /build/assets/dropdown-menu-DQWVfz8W.js ...... ~ 0.04ms
+  2026-10-17 18:59:10 /build/assets/input-C6KI5-nY.js .............. ~ 0.10ms
+  2026-10-17 18:59:10 /build/assets/label-Z_mgknoc.js .............. ~ 0.20ms
+  2026-10-17 18:59:10 /build/assets/table-YZl3i2O2.js .............. ~ 0.31ms
+  2026-10-17 18:59:10 /build/assets/tabs-BVx7baQk.js ............... ~ 0.42ms
+  2026-10-17 18:59:10 /build/assets/textarea-Di2pktvs.js ........... ~ 0.52ms
+  2026-10-17 18:59:10 /build/assets/use-mobile-nmnMtlOW.js ......... ~ 0.44ms
+  2026-10-17 18:59:10 /build/assets/mainLogo-l-PLDyHm.js ........... ~ 0.32ms
+  2026-10-17 18:59:10 /build/assets/house-qdKQlqGy.js .............. ~ 0.30ms
+  2026-10-17 18:59:10 /build/assets/map-pin-Jj1qg_Cp.js ............ ~ 0.40ms
+  2026-10-17 18:59:10 /build/assets/check-BGexV6Bb.js .............. ~ 0.40ms
+  2026-10-17 18:59:10 /build/assets/eye-DdcN07ZP.js ................ ~ 0.40ms
+  2026-10-17 18:59:10 /build/assets/undo-2-XOgdviUN.js ............. ~ 0.42ms
+  2026-10-17 18:59:10 /build/assets/credit-card-vNh6Mtfn.js ........ ~ 0.43ms
+  2026-10-17 18:59:10 /build/assets/sparkles-DeEgGT4K.js ........... ~ 0.41ms
+  2026-10-17 18:59:10 /build/assets/user-gcxsYfyo.js ............... ~ 0.39ms
+  2026-10-17 18:59:10 /build/assets/calendar-BsXUbSBd.js ........... ~ 0.39ms
+  2026-10-17 18:59:10 /build/assets/search-BCpJa8eG.js ............. ~ 0.37ms
+  2026-10-17 18:59:10 /build/assets/chevron-left-C7UpWz0K.js ....... ~ 0.39ms
+  2026-10-17 18:59:10 /build/assets/select-Bddy7cNG.js ............. ~ 0.36ms
+  2026-10-17 18:59:10 /build/assets/index-DJ7kKohB.js .............. ~ 0.34ms
+  2026-10-17 18:59:10 /build/assets/index-CN8R85pe.js .............. ~ 0.36ms
+  2026-10-17 18:59:10 /build/assets/index-BTt7Fy2x.js .............. ~ 0.13ms
+  2026-10-17 18:59:10 /build/assets/index-DfHGYS_q.js .............. ~ 0.23ms
+  2026-10-17 18:59:10 /build/assets/index-CSHxGiom.js .............. ~ 0.22ms
+  2026-10-17 18:59:10 /build/assets/scan-line-D8g9fBrH.js .......... ~ 0.31ms
+  2026-10-17 18:59:10 /build/assets/app-BGAoCQB6.css ............... ~ 0.29ms
+  2026-10-17 18:59:10 /build/assets/BrowserQRCodeReader-Do4Wf9NK.js  ~ 0.50ms
+  2026-10-17 18:59:10 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.02ms
+  2026-10-17 18:59:10 /sw.js ....................................... ~ 0.02ms
+  2026-10-17 18:59:10 /stamps/1/rating ............................. ~ 0.01ms
+  2026-10-17 18:59:10 /dashboard ................................... ~ 0.01ms
+  2026-10-17 18:59:11 /branches .................................... ~ 0.33ms
+  2026-10-17 18:59:11 /build/assets/app-BGAoCQB6.css ............... ~ 0.03ms
+  2026-10-17 18:59:11 /build/assets/Index-B_bBJRMM.js .............. ~ 0.03ms
+  2026-10-17 18:59:11 /build/assets/module-heading-B0vF-JQ7.js ..... ~ 0.11ms
+  2026-10-17 18:59:11 /build/assets/alert-dialog-CFVFGmya.js ....... ~ 0.15ms
+  2026-10-17 18:59:11 /build/assets/dialog-CJMQKpQG.js ............. ~ 0.19ms
+  2026-10-17 18:59:11 /build/assets/app-Cmjjc_8e.js ................ ~ 0.29ms
+  2026-10-17 18:59:11 /build/assets/input-C6KI5-nY.js .............. ~ 0.34ms
+  2026-10-17 18:59:11 /build/assets/label-Z_mgknoc.js .............. ~ 0.01ms
+  2026-10-17 18:59:11 /build/assets/textarea-Di2pktvs.js ........... ~ 0.03ms
+  2026-10-17 18:59:11 /build/assets/app-layout-cxZkIDxm.js ......... ~ 0.10ms
+  2026-10-17 18:59:11 /build/assets/pencil-nmu4JCNm.js ............. ~ 0.15ms
+  2026-10-17 18:59:11 /build/assets/trash-2-DCFSDH5W.js ............ ~ 0.22ms
+  2026-10-17 18:59:11 /build/assets/plus-DbMnuHun.js ............... ~ 0.29ms
+  2026-10-17 18:59:11 /build/assets/index-DJ7kKohB.js .............. ~ 0.37ms
+  2026-10-17 18:59:11 /build/assets/index-CN8R85pe.js .............. ~ 0.38ms
+  2026-10-17 18:59:11 /build/assets/index-BTt7Fy2x.js .............. ~ 0.33ms
+  2026-10-17 18:59:11 /build/assets/use-mobile-nmnMtlOW.js ......... ~ 0.33ms
+  2026-10-17 18:59:11 /build/assets/index-CSHxGiom.js .............. ~ 0.31ms
+  2026-10-17 18:59:11 /build/assets/dropdown-menu-DQWVfz8W.js ...... ~ 0.31ms
+  2026-10-17 18:59:11 /build/assets/index-CDkOghj2.js .............. ~ 0.28ms
+  2026-10-17 18:59:11 /build/assets/index-CSEUMRIG.js .............. ~ 0.27ms
+  2026-10-17 18:59:11 /build/assets/settings-Cn_W4qzQ.js ........... ~ 0.28ms
+  2026-10-17 18:59:11 /build/assets/mainLogo-l-PLDyHm.js ........... ~ 0.27ms
+  2026-10-17 18:59:11 /build/assets/app-BGAoCQB6.css ............... ~ 0.01ms
+  2026-10-17 18:59:11 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.01ms
+  2026-10-17 18:59:11 /sw.js ....................................... ~ 0.01ms
+  2026-10-17 18:59:11 /branches .................................... ~ 0.01ms
+  2026-10-17 18:59:12 /sw.js ....................................... ~ 0.14ms
+  2026-10-17 18:59:13 /sw.js ....................................... ~ 0.22ms
+  2026-10-17 18:59:22 /perk-claims/1/redeem ........................ ~ 0.05ms
+  2026-10-17 18:59:22 /dashboard ................................... ~ 0.01ms
+  2026-10-17 18:59:22 /branches/2 .................................. ~ 0.14ms
+  2026-10-17 18:59:22 /branches .................................... ~ 0.03ms
+  2026-10-17 18:59:26 /dashboard ................................... ~ 0.08ms
+  2026-10-17 18:59:26 /build/assets/app-BGAoCQB6.css ............... ~ 0.02ms
+  2026-10-17 18:59:26 /build/assets/Index-BompbaJN.js .............. ~ 0.03ms
+  2026-10-17 18:59:26 /build/assets/app-Cmjjc_8e.js ................ ~ 0.11ms
+  2026-10-17 18:59:26 /build/assets/customer-qr-scanner-BTRW7GoA.js  ~ 0.19ms
+  2026-10-17 18:59:26 /build/assets/badge-BtSKgCxJ.js .............. ~ 0.22ms
+  2026-10-17 18:59:26 /build/assets/card-DLPez5Tq.js ............... ~ 0.30ms
+  2026-10-17 18:59:26 /build/assets/dialog-CJMQKpQG.js ............. ~ 0.37ms
+  2026-10-17 18:59:26 /build/assets/dropdown-menu-DQWVfz8W.js ...... ~ 0.25ms
+  2026-10-17 18:59:26 /build/assets/input-C6KI5-nY.js .............. ~ 0.22ms
+  2026-10-17 18:59:26 /build/assets/label-Z_mgknoc.js .............. ~ 0.15ms
+  2026-10-17 18:59:26 /build/assets/table-YZl3i2O2.js .............. ~ 0.24ms
+  2026-10-17 18:59:26 /build/assets/tabs-BVx7baQk.js ............... ~ 0.19ms
+  2026-10-17 18:59:26 /build/assets/textarea-Di2pktvs.js ........... ~ 0.26ms
+  2026-10-17 18:59:26 /build/assets/use-mobile-nmnMtlOW.js ......... ~ 0.32ms
+  2026-10-17 18:59:26 /build/assets/mainLogo-l-PLDyHm.js ........... ~ 0.01ms
+  2026-10-17 18:59:26 /build/assets/house-qdKQlqGy.js .............. ~ 0.03ms
+  2026-10-17 18:59:26 /build/assets/map-pin-Jj1qg_Cp.js ............ ~ 0.12ms
+  2026-10-17 18:59:26 /build/assets/check-BGexV6Bb.js .............. ~ 0.19ms
+  2026-10-17 18:59:26 /build/assets/eye-DdcN07ZP.js ................ ~ 0.27ms
+  2026-10-17 18:59:26 /build/assets/undo-2-XOgdviUN.js ............. ~ 0.35ms
+  2026-10-17 18:59:26 /build/assets/credit-card-vNh6Mtfn.js ........ ~ 0.42ms
+  2026-10-17 18:59:26 /build/assets/sparkles-DeEgGT4K.js ........... ~ 0.40ms
+  2026-10-17 18:59:26 /build/assets/user-gcxsYfyo.js ............... ~ 0.30ms
+  2026-10-17 18:59:26 /build/assets/calendar-BsXUbSBd.js ........... ~ 0.30ms
+  2026-10-17 18:59:26 /build/assets/search-BCpJa8eG.js ............. ~ 0.33ms
+  2026-10-17 18:59:26 /build/assets/chevron-left-C7UpWz0K.js ....... ~ 0.42ms
+  2026-10-17 18:59:26 /build/assets/select-Bddy7cNG.js ............. ~ 0.42ms
+  2026-10-17 18:59:26 /build/assets/index-DJ7kKohB.js .............. ~ 0.42ms
+  2026-10-17 18:59:26 /build/assets/index-CN8R85pe.js .............. ~ 0.47ms
+  2026-10-17 18:59:26 /build/assets/index-BTt7Fy2x.js .............. ~ 0.37ms
+  2026-10-17 18:59:26 /build/assets/index-DfHGYS_q.js .............. ~ 0.37ms
+  2026-10-17 18:59:26 /build/assets/index-CSHxGiom.js .............. ~ 0.36ms
+  2026-10-17 18:59:26 /build/assets/scan-line-D8g9fBrH.js .......... ~ 0.24ms
+  2026-10-17 18:59:26 /build/assets/BrowserQRCodeReader-Do4Wf9NK.js  ~ 0.39ms
+  2026-10-17 18:59:26 /build/assets/app-BGAoCQB6.css ............... ~ 0.10ms
+  2026-10-17 18:59:26 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.01ms
+  2026-10-17 18:59:26 /sw.js ....................................... ~ 0.01ms
+  2026-10-17 18:59:26 /branches .................................... ~ 0.01ms
+  2026-10-17 18:59:26 /build/assets/app-BGAoCQB6.css ............... ~ 0.01ms
+  2026-10-17 18:59:26 /build/assets/app-Cmjjc_8e.js ................ ~ 0.02ms
+  2026-10-17 18:59:26 /build/assets/Index-B_bBJRMM.js .............. ~ 0.11ms
+  2026-10-17 18:59:26 /build/assets/module-heading-B0vF-JQ7.js ..... ~ 0.10ms
+  2026-10-17 18:59:26 /build/assets/alert-dialog-CFVFGmya.js ....... ~ 0.15ms
+  2026-10-17 18:59:26 /build/assets/dialog-CJMQKpQG.js ............. ~ 0.21ms
+  2026-10-17 18:59:26 /build/assets/input-C6KI5-nY.js .............. ~ 0.28ms
+  2026-10-17 18:59:26 /build/assets/label-Z_mgknoc.js .............. ~ 0.29ms
+  2026-10-17 18:59:26 /build/assets/textarea-Di2pktvs.js ........... ~ 0.32ms
+  2026-10-17 18:59:26 /build/assets/app-layout-cxZkIDxm.js ......... ~ 0.33ms
+  2026-10-17 18:59:26 /build/assets/pencil-nmu4JCNm.js ............. ~ 0.32ms
+  2026-10-17 18:59:26 /build/assets/trash-2-DCFSDH5W.js ............ ~ 0.30ms
+  2026-10-17 18:59:26 /build/assets/plus-DbMnuHun.js ............... ~ 0.29ms
+  2026-10-17 18:59:26 /build/assets/index-DJ7kKohB.js .............. ~ 0.31ms
+  2026-10-17 18:59:26 /build/assets/index-CN8R85pe.js .............. ~ 0.32ms
+  2026-10-17 18:59:26 /build/assets/index-BTt7Fy2x.js .............. ~ 0.32ms
+  2026-10-17 18:59:26 /build/assets/use-mobile-nmnMtlOW.js ......... ~ 0.33ms
+  2026-10-17 18:59:26 /build/assets/index-CSHxGiom.js .............. ~ 0.31ms
+  2026-10-17 18:59:26 /build/assets/dropdown-menu-DQWVfz8W.js ...... ~ 0.31ms
+  2026-10-17 18:59:26 /build/assets/index-CDkOghj2.js .............. ~ 0.28ms
+  2026-10-17 18:59:26 /build/assets/index-CSEUMRIG.js .............. ~ 0.27ms
+  2026-10-17 18:59:27 /build/assets/settings-Cn_W4qzQ.js ........... ~ 0.28ms
+  2026-10-17 18:59:27 /build/assets/mainLogo-l-PLDyHm.js ........... ~ 0.27ms
+  2026-10-17 18:59:27 /build/assets/app-BGAoCQB6.css ............... ~ 0.01ms
+  2026-10-17 18:59:27 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.01ms
+  2026-10-17 18:59:27 /sw.js ....................................... ~ 0.01ms
+  2026-10-17 18:59:27 /qr-studio ................................... ~ 0.09ms
+  2026-10-17 18:59:27 /branches .................................... ~ 0.02ms
+  2026-10-17 18:59:27 /qr-studio ................................... ~ 0.02ms
+  2026-10-17 18:59:28 /sw.js ....................................... ~ 0.15ms
+  2026-10-17 18:59:28 /sw.js ....................................... ~ 0.40ms
+  2026-10-17 18:59:44 /qr-studio ................................... ~ 0.11ms
+  2026-10-17 18:59:44 /build/assets/app-BGAoCQB6.css ............... ~ 0.03ms
+  2026-10-17 18:59:44 /build/assets/app-Cmjjc_8e.js ................ ~ 0.04ms
+  2026-10-17 18:59:44 /build/assets/Index-BLti9IuG.js .............. ~ 0.22ms
+  2026-10-17 18:59:44 /build/assets/module-heading-B0vF-JQ7.js ..... ~ 0.36ms
+  2026-10-17 18:59:44 /build/assets/card-DLPez5Tq.js ............... ~ 0.30ms
+  2026-10-17 18:59:44 /build/assets/label-Z_mgknoc.js .............. ~ 0.21ms
+  2026-10-17 18:59:44 /build/assets/input-C6KI5-nY.js .............. ~ 0.62ms
+  2026-10-17 18:59:44 /build/assets/select-Bddy7cNG.js ............. ~ 0.53ms
+  2026-10-17 18:59:44 /build/assets/textarea-Di2pktvs.js ........... ~ 0.67ms
+  2026-10-17 18:59:44 /build/assets/app-layout-cxZkIDxm.js ......... ~ 0.65ms
+  2026-10-17 18:59:44 /build/assets/index-BTt7Fy2x.js .............. ~ 0.47ms
+  2026-10-17 18:59:44 /build/assets/index-DJ7kKohB.js .............. ~ 0.65ms
+  2026-10-17 18:59:44 /build/assets/index-CN8R85pe.js .............. ~ 0.68ms
+  2026-10-17 18:59:44 /build/assets/index-DfHGYS_q.js .............. ~ 0.73ms
+  2026-10-17 18:59:44 /build/assets/index-CSHxGiom.js .............. ~ 0.79ms
+  2026-10-17 18:59:44 /build/assets/check-BGexV6Bb.js .............. ~ 0.80ms
+  2026-10-17 18:59:44 /build/assets/use-mobile-nmnMtlOW.js ......... ~ 0.79ms
+  2026-10-17 18:59:44 /build/assets/dropdown-menu-DQWVfz8W.js ...... ~ 0.75ms
+  2026-10-17 18:59:44 /build/assets/index-CDkOghj2.js .............. ~ 0.66ms
+  2026-10-17 18:59:44 /build/assets/index-CSEUMRIG.js .............. ~ 0.63ms
+  2026-10-17 18:59:44 /build/assets/settings-Cn_W4qzQ.js ........... ~ 0.59ms
+  2026-10-17 18:59:44 /build/assets/mainLogo-l-PLDyHm.js ........... ~ 0.57ms
+  2026-10-17 18:59:44 /build/assets/app-BGAoCQB6.css ............... ~ 0.02ms
+  2026-10-17 18:59:44 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.02ms
+  2026-10-17 18:59:44 /sw.js ....................................... ~ 0.02ms
+  2026-10-17 18:59:45 /sw.js ....................................... ~ 0.24ms
+  2026-10-17 18:59:49 /qr-studio/update ............................ ~ 0.12ms
+  2026-10-17 18:59:49 /qr-studio ................................... ~ 0.01ms
+  2026-10-17 18:59:52 /qr-studio/download .............................. ~ 1s
+  2026-10-17 18:59:55 /sw.js ....................................... ~ 0.12ms
+  2026-10-17 19:00:22 /qr-studio ................................... ~ 0.11ms
+  2026-10-17 19:00:22 /build/assets/app-BGAoCQB6.css ............... ~ 0.02ms
+  2026-10-17 19:00:22 /build/assets/Index-BLti9IuG.js .............. ~ 0.04ms
+  2026-10-17 19:00:22 /build/assets/module-heading-B0vF-JQ7.js ..... ~ 0.15ms
+  2026-10-17 19:00:22 /build/assets/card-DLPez5Tq.js ............... ~ 0.21ms
+  2026-10-17 19:00:22 /build/assets/app-Cmjjc_8e.js ................ ~ 0.34ms
+  2026-10-17 19:00:22 /build/assets/input-C6KI5-nY.js .............. ~ 0.42ms
+  2026-10-17 19:00:22 /build/assets/label-Z_mgknoc.js .............. ~ 0.53ms
+  2026-10-17 19:00:22 /build/assets/select-Bddy7cNG.js ............. ~ 0.53ms
+  2026-10-17 19:00:22 /build/assets/textarea-Di2pktvs.js ........... ~ 0.56ms
+  2026-10-17 19:00:22 /build/assets/app-layout-cxZkIDxm.js ......... ~ 0.55ms
+  2026-10-17 19:00:22 /build/assets/index-BTt7Fy2x.js .............. ~ 0.41ms
+  2026-10-17 19:00:22 /build/assets/index-DJ7kKohB.js .............. ~ 0.41ms
+  2026-10-17 19:00:22 /build/assets/index-CN8R85pe.js .............. ~ 0.41ms
+  2026-10-17 19:00:22 /build/assets/index-DfHGYS_q.js .............. ~ 0.42ms
+  2026-10-17 19:00:22 /build/assets/index-CSHxGiom.js .............. ~ 0.45ms
+  2026-10-17 19:00:22 /build/assets/check-BGexV6Bb.js .............. ~ 0.53ms
+  2026-10-17 19:00:22 /build/assets/use-mobile-nmnMtlOW.js ......... ~ 0.55ms
+  2026-10-17 19:00:22 /build/assets/dropdown-menu-DQWVfz8W.js ...... ~ 0.53ms
+  2026-10-17 19:00:22 /build/assets/index-CDkOghj2.js .............. ~ 0.49ms
+  2026-10-17 19:00:22 /build/assets/index-CSEUMRIG.js .............. ~ 0.40ms
+  2026-10-17 19:00:22 /build/assets/settings-Cn_W4qzQ.js ........... ~ 0.37ms
+  2026-10-17 19:00:22 /build/assets/mainLogo-l-PLDyHm.js ........... ~ 0.37ms
+  2026-10-17 19:00:22 /build/assets/app-BGAoCQB6.css ............... ~ 0.02ms
+  2026-10-17 19:00:22 /sw.js ....................................... ~ 0.02ms
+  2026-10-17 19:00:22 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.02ms
+  2026-10-17 19:00:22 /customers ................................... ~ 0.01ms
+  2026-10-17 19:00:22 /build/assets/Index-D5os0uYN.js .............. ~ 0.04ms
+  2026-10-17 19:00:22 /build/assets/table-YZl3i2O2.js .............. ~ 0.14ms
+  2026-10-17 19:00:22 /build/assets/pagination-GDiwuMkO.js ......... ~ 0.23ms
+  2026-10-17 19:00:22 /build/assets/chevron-left-C7UpWz0K.js ....... ~ 0.31ms
+  2026-10-17 19:00:22 /build/assets/eye-DdcN07ZP.js ................ ~ 0.37ms
+  2026-10-17 19:00:22 /build/assets/search-BCpJa8eG.js ............. ~ 0.47ms
+  2026-10-17 19:00:23 /customers ................................... ~ 0.10ms
+  2026-10-17 19:00:24 /sw.js ....................................... ~ 0.18ms
+  2026-10-17 19:00:26 /customers/1 ................................. ~ 0.06ms
+  2026-10-17 19:00:26 /build/assets/Show-BfW85fiI.js ............... ~ 0.04ms
+  2026-10-17 19:00:26 /build/assets/badge-BtSKgCxJ.js .............. ~ 0.11ms
+  2026-10-17 19:00:26 /build/assets/separator-DKhPyx6S.js .......... ~ 0.19ms
+  2026-10-17 19:00:26 /build/assets/credit-card-vNh6Mtfn.js ........ ~ 0.25ms
+  2026-10-17 19:00:26 /build/assets/clock-BBQpTn3b.js .............. ~ 0.31ms
+  2026-10-17 19:00:26 /build/assets/user-gcxsYfyo.js ............... ~ 0.38ms
+  2026-10-17 19:00:26 /build/assets/calendar-BsXUbSBd.js ........... ~ 0.23ms
+  2026-10-17 19:00:26 /build/assets/phone-CToN7Q9d.js .............. ~ 0.24ms
+  2026-10-17 19:00:26 /build/assets/mail-aFAyorXF.js ............... ~ 0.23ms
+  2026-10-17 19:00:27 /dashboard/generate-code ..................... ~ 0.11ms
+  2026-10-17 19:00:27 /dashboard ................................... ~ 0.02ms
+  2026-10-17 19:00:40 /stamps/record ............................... ~ 0.10ms
+  2026-10-17 19:00:40 /dashboard ................................... ~ 0.02ms
+  2026-10-17 19:00:41 /stamp-codes ................................. ~ 0.10ms
+  2026-10-17 19:00:41 /build/assets/Index-CXXmqBHf.js .............. ~ 0.03ms
+  2026-10-17 19:00:41 /build/assets/dialog-CJMQKpQG.js ............. ~ 0.13ms
+  2026-10-17 19:00:41 /stamp-codes ................................. ~ 0.01ms
+  2026-10-17 19:00:47 /stamp-codes ................................. ~ 0.12ms
+  2026-10-17 19:00:47 /stamps/3/rating ............................. ~ 0.02ms
+  2026-10-17 19:00:47 /dashboard ................................... ~ 0.02ms
+  2026-10-17 19:00:51 /stamp-codes/export .......................... ~ 0.20ms
+  2026-10-17 19:00:52 /sw.js ....................................... ~ 0.18ms
+  2026-10-17 19:01:07 /perk-claims ................................. ~ 0.12ms
+  2026-10-17 19:01:07 /build/assets/Index-BGxKUOFm.js .............. ~ 0.05ms
+  2026-10-17 19:01:07 /build/assets/undo-2-XOgdviUN.js ............. ~ 0.20ms
+  2026-10-17 19:01:07 /build/assets/sparkles-DeEgGT4K.js ........... ~ 0.34ms
+  2026-10-17 19:01:07 /perk-claims ................................. ~ 0.07ms
+  2026-10-17 19:01:07 /dashboard/generate-code ..................... ~ 0.02ms
+  2026-10-17 19:01:07 /dashboard ................................... ~ 0.02ms
+  2026-10-17 19:01:16 /perk-claims/1/undo .......................... ~ 0.13ms
+  2026-10-17 19:01:16 /perk-claims ................................. ~ 0.02ms
+  2026-10-17 19:01:24 /stamps/record ............................... ~ 0.07ms
+  2026-10-17 19:01:24 /dashboard ................................... ~ 0.02ms
+  2026-10-17 19:01:35 /stamps/4/rating ............................. ~ 0.07ms
+  2026-10-17 19:01:35 /dashboard ................................... ~ 0.01ms
+  2026-10-17 19:01:35 /dashboard ................................... ~ 0.01ms
+  2026-10-17 19:01:35 /build/assets/app-BGAoCQB6.css ............... ~ 0.01ms
+  2026-10-17 19:01:35 /build/assets/app-Cmjjc_8e.js ................ ~ 0.02ms
+  2026-10-17 19:01:35 /build/assets/Index-B1asaBZQ.js .............. ~ 0.11ms
+  2026-10-17 19:01:35 /build/assets/badge-BtSKgCxJ.js .............. ~ 0.19ms
+  2026-10-17 19:01:35 /build/assets/dialog-CJMQKpQG.js ............. ~ 0.18ms
+  2026-10-17 19:01:35 /build/assets/dropdown-menu-DQWVfz8W.js ...... ~ 0.26ms
+  2026-10-17 19:01:35 /build/assets/input-C6KI5-nY.js .............. ~ 0.30ms
+  2026-10-17 19:01:35 /build/assets/label-Z_mgknoc.js .............. ~ 0.23ms
+  2026-10-17 19:01:35 /build/assets/tabs-BVx7baQk.js ............... ~ 0.13ms
+  2026-10-17 19:01:35 /build/assets/mainLogo-l-PLDyHm.js ........... ~ 0.21ms
+  2026-10-17 19:01:35 /build/assets/user-gcxsYfyo.js ............... ~ 0.27ms
+  2026-10-17 19:01:35 /build/assets/house-qdKQlqGy.js .............. ~ 0.36ms
+  2026-10-17 19:01:35 /build/assets/BrowserQRCodeReader-Do4Wf9NK.js  ~ 0.45ms
+  2026-10-17 19:01:35 /build/assets/plus-DbMnuHun.js ............... ~ 0.22ms
+  2026-10-17 19:01:35 /build/assets/scan-line-D8g9fBrH.js .......... ~ 0.22ms
+  2026-10-17 19:01:35 /build/assets/chevron-left-C7UpWz0K.js ....... ~ 0.20ms
+  2026-10-17 19:01:35 /build/assets/sparkles-DeEgGT4K.js ........... ~ 0.22ms
+  2026-10-17 19:01:35 /build/assets/calendar-BsXUbSBd.js ........... ~ 0.28ms
+  2026-10-17 19:01:35 /build/assets/index-CN8R85pe.js .............. ~ 0.02ms
+  2026-10-17 19:01:35 /build/assets/settings-Cn_W4qzQ.js ........... ~ 0.36ms
+  2026-10-17 19:01:35 /build/assets/index-DJ7kKohB.js .............. ~ 0.18ms
+  2026-10-17 19:01:35 /build/assets/index-BTt7Fy2x.js .............. ~ 0.26ms
+  2026-10-17 19:01:35 /build/assets/app-BGAoCQB6.css ............... ~ 0.01ms
+  2026-10-17 19:01:35 /build/assets/mainLogo-BGpJIa-x.png .......... ~ 0.01ms
+  2026-10-17 19:01:35 /sw.js ....................................... ~ 0.01ms
+  2026-10-17 19:01:37 /sw.js ....................................... ~ 0.09ms
+Traceback (most recent call last):
+  File "/Users/nathanielalvarez/Herd/bigoli/outputs/uat-qc-execution-20261017/local-server.py", line 11, in <module>
+    subprocess.run(['php','artisan','serve','--no-reload','--host=127.0.0.1','--port=3147'],cwd=root,env=env,check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 557, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1213, in communicate
+    self.wait()
+    ~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1279, in wait
+    return self._wait(timeout=timeout)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 2084, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ~~~~~~~~~~~~~~^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 2042, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

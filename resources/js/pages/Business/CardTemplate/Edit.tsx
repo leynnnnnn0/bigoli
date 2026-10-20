@@ -21,6 +21,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -947,15 +948,17 @@ export default function Edit({
                                             <Label className="text-sm md:text-base">
                                                 Valid Until
                                             </Label>
-                                            <Input
-                                                type="date"
+                                            <DatePicker
                                                 value={data.valid_until}
-                                                onChange={(e) =>
+                                                onChange={(value) =>
                                                     setData(
                                                         'valid_until',
-                                                        e.target.value,
+                                                        value,
                                                     )
                                                 }
+                                                placeholder="Choose an expiry date"
+                                                invalid={!!errors.valid_until}
+                                                required
                                             />
                                             {errors.valid_until && (
                                                 <p className="text-xs text-red-500 md:text-sm">

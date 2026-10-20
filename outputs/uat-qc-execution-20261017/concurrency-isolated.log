@@ -1,0 +1,1 @@
+SQLSTATE[HY000] [1045] Access denied for user 'u574811581_bigoli'@'localhost' (using password: YES) (Connection: loyalty_security_admin, Host: 127.0.0.1, Port: 3306, Database: , SQL: CREATE DATABASE `loyalty_security_664c1a83015a7ee7`)

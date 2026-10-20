@@ -1,0 +1,372 @@
+{
+  "environment": "isolated local; SQLite; Chromium",
+  "date": "2026-10-17",
+  "summary": {
+    "UAT": {
+      "Pass": 14,
+      "Fail": 1,
+      "Blocked": 5
+    },
+    "QC": {
+      "Pass": 36,
+      "Fail": 0,
+      "Blocked": 3
+    }
+  },
+  "cases": [
+    {
+      "id": "UAT-001",
+      "status": "Pass",
+      "actual": "Browser: invalid credentials rejected; verified owner signed in and reached own dashboard.",
+      "evidence": "Browser login; phpunit.xml / AuthenticationTest"
+    },
+    {
+      "id": "UAT-002",
+      "status": "Pass",
+      "actual": "Browser: QA Branch A2 created, address edited and persisted after reload. Automated HTTP create/update also passed.",
+      "evidence": "branch-updated.png; extended.xml / UAT 002"
+    },
+    {
+      "id": "UAT-003",
+      "status": "Pass",
+      "actual": "Local automated HTTP tests: staff created on own branch and edited without changing password; records persisted. Staff browser login passed.",
+      "evidence": "phpunit.xml / StaffControllerTest; Staff login browser"
+    },
+    {
+      "id": "UAT-004",
+      "status": "Pass",
+      "actual": "Local automated HTTP test: 5-stamp card with minimum spend 100, milestone and branch assignment saved; heading edit persisted and edit page loaded.",
+      "evidence": "extended.xml / UAT 004"
+    },
+    {
+      "id": "UAT-005",
+      "status": "Blocked",
+      "actual": "Browser: QR heading/subheading saved and survived reload; customized PDF downloaded and text verified. Physical phone scan and destination check remain unverified.",
+      "evidence": "qr-code.pdf; UAT 005 / extended.xml; blocker ENV-01"
+    },
+    {
+      "id": "UAT-006",
+      "status": "Blocked",
+      "actual": "Local automated registration, account association, dashboard access, logout and login passed. Real mailbox verification was not exercised; mail was faked.",
+      "evidence": "extended.xml / UAT 006; phpunit.xml / CustomerRegistrationTest; ENV-02"
+    },
+    {
+      "id": "UAT-007",
+      "status": "Blocked",
+      "actual": "Local automated reset request, reset token, new password and subsequent login passed. Real reset-email delivery and email link opening remain unverified.",
+      "evidence": "extended.xml / UAT 007; ENV-02"
+    },
+    {
+      "id": "UAT-008",
+      "status": "Blocked",
+      "actual": "Local HTTP test: valid signed customer QR credited exactly one stamp with receipt/minimum spend. Camera capture and physical QR scanning remain unverified.",
+      "evidence": "extended.xml / QC 014; ENV-01"
+    },
+    {
+      "id": "UAT-009",
+      "status": "Pass",
+      "actual": "Browser: active branch staff signed in and saw assigned branch and eligible loyalty card; inactive account was denied.",
+      "evidence": "Staff browser login; phpunit.xml / StaffDashboardTest"
+    },
+    {
+      "id": "UAT-010",
+      "status": "Blocked",
+      "actual": "Local HTTP test: staff QR issuance credited correct customer/card at eligible spend; branch restriction was enforced. Physical camera workflow remains unverified.",
+      "evidence": "extended.xml / QC 014 and QC 019; ENV-01"
+    },
+    {
+      "id": "UAT-011",
+      "status": "Pass",
+      "actual": "Browser: staff generated code 1AT4TWQI; customer manually redeemed it; progress became 1/3 and persisted after refresh.",
+      "evidence": "new-cycle.png (later cycle); browser observations; local state snapshot"
+    },
+    {
+      "id": "UAT-012",
+      "status": "Pass",
+      "actual": "Browser: second stamp unlocked exactly one E2E Free Drink claim. Automated 5-stamp card check awarded its milestone at stamp 3 only.",
+      "evidence": "reward-redeemed.png; extended.xml / QC 026"
+    },
+    {
+      "id": "UAT-013",
+      "status": "Pass",
+      "actual": "Browser: staff redeemed the available claim; refresh showed Redeemed and counts 0 available / 1 redeemed. Backend actor assertion passed.",
+      "evidence": "reward-redeemed.png; extended.xml / UAT 013 014"
+    },
+    {
+      "id": "UAT-014",
+      "status": "Pass",
+      "actual": "Browser: admin Undo restored the claim to Available. Backend assertions confirmed actor, timestamp and remarks cleared.",
+      "evidence": "reward-undo.png; extended.xml / UAT 013 014"
+    },
+    {
+      "id": "UAT-015",
+      "status": "Pass",
+      "actual": "Browser: completed 3-stamp fixture appeared as Cycle #1 in History; next code started fresh progress at 1/3. Automated 5-stamp fixture completed two cycles with four claims.",
+      "evidence": "completed-card.png; new-cycle.png; extended.xml / QC 027"
+    },
+    {
+      "id": "UAT-016",
+      "status": "Pass",
+      "actual": "Browser: customer details showed correct email, username and stamp entries; phone/DOB were N/A in browser fixture. Automated populated phone/DOB assertions passed.",
+      "evidence": "Browser customer detail; phpunit.xml / customer details show date of birth and phone number"
+    },
+    {
+      "id": "UAT-017",
+      "status": "Pass",
+      "actual": "Browser: searched QA-BROWSER-002, exported one matching used stamp. Export XML contained AVVV5H8G, correct transaction/customer, and no extra data rows.",
+      "evidence": "export-verification.json; stamp-export.xlsx; extended.xml / QC 037"
+    },
+    {
+      "id": "UAT-018",
+      "status": "Pass",
+      "actual": "Browser: customer gave thumbs up, received confirmation, reloaded with no repeated handled prompt. Persisted rating also covered by automated tests.",
+      "evidence": "phpunit.xml / StampRatingTest; browser observations"
+    },
+    {
+      "id": "UAT-019",
+      "status": "Fail",
+      "actual": "Ticket creation persists, but ticket list returns HTTP 500 after creation. Ticket detail points to missing Business/Ticket/Show component; reply author resolves incorrectly.",
+      "evidence": "DEF-001 / DEF-002 / DEF-003; extended.xml; ticket-list-error.png"
+    },
+    {
+      "id": "UAT-020",
+      "status": "Pass",
+      "actual": "Local automated HTTP checks: logout on all three portals cleared the corresponding guard; protected dashboards redirected to each portal login.",
+      "evidence": "extended.xml / UAT 020"
+    },
+    {
+      "id": "QC-001",
+      "status": "Pass",
+      "actual": "Wrong-password and unknown-account submissions rejected across admin/customer/staff. Browser also confirmed invalid admin/customer and inactive staff feedback.",
+      "evidence": "extended.xml / QC 001; browser observations"
+    },
+    {
+      "id": "QC-002",
+      "status": "Pass",
+      "actual": "Guest dashboards redirected to the correct portal login; portal login views and clean routes passed.",
+      "evidence": "phpunit.xml / PortalDomainTest"
+    },
+    {
+      "id": "QC-003",
+      "status": "Pass",
+      "actual": "Duplicate email, malformed email, blank username and missing branch registration inputs rejected; customer count unchanged.",
+      "evidence": "extended.xml / QC 003"
+    },
+    {
+      "id": "QC-004",
+      "status": "Pass",
+      "actual": "Cross-business staff create/update/delete attempts denied; own-branch creation passed.",
+      "evidence": "phpunit.xml / StaffControllerTest"
+    },
+    {
+      "id": "QC-005",
+      "status": "Pass",
+      "actual": "Staff edit with password omitted preserved original password and updated details.",
+      "evidence": "phpunit.xml / business owners can update their staff without changing the password"
+    },
+    {
+      "id": "QC-006",
+      "status": "Pass",
+      "actual": "Deleting unused staff succeeded; staff with recorded stamp/claim activity could not be deleted.",
+      "evidence": "phpunit.xml / StaffControllerTest"
+    },
+    {
+      "id": "QC-007",
+      "status": "Pass",
+      "actual": "Browser: correct credentials for e2e-inactive remained on login with rejection feedback; active account signed in.",
+      "evidence": "Browser inactive/active staff checks"
+    },
+    {
+      "id": "QC-008",
+      "status": "Pass",
+      "actual": "After deactivation, existing staff session could not issue stamps or redeem/undo claims. No unauthorized effects were stored.",
+      "evidence": "phpunit.xml / LoyaltySecurityTest"
+    },
+    {
+      "id": "QC-009",
+      "status": "Pass",
+      "actual": "Branch deletion blocked when linked soft-deleted stamp history remained.",
+      "evidence": "phpunit.xml / B-07 blocks branch deletion when soft-deleted stamp history remains linked"
+    },
+    {
+      "id": "QC-010",
+      "status": "Pass",
+      "actual": "Blank name/heading, zero stamps, negative minimum, three-decimal amount and mechanics over 500 characters rejected; no extra card persisted.",
+      "evidence": "extended.xml / QC 010"
+    },
+    {
+      "id": "QC-011",
+      "status": "Pass",
+      "actual": "Milestone 0, milestone 6 on 5-stamp card, and duplicate milestone 3 rejected.",
+      "evidence": "extended.xml / QC 011"
+    },
+    {
+      "id": "QC-012",
+      "status": "Pass",
+      "actual": "Card accepted omitted optional perk color; edit preserved existing color when omitted.",
+      "evidence": "phpunit.xml / LC-03 and LC-09"
+    },
+    {
+      "id": "QC-013",
+      "status": "Pass",
+      "actual": "Earned perk edits/removal and card deletion rejected; safe heading edit retained earned claims.",
+      "evidence": "phpunit.xml / earned perks cannot be modified removed or bypassed by deleting their card"
+    },
+    {
+      "id": "QC-014",
+      "status": "Pass",
+      "actual": "For both owner and staff QR issuance, 99.99 rejected and 100.00 credited exactly one stamp with stored amount 100.00.",
+      "evidence": "extended.xml / QC 014"
+    },
+    {
+      "id": "QC-015",
+      "status": "Pass",
+      "actual": "Staff code at 99.99 rejected; 100.00 created exactly one new code.",
+      "evidence": "extended.xml / QC 015"
+    },
+    {
+      "id": "QC-016",
+      "status": "Pass",
+      "actual": "Blank receipt number, negative amount, nonnumeric amount and three decimal places rejected across owner/staff scan and staff generation paths.",
+      "evidence": "extended.xml / QC 016"
+    },
+    {
+      "id": "QC-017",
+      "status": "Pass",
+      "actual": "Random QR text and tampered signed payload rejected for owner/staff; no used stamp added.",
+      "evidence": "extended.xml / QC 017"
+    },
+    {
+      "id": "QC-018",
+      "status": "Pass",
+      "actual": "Cryptographically valid QR belonging to another business rejected for both roles; no stamp credited.",
+      "evidence": "extended.xml / QC 018"
+    },
+    {
+      "id": "QC-019",
+      "status": "Pass",
+      "actual": "Owner scan with ineligible branch rejected; staff at unassigned branch could neither scan-issue nor generate code for restricted card.",
+      "evidence": "extended.xml / QC 019"
+    },
+    {
+      "id": "QC-020",
+      "status": "Pass",
+      "actual": "Expired card rejected owner/staff scan issuance, staff code generation and customer code redemption; no stamp was used.",
+      "evidence": "extended.xml / QC 020"
+    },
+    {
+      "id": "QC-021",
+      "status": "Pass",
+      "actual": "Unknown, already-used and foreign-business codes rejected; original valid redemption credited one stamp only.",
+      "evidence": "extended.xml / QC 021"
+    },
+    {
+      "id": "QC-022",
+      "status": "Pass",
+      "actual": "Old unused online code on active card remained redeemable despite legacy code-expiry flag.",
+      "evidence": "phpunit.xml / online stamp codes do not expire and remain redeemable until used"
+    },
+    {
+      "id": "QC-023",
+      "status": "Pass",
+      "actual": "Historical offline code rejected; no customer stamp added.",
+      "evidence": "phpunit.xml / historical offline codes can no longer be redeemed"
+    },
+    {
+      "id": "QC-024",
+      "status": "Pass",
+      "actual": "Dashboard views/refreshes created no code. Browser refresh after generation showed only the one explicitly generated staff code.",
+      "evidence": "phpunit.xml / viewing or refreshing the staff dashboard does not generate a stamp code; browser"
+    },
+    {
+      "id": "QC-025",
+      "status": "Pass",
+      "actual": "One explicit staff generation created one code; refresh did not duplicate it.",
+      "evidence": "phpunit.xml / staff code generation creates exactly one code and refresh is safe; browser"
+    },
+    {
+      "id": "QC-026",
+      "status": "Pass",
+      "actual": "On prepared 5-stamp card, no claim at 2 stamps; exactly one configured claim at 3.",
+      "evidence": "extended.xml / QC 026"
+    },
+    {
+      "id": "QC-027",
+      "status": "Pass",
+      "actual": "Alternating QR and online codes over ten stamps produced two 5-stamp cycles, exactly four milestone claims and no leftover active stamps.",
+      "evidence": "extended.xml / QC 027"
+    },
+    {
+      "id": "QC-028",
+      "status": "Blocked",
+      "actual": "Sequential reused-code rejection passed. Simultaneous same-code requests were not tested against MySQL: local configured database account lacked access.",
+      "evidence": "concurrency-isolated.log; ENV-03"
+    },
+    {
+      "id": "QC-029",
+      "status": "Blocked",
+      "actual": "Sequential milestone/cycle tests passed. Actual simultaneous milestone writers against MySQL remain unverified due to local MySQL access failure.",
+      "evidence": "concurrency-isolated.log; ENV-03"
+    },
+    {
+      "id": "QC-030",
+      "status": "Pass",
+      "actual": "Two stale copies of a claim could not both redeem; first actor/remarks retained. Browser staff redemption and admin undo passed. True simultaneous timing remains outside this result.",
+      "evidence": "phpunit.xml / stale reward redemption requests cannot both succeed"
+    },
+    {
+      "id": "QC-031",
+      "status": "Pass",
+      "actual": "Another business owner could neither redeem nor undo the claim; original claim state unchanged.",
+      "evidence": "extended.xml / QC 031"
+    },
+    {
+      "id": "QC-032",
+      "status": "Pass",
+      "actual": "Search statistics scoped to searched customer; available/redeemed status filters changed correctly after redemption.",
+      "evidence": "phpunit.xml / perk claim summary reflects the searched customer; extended.xml / QC 032"
+    },
+    {
+      "id": "QC-033",
+      "status": "Pass",
+      "actual": "Automated staff reward/code collections paginated at ten; further records reachable on page 2.",
+      "evidence": "phpunit.xml / staff reward and code tabs are paginated by ten"
+    },
+    {
+      "id": "QC-034",
+      "status": "Pass",
+      "actual": "Another customer stamp and invalid rating rejected; no unauthorized rating persisted.",
+      "evidence": "phpunit.xml / customer cannot rate another customer stamp or submit an invalid rating"
+    },
+    {
+      "id": "QC-035",
+      "status": "Pass",
+      "actual": "Dismissed rating stayed handled; completed-card stamp remained rateable. Browser rated and skipped prompts successfully.",
+      "evidence": "phpunit.xml / customer can dismiss a stamp rating and completed-card stamps remain rateable"
+    },
+    {
+      "id": "QC-036",
+      "status": "Pass",
+      "actual": "Foreign customer direct detail returned 404; search exposed no foreign rows.",
+      "evidence": "extended.xml / QC 036"
+    },
+    {
+      "id": "QC-037",
+      "status": "Pass",
+      "actual": "Downloaded XLSX contents matched selected used/branch filter and excluded foreign business data. Browser receipt search exported exactly one matching record.",
+      "evidence": "extended.xml / QC 037; export-verification.json"
+    },
+    {
+      "id": "QC-038",
+      "status": "Pass",
+      "actual": "Blank ticket rejected; another business ticket detail/reply returned 404; unauthorized reply count stayed zero. Own-ticket UI failures are tracked separately under UAT-019.",
+      "evidence": "extended.xml / QC 038; DEF-001 / DEF-002"
+    },
+    {
+      "id": "QC-039",
+      "status": "Blocked",
+      "actual": "Desktop Chromium core flows worked. Actual mobile devices, agreed browser matrix and physical QR camera flow were not available.",
+      "evidence": "ENV-01 / ENV-04; desktop browser observations"
+    }
+  ]
+}

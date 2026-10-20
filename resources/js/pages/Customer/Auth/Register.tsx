@@ -2,6 +2,7 @@ import BrandedAuthShell from '@/components/branded-auth-shell';
 import TermsAndAgreement from '@/components/TermsAndAgreement';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -14,7 +15,6 @@ import {
 import { Head, Link, useForm } from '@inertiajs/react';
 import {
     AlertCircle,
-    CalendarDays,
     Eye,
     EyeOff,
     Lock,
@@ -207,24 +207,21 @@ export default function Register({
                             >
                                 Date of birth
                             </Label>
-                            <div className="relative">
-                                <CalendarDays className={inputIconClassName} />
-                                <Input
-                                    id="date_of_birth"
-                                    type="date"
-                                    value={data.date_of_birth}
-                                    onChange={(event) =>
-                                        setData(
-                                            'date_of_birth',
-                                            event.target.value,
-                                        )
-                                    }
-                                    autoComplete="bday"
-                                    required
-                                    aria-invalid={!!errors.date_of_birth}
-                                    className={inputClassName}
-                                />
-                            </div>
+                            <DatePicker
+                                id="date_of_birth"
+                                value={data.date_of_birth}
+                                onChange={(value) =>
+                                    setData('date_of_birth', value)
+                                }
+                                placeholder="Choose your birth date"
+                                disabled={{ after: new Date() }}
+                                startMonth={new Date(1900, 0)}
+                                endMonth={new Date()}
+                                captionLayout="dropdown"
+                                required
+                                invalid={!!errors.date_of_birth}
+                                className={inputClassName}
+                            />
                             {errors.date_of_birth && (
                                 <FieldError>{errors.date_of_birth}</FieldError>
                             )}

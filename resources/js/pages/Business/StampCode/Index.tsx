@@ -2,6 +2,7 @@ import ModuleHeading from '@/components/module-heading';
 import Pagination from '@/components/pagination';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { DatePicker } from '@/components/ui/date-picker';
 import {
     Dialog,
     DialogContent,
@@ -487,12 +488,11 @@ export default function Index({
                                 <label className="mb-1 block text-xs font-medium text-gray-600">
                                     Created From
                                 </label>
-                                <Input
-                                    type="date"
+                                <DatePicker
                                     value={dateFrom}
-                                    onChange={(e) =>
-                                        setDateFrom(e.target.value)
-                                    }
+                                    onChange={setDateFrom}
+                                    placeholder="Select start date"
+                                    clearable
                                     className="bg-white"
                                 />
                             </div>
@@ -502,10 +502,11 @@ export default function Index({
                                 <label className="mb-1 block text-xs font-medium text-gray-600">
                                     Created To
                                 </label>
-                                <Input
-                                    type="date"
+                                <DatePicker
                                     value={dateTo}
-                                    onChange={(e) => setDateTo(e.target.value)}
+                                    onChange={setDateTo}
+                                    placeholder="Select end date"
+                                    clearable
                                     className="bg-white"
                                 />
                             </div>
@@ -515,12 +516,11 @@ export default function Index({
                                 <label className="mb-1 block text-xs font-medium text-gray-600">
                                     Used From
                                 </label>
-                                <Input
-                                    type="date"
+                                <DatePicker
                                     value={usedFrom}
-                                    onChange={(e) =>
-                                        setUsedFrom(e.target.value)
-                                    }
+                                    onChange={setUsedFrom}
+                                    placeholder="Select start date"
+                                    clearable
                                     className="bg-white"
                                 />
                             </div>
@@ -530,10 +530,11 @@ export default function Index({
                                 <label className="mb-1 block text-xs font-medium text-gray-600">
                                     Used To
                                 </label>
-                                <Input
-                                    type="date"
+                                <DatePicker
                                     value={usedTo}
-                                    onChange={(e) => setUsedTo(e.target.value)}
+                                    onChange={setUsedTo}
+                                    placeholder="Select end date"
+                                    clearable
                                     className="bg-white"
                                 />
                             </div>

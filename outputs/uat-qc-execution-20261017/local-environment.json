@@ -1,0 +1,6 @@
+{
+  "database": "/var/folders/rt/nv54pw4d5sbdrj7pz67shkfw0000gn/T/bigoli-qa-tdvkw407/database.sqlite",
+  "admin": "http://admin.localhost:3147",
+  "customer": "http://customer.localhost:3147",
+  "staff": "http://staff.localhost:3147"
+}

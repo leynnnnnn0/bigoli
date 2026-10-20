@@ -1,0 +1,133 @@
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Unit\ExampleTest[39m
+  [32;1m✓[39;22m[90m [39m[90mthat true is true[39m[90m                                                   [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\AuthenticationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mlogin screen can be rendered[39m[90m                                        [39m [90m0.17s[39m  
+  [32;1m✓[39;22m[90m [39m[90musers can authenticate using the login screen[39m[90m                       [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90musers with two factor enabled are redirected to two factor challeng[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90musers can not authenticate with invalid password[39m[90m                    [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90musers can logout[39m[90m                                                    [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90musers are rate limited[39m[90m                                              [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\CustomerRegistrationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mcustomers can open registration without a QR and choose a Bigoli br[39m[90m…[39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mregistration requires a valid date of birth and phone number[39m[90m        [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mQR registration preserves its business and branch selection[39m[90m         [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mregistration rejects a branch from a different business[39m[90m             [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mregistration requires a branch[39m[90m                                      [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\EmailVerificationTest[39m
+  [32;1m✓[39;22m[90m [39m[90memail verification screen can be rendered[39m[90m                           [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90memail can be verified[39m[90m                                               [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90memail is not verified with invalid hash[39m[90m                             [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90memail is not verified with invalid user id[39m[90m                          [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mverified user is redirected to dashboard from verification prompt[39m[90m   [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90malready verified user visiting verification link is redirected with[39m[90m…[39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\PasswordConfirmationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mconfirm password screen can be rendered[39m[90m                             [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpassword confirmation requires authentication[39m[90m                       [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\PasswordResetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mpublic business password-reset routes are unavailable[39m[90m               [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\RegistrationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mpublic business registration is unavailable[39m[90m                         [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\TwoFactorChallengeTest[39m
+  [32;1m✓[39;22m[90m [39m[90mtwo factor challenge redirects to login when not authenticated[39m[90m      [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mtwo factor challenge can be rendered[39m[90m                                [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\VerificationNotificationTest[39m
+  [32;1m✓[39;22m[90m [39m[90msends verification notification[39m[90m                                     [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mdoes not send verification notification if email is verified[39m[90m        [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Business\FunctionalRequirementRegressionTest[39m
+  [32;1m✓[39;22m[90m [39m[90mIS-03 requires a transaction number whenever an online stamp code i[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin stamp generation enforces and records the loyalty card minimu[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90monline stamp codes do not expire and remain redeemable until used[39m[90m   [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mLC-03 creates a card when optional perk color is omitted[39m[90m            [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mloyalty card create and edit persist the minimum amount spent[39m[90m       [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mLC-09 preserves an existing perk color when an edit omits the optio[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mLC-06 rejects rewards outside the loyalty card stamp range[39m[90m          [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcustomer stamp history ignores the legacy expiration flag[39m[90m           [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcustomer details show date of birth and phone number[39m[90m                [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mperk claim summary reflects the searched customer[39m[90m                   [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mB-07 blocks branch deletion when soft-deleted stamp history remains[39m[90m…[39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Business\LoyaltySecurityTest[39m
+  [32;1m✓[39;22m[90m [39m[90mstale reward redemption requests cannot both succeed[39m[90m                [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mdeactivating logged in staff prevents further loyalty actions[39m[90m       [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90minactive staff cannot reopen or redeem rewards[39m[90m                      [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mremoved offline endpoints cannot generate stamps[39m[90m                    [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mhistorical offline codes can no longer be redeemed[39m[90m                  [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mexpired loyalty cards cannot receive stamps through either path[39m[90m     [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcustomer QR issuance enforces the loyalty card minimum spend for ad[39m[90m…[39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mearned perks cannot be modified removed or bypassed by deleting the[39m[90m…[39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mstamp cycles preserve exactly one milestone claim per cycle across[39m[90m… [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Business\StaffControllerTest[39m
+  [32;1m✓[39;22m[90m [39m[90mbusiness owners can view only their staff accounts[39m[90m                  [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mbusiness owners can create staff for their own branch[39m[90m               [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mbusiness owners cannot create staff for another business branch[39m[90m     [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mbusiness owners can update their staff without changing the passwor[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mbusiness owners cannot update or delete staff from another business[39m[90m [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mbusiness owners can delete their own staff account[39m[90m                  [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mbusiness owners cannot delete staff with recorded activity[39m[90m          [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Customer\StampRatingTest[39m
+  [32;1m✓[39;22m[90m [39m[90mcustomer is prompted to rate each received stamp and can give a thu[39m[90m…[39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcustomer can dismiss a stamp rating and completed-card stamps remai[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcustomer cannot rate another customer stamp or submit an invalid ra[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mapplying a stamp broadcasts a private customer feedback event[39m[90m       [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\PortalDomainTest[39m
+  [32;1m✓[39;22m[90m [39m[90mportal domains are configured and unique[39m[90m                            [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90meach portal renders its own login page at login with dataset "admin[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90meach portal renders its own login page at login with dataset "custo[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90meach portal renders its own login page at login with dataset "staff[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90meach protected dashboard redirects guests to its own login page wit[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90meach protected dashboard redirects guests to its own login page wit[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90meach protected dashboard redirects guests to its own login page wit[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90meach portal root enters through its dashboard with ('admin')[39m[90m        [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90meach portal root enters through its dashboard with ('staff')[39m[90m        [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcustomer portal root renders the public welcome page[39m[90m                [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mlegacy prefixed portal paths are removed[39m[90m                            [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcustomer logout uses the clean portal path[39m[90m                          [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mstaff logout uses the clean portal path[39m[90m                             [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcustomers can only authorize their own private broadcast channel[39m[90m    [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\SessionLifetimeTest[39m
+  [32;1m✓[39;22m[90m [39m[90mbusiness sessions last one day[39m[90m                                      [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mstaff sessions last seven days[39m[90m                                      [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcustomer sessions last fourteen days[39m[90m                                [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Settings\PasswordUpdateTest[39m
+  [32;1m✓[39;22m[90m [39m[90mpassword update page is displayed[39m[90m                                   [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpassword can be updated[39m[90m                                             [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcorrect password must be provided to update password[39m[90m                [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Settings\ProfileUpdateTest[39m
+  [32;1m✓[39;22m[90m [39m[90mprofile page is displayed[39m[90m                                           [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mprofile information can be updated[39m[90m                                  [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90memail verification status is unchanged when the email address is un[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90muser can delete their account[39m[90m                                       [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcorrect password must be provided to delete account[39m[90m                 [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Settings\TwoFactorAuthenticationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mtwo factor settings page can be rendered[39m[90m                            [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mtwo factor settings page requires password confirmation when enable[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mtwo factor settings page does not requires password confirmation wh[39m[90m…[39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mtwo factor settings page returns forbidden response when two factor[39m[90m…[39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Staff\StaffDashboardTest[39m
+  [32;1m✓[39;22m[90m [39m[90mviewing or refreshing the staff dashboard does not generate a stamp[39m[90m…[39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mstaff code generation creates exactly one code and refresh is safe[39m[90m  [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mstaff cannot generate a stamp below the loyalty card minimum spend[39m[90m  [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mstaff reward and code tabs are paginated by ten[39m[90m                     [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mstaff dashboard identifies the staff member who redeemed a perk[39m[90m     [39m [90m0.02s[39m  
+
+  [90mTests:[39m    [32;1m91 passed[39;22m[90m (481 assertions)[39m
+  [90mDuration:[39m [39m1.39s[39m
+

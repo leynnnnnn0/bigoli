@@ -14,6 +14,7 @@ import { Head, useForm } from "@inertiajs/react";
 import { ImageIcon, Plus, Sparkles, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -845,15 +846,17 @@ export default function Create({ branches = [] }: { branches?: BranchOption[] })
                                           <Label className="text-sm md:text-base">
                                               Valid Until
                                           </Label>
-                                          <Input
-                                              type="date"
+                                          <DatePicker
                                               value={data.valid_until}
-                                              onChange={(e) =>
+                                              onChange={(value) =>
                                                   setData(
                                                       'valid_until',
-                                                      e.target.value,
+                                                      value,
                                                   )
                                               }
+                                              placeholder="Choose an expiry date"
+                                              invalid={!!errors.valid_until}
+                                              required
                                           />
                                           {errors.valid_until && (
                                               <p className="text-xs text-red-500 md:text-sm">
