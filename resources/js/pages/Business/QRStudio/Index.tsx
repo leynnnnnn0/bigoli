@@ -52,7 +52,7 @@ interface IndexProps {
         branch_id: number | null;
     };
     branches?: Branch[];
-    branch_id?: string;
+    branch_id?: number | null;
     errors?: Record<string, string>;
 }
 
@@ -60,6 +60,7 @@ export default function Index({
     qrCode,
     errors,
     branches = [],
+    branch_id,
 }: IndexProps) {
     const [logoPreview, setLogoPreview] = useState<string | null>(
         qrCode?.logo ? '/' + qrCode.logo : null,
@@ -82,7 +83,7 @@ export default function Index({
         logo: null,
         remove_logo: false,
         remove_background_image: false,
-        branch_id: qrCode?.branch_id ?? null,
+        branch_id: branch_id ?? qrCode?.branch_id ?? null,
     });
 
     const handleBranchChange = (value: string) => {
@@ -141,9 +142,7 @@ export default function Index({
 
     const handleDownload = () => {
         setIsDownloading(true);
-        const url = data.branch_id
-            ? `/qr-studio/download?branch_id=${data.branch_id}`
-            : '/qr-studio/download';
+        const url = `/qr-studio/download?branch_id=${data.branch_id ?? ''}`;
         window.location.href = url;
         setTimeout(() => setIsDownloading(false), 2000);
     };

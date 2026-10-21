@@ -20,9 +20,12 @@ class QRStudioController extends Controller
         ));
     }
 
-    public function download(QRStudioService $qrStudio)
+    public function download(QRStudioIndexRequest $request, QRStudioService $qrStudio)
     {
-        $pdf = Pdf::loadView('pdf.qr-code', $qrStudio->downloadData(Auth::user()->business));
+        $pdf = Pdf::loadView('pdf.qr-code', $qrStudio->downloadData(
+            Auth::user()->business,
+            $request->integer('branch_id') ?: null,
+        ));
         $pdf->setPaper('letter', 'portrait');
 
         return $pdf->download('qr-code.pdf');

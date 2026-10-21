@@ -55,14 +55,16 @@ class QRStudioService
         return $qrCode;
     }
 
-    public function downloadData(Business $business): array
+    public function downloadData(Business $business, ?int $branchId = null): array
     {
+        $this->ensureBranchBelongsToBusiness($business, $branchId);
+
         $qrCode = $business->qr_code()->firstOrCreate([], [
             'heading' => 'Taylora', 'subheading' => 'Join our loyalty program by scanning the QR code',
         ]);
-        $url = $this->registrationUrl($business, $qrCode->branch_id);
+        $url = $this->registrationUrl($business, $branchId);
 
-        $qrImage = file_get_contents('https://api.qrserver.com/v1/create-qr-code/?size=500x500&data='.urlencode($url));
+        $qrImage = $this->generateQrImage($url);
 
         return [
             'heading' => $qrCode->heading ?? 'Loyalty Program',
@@ -86,6 +88,11 @@ class QRStudioService
         }
 
         return $baseUrl.(str_contains($baseUrl, '?') ? '&' : '?').http_build_query($query);
+    }
+
+    protected function generateQrImage(string $url): string
+    {
+        return file_get_contents('https://api.qrserver.com/v1/create-qr-code/?size=500x500&data='.urlencode($url));
     }
 
     private function ensureBranchBelongsToBusiness(Business $business, ?int $branchId): void
