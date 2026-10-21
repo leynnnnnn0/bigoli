@@ -60,12 +60,7 @@ class QRStudioService
         $qrCode = $business->qr_code()->firstOrCreate([], [
             'heading' => 'Taylora', 'subheading' => 'Join our loyalty program by scanning the QR code',
         ]);
-        $url = $business->subdomain
-            ? rtrim($business->subdomain, '/').'/register?business='.$business->qr_token
-            : route('customer.register', ['business' => $business->qr_token]);
-        if ($qrCode->branch_id) {
-            $url .= '&branch_id='.$qrCode->branch_id;
-        }
+        $url = $this->registrationUrl($business, $qrCode->branch_id);
 
         $qrImage = file_get_contents('https://api.qrserver.com/v1/create-qr-code/?size=500x500&data='.urlencode($url));
 
@@ -79,6 +74,18 @@ class QRStudioService
             'logoBase64' => $this->imageBase64($qrCode->logo),
             'backgroundImageBase64' => $this->imageBase64($qrCode->background_image),
         ];
+    }
+
+    public function registrationUrl(Business $business, ?int $branchId = null): string
+    {
+        $baseUrl = rtrim((string) config('portals.customer_register_url'), '?&');
+        $query = ['business' => $business->qr_token];
+
+        if ($branchId) {
+            $query['branch_id'] = $branchId;
+        }
+
+        return $baseUrl.(str_contains($baseUrl, '?') ? '&' : '?').http_build_query($query);
     }
 
     private function ensureBranchBelongsToBusiness(Business $business, ?int $branchId): void
