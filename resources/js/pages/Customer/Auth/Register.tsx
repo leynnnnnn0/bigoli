@@ -200,7 +200,7 @@ export default function Register({
                             )}
                         </div>
 
-                        <div className="min-w-0 space-y-2">
+                        <div className="col-span-2 min-w-0 space-y-2">
                             <Label
                                 htmlFor="date_of_birth"
                                 className="text-sm font-medium"
@@ -227,7 +227,7 @@ export default function Register({
                             )}
                         </div>
 
-                        <div className="min-w-0 space-y-2">
+                        <div className="col-span-2 min-w-0 space-y-2">
                             <Label
                                 htmlFor="phone_number"
                                 className="text-sm font-medium"

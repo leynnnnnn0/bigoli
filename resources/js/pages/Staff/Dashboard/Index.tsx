@@ -560,7 +560,7 @@ export default function Index({
                                 >
                                     {branchAndCardSelectors}
 
-                                    <div className="grid grid-cols-2 gap-3">
+                                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                         <div>
                                             <Label className="mb-2 block text-sm font-semibold text-gray-700">
                                                 Transaction Number
@@ -672,7 +672,7 @@ export default function Index({
 
                                     {branchAndCardSelectors}
 
-                                    <div className="grid grid-cols-2 gap-3">
+                                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                         <div>
                                             <Label className="mb-2 block text-sm font-semibold text-gray-700">
                                                 Transaction Number
