@@ -9,7 +9,90 @@ import { cn } from '@/lib/utils';
 import { format, isValid, parseISO } from 'date-fns';
 import { CalendarDays, X } from 'lucide-react';
 import * as React from 'react';
-import type { Matcher } from 'react-day-picker';
+import {
+    type Matcher,
+    type MonthCaptionProps,
+    useDayPicker,
+} from 'react-day-picker';
+
+const monthNames = Array.from({ length: 12 }, (_, month) =>
+    format(new Date(2000, month, 1), 'MMMM'),
+);
+
+function UnrestrictedMonthCaption({
+    calendarMonth,
+    displayIndex,
+    ...props
+}: MonthCaptionProps) {
+    void displayIndex;
+
+    const { goToMonth } = useDayPicker();
+    const displayedMonth = calendarMonth.date;
+    const [yearInput, setYearInput] = React.useState(() =>
+        String(displayedMonth.getFullYear()),
+    );
+
+    React.useEffect(() => {
+        setYearInput(String(displayedMonth.getFullYear()));
+    }, [displayedMonth]);
+
+    const goTo = (month: number, year: number) => {
+        if (!Number.isInteger(year) || year < 1 || year > 9999) return false;
+
+        const nextMonth = new Date(displayedMonth);
+        nextMonth.setDate(1);
+        nextMonth.setMonth(month);
+        nextMonth.setFullYear(year);
+        goToMonth(nextMonth);
+
+        return true;
+    };
+
+    const commitYear = () => {
+        if (!goTo(displayedMonth.getMonth(), Number(yearInput))) {
+            setYearInput(String(displayedMonth.getFullYear()));
+        }
+    };
+
+    return (
+        <div
+            {...props}
+            className={cn(
+                'relative flex h-8 items-center justify-center gap-1',
+                props.className,
+            )}
+        >
+            <select
+                aria-label="Calendar month"
+                value={displayedMonth.getMonth()}
+                onChange={(event) =>
+                    goTo(
+                        Number(event.target.value),
+                        displayedMonth.getFullYear(),
+                    )
+                }
+                className="h-8 rounded-md border border-input bg-background px-2 text-sm"
+            >
+                {monthNames.map((month, index) => (
+                    <option key={month} value={index}>
+                        {month}
+                    </option>
+                ))}
+            </select>
+            <input
+                type="number"
+                aria-label="Calendar year"
+                value={yearInput}
+                onChange={(event) => setYearInput(event.target.value)}
+                onBlur={commitYear}
+                onKeyDown={(event) => {
+                    if (event.key === 'Enter') commitYear();
+                }}
+                className="h-8 w-20 rounded-md border border-input bg-background px-2 text-sm"
+            />
+        </div>
+    );
+}
 
 interface DatePickerProps {
     value?: string;
@@ -49,6 +132,8 @@ function DatePicker({
 }: DatePickerProps) {
     const [open, setOpen] = React.useState(false);
     const selected = parseDate(value);
+    const hasUnrestrictedNavigation =
+        captionLayout === 'label' && !startMonth && !endMonth;
 
     return (
         <div className="relative w-full">
@@ -97,6 +182,14 @@ function DatePicker({
                         startMonth={startMonth}
                         endMonth={endMonth}
                         captionLayout={captionLayout}
+                        components={
+                            hasUnrestrictedNavigation
+                                ? {
+                                      MonthCaption:
+                                          UnrestrictedMonthCaption,
+                                  }
+                                : undefined
+                        }
                         autoFocus
                     />
                 </PopoverContent>
